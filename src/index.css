@@ -1,0 +1,44 @@
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu&display=swap');
+:root {
+            --main-color: #2B6F78;
+            --background-color: #F4F5F6;
+            --text-color: #343A40;
+            --accent-green-color: #2CA47D;
+            --accent-blue-color: #28AFB0;
+            --accent-pink-color: #E2475D;
+            --accent-orange-color: #FE5F55;
+}
+
+body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
+h1 {
+    font-size: 40px;
+
+}
+*{
+    font-family:'Ubuntu';
+
+}
+.ant-layout{
+    background-color: var(--background-color) !important;
+}
+h1, h2, h3, h4, h5, h6{
+    color:var(--text-color) !important;
+}
+table {
+    white-space: pre-wrap; /* CSS3 */
+    white-space: -moz-pre-wrap; /* Firefox */
+    word-wrap: break-word; /* IE */
+}
