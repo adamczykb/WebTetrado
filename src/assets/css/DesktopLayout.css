@@ -1,0 +1,11 @@
+.site-layout .site-layout-background {
+  background: #fff;
+}
+.vertical-center {
+  display: flex;
+  align-items: center;
+}
+.horizontal-center {
+  display: flex;
+  justify-content: center;
+}
