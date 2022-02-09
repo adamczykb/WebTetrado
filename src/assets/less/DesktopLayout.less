@@ -1,14 +1,44 @@
-
-
 .site-layout .site-layout-background {
     background: #fff;
-}  
-
-.vertical-center{
-    display: flex;
-    align-items:center;
 }
-.horizontal-center{
+
+.vertical-center {
     display: flex;
-    justify-content:center;
+    align-items: center;
+}
+.nav_slider{
+    display: none;
+
+    @media screen and (min-width: 1820px) {
+        display: block;
+    }
+}
+.horizontal-center {
+    display: flex;
+    justify-content: center;
+}
+
+.split-layout__divider {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    @media screen and (min-width: 30em) {
+        flex-direction: column;
+    }
+}
+
+.split-layout__label {
+    padding: 1em;
+}
+
+.split-layout__rule {
+    flex: 1;
+    border-style: solid;
+    border-color: #04afa4;
+    border-width: 1px 0 0 0;
+
+    @media screen and (min-width: 30em) {
+        border-width: 0 1px 0 0;
+    }
 }
