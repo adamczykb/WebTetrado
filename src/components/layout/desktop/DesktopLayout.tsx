@@ -1,11 +1,47 @@
-import React from 'react';
-import { Layout, Menu } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { Anchor, Layout, Menu } from 'antd';
 import '../../../assets/css/DesktopLayout.css';
 import IndexRouter from '../../../routes/router';
-//@ts-ignore
-import logo from '../../../assets/images/faviconold.ico';
-const { Header, Content, Footer } = Layout;
+import AnchorRouter from '../../../routes/anchorRouter';
 
+import logo from '../../../assets/images/logo_simple.png';
+const { Header, Content, Footer } = Layout;
+const { Link } = Anchor;
+
+
+import pp_img from '../../../assets/images/PP-PUT_logo_jasne.png'
+import ichb_img from '../../../assets/images/ICHB_PAN_EN_kolor.png'
+import rna_polis_img from '../../../assets/images/RNApolis-logo.png'
+
+const ContentList: React.FC = () => {
+    const [targetOffset, setTargetOffset] = useState<number | undefined>(undefined);
+    useEffect(() => {
+        setTargetOffset(window.innerHeight/4);
+    }, []);
+    return (
+        <div className='nav_slider' style={{ position: 'fixed', top: '100px', width: '200px', left: 'calc((100% - 1400px) / 2 - 200px )' }}>
+            <Anchor targetOffset={targetOffset} >
+                <AnchorRouter />
+
+            </Anchor>
+            <div style={{ marginTop: '100px' }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", width: '90%' }}>
+                    <a target='_blank' rel="noreferrer" href={"https://www.put.poznan.pl/index.php/en"}>
+                        <img alt={'PP logo'} style={{ width: "80px", }} src={pp_img} />
+                    </a>
+                    <a target='_blank' rel="noreferrer" href={"https://www.ibch.poznan.pl/en.html"}>
+                        <img alt={'IBCH logo'} style={{ width: "80px" }} src={ichb_img} />
+                    </a>
+                </div>
+                <div style={{ width: '90%', marginTop: '30px' }}>
+                    <a target='_blank' rel="noreferrer" href={"https://www.rnapolis.pl/"}>
+                        <img alt={'RNApolis'} style={{ width: "100%" }} src={rna_polis_img} />
+                    </a>
+                </div>
+            </div>
+        </div>
+    );
+};
 export class DesktopLayout extends React.Component {
 
     render(): React.ReactNode {
@@ -25,9 +61,12 @@ export class DesktopLayout extends React.Component {
                         </Menu>
                     </div>
                 </Header>
-
-                <IndexRouter />
-
+                <ContentList />
+                <Content className="site-layout" style={{ padding: '0 0', marginTop: 64, maxWidth: '1400px',width:'100%', marginLeft: 'auto', marginRight: 'auto', float: 'left' }}>
+                    <div className="site-layout-background" style={{ padding: 24 }}>
+                        <IndexRouter />
+                    </div>
+                </Content>
                 <Footer style={{ textAlign: 'center' }}>WebTetrado 2022 | XYZ</Footer>
             </Layout>
         )
