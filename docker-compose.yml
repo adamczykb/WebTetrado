@@ -1,0 +1,56 @@
+version: "3.9"
+services:
+
+  processor:
+    image: webtetrado
+    ports:
+      - 8080:8080
+    environment:
+      - WORKDIR=/mnt/workdir
+      - QBASE_JAR=/qbase-backend-1.0-SNAPSHOT-jar-with-dependencies.jar
+      - LOGLEVEL=INFO
+    volumes:
+      - workdir:/mnt/workdir
+  nginx:
+      build:
+        context: ./nginx
+      ports:
+        - 80:8080
+      depends_on:
+        - web
+      volumes:
+        - ./static:/home/solo/webtetrado/static
+        - ./media:/home/solo/webtetrado/media
+      networks:
+        - rnasolo
+  db:
+    image: postgres:latest
+    restart: always
+    env_file:
+      - ./db_env.env
+    volumes:
+      - pgdata:/var/lib/postgresql/data/
+    networks:
+      - db_network
+
+  redis:
+    image: redis:alpine
+    restart: always
+    expose:
+      - '6379'
+    ports:
+      - '6379:6379'
+    networks:
+      - redis_network
+
+volumes:
+  workdir:
+  pgdata:
+
+networks:
+  webtetrado:
+    driver: bridge
+  db_network:
+    driver: bridge
+  redis_network:
+    driver: bridge

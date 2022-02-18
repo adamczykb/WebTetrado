@@ -12,7 +12,7 @@ export const RequestForm = ()=>{
     const props = {
         name: 'structure',
         multiple: false,
-        action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
+        action: 'http://127.0.0.1:8000/img/',
         maxCount: 1,
         beforeUpload: (file: File) => {
             const isCifOrPdb = file.type === 'text/plain' || file.type === 'chemical/x-cif' || file.type === 'chemical/x-pdb';
