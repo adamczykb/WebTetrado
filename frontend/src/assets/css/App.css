@@ -7567,7 +7567,7 @@ _:-ms-fullscreen .ant-picker-range-wrapper .ant-picker-year-panel .ant-picker-ce
   margin-bottom: 0;
 }
 .ant-form-inline .ant-form-item-with-help {
-  margin-bottom: 24px;
+  margin-bottom: 0px;
 }
 .ant-form-inline .ant-form-item > .ant-form-item-label,
 .ant-form-inline .ant-form-item > .ant-form-item-control {
@@ -8115,7 +8115,7 @@ _:-ms-fullscreen .ant-picker-range-wrapper .ant-picker-year-panel .ant-picker-ce
   line-height: 1.5715;
   list-style: none;
   font-feature-settings: 'tnum';
-  margin-bottom: 24px;
+  margin-bottom: 0px;
   vertical-align: top;
   transition: margin-bottom 0.3s 0.017s linear;
 }
@@ -8223,21 +8223,21 @@ _:-ms-fullscreen .ant-picker-range-wrapper .ant-picker-year-panel .ant-picker-ce
   opacity: 0;
 }
 .ant-form-item-extra {
-  min-height: 24px;
+  min-height: 0px;
 }
 .ant-form-item .ant-input-textarea-show-count::after {
   margin-bottom: -22px;
 }
 .ant-form-item-with-help .ant-form-item-explain {
   height: auto;
-  min-height: 24px;
+  min-height: 0px;
   opacity: 1;
 }
 .ant-show-help {
   transition: height 0.3s linear, min-height 0.3s linear, margin-bottom 0.3s cubic-bezier(0.645, 0.045, 0.355, 1), opacity 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
 }
 .ant-show-help-leave {
-  min-height: 24px;
+  min-height: 0px;
 }
 .ant-show-help-leave-active {
   min-height: 0;

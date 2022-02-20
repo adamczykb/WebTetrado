@@ -68,19 +68,13 @@ class TemporaryFile(models.Model):
     id = models.AutoField(primary_key=True)
     file=models.FileField(upload_to='uploads/%Y/%m/') #,storage=FileSystemStorage(location=str(BASE_DIR)+'/tmp')
     timestamp = models.DateTimeField(auto_now=True)
-    
-    def save(self,*args,**kwargs):
-        if 'file' in kwargs:
-            self.file.save(name=str(uuid.uuid1()),content=kwargs['file'])
-            del kwargs['file']
-            super().save(*args,**kwargs)
 
 @receiver(pre_delete,sender=TemporaryFile)
 def remove_file(**kwargs):
     instance = kwargs.get('instance')
     instance.file.delete(save=False)
 
-class Request(models.Model):
+class TetradoRequest(models.Model):
     class Sources(models.IntegerChoices):
         RCSB = 1, 'RCSB'
         FILE = 2, 'File'
@@ -99,6 +93,8 @@ class Request(models.Model):
     stacking_mismatch=models.BooleanField()
     strict=models.BooleanField()
 
+    timestamp=models.DateTimeField(auto_now=True)
+    elTetradoKey=models.CharField(max_length=100)
     loopClassification=models.CharField(max_length=50)
     quadruplex=models.ManyToManyField(Quadruplex)
     base_pair=models.ManyToManyField(Base_Pair)
