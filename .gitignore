@@ -75,7 +75,7 @@ media/
 # Output of 'npm pack'
 *.tgz
 migrations/
-db.sqlite3
+*.sqlite3
 src/assets/css/*.css
 # Yarn Integrity file
 .yarn-integrity
@@ -180,3 +180,4 @@ src/assets/css/
 # Support for Project snippet scope
 
 # End of https://www.toptal.com/developers/gitignore/api/react,node,visualstudiocode
+db.sqlite3

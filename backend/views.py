@@ -1,19 +1,12 @@
-from email.policy import default
-from importlib.resources import contents
-import uuid
 from django.core.files.temp import NamedTemporaryFile
 from django.http import HttpResponse
-from django.shortcuts import render
-import logging
-from webTetrado.settings import BASE_DIR 
-from django import forms
 from django.views.decorators.csrf import csrf_exempt
 from backend.models import TemporaryFile, TetradoRequest
-import json,requests
-# Create your views here.
+import json,requests,uuid
+import django_rq
+import redis
 
-class UploadFileForm(forms.Form):
-    file = forms.FileField()
+from backend.scripts.elTetradoProcessing import add_to_queue
 
 def handle_uploaded_file(f):
     data_file = NamedTemporaryFile()
@@ -23,7 +16,6 @@ def handle_uploaded_file(f):
     n.file.save(name=str(uuid.uuid1()),content=data_file)
     n.save()
     data_file.close()
-
     return str(n.id)
 
 def show(request):
@@ -31,10 +23,11 @@ def show(request):
 
 
 @csrf_exempt
-def processing_request(request):
+def adding_request(request):
     body_unicode = request.body.decode('utf-8')
     body = json.loads(body_unicode)
     entity = TetradoRequest()
+    entity.cookie_user_id=body['userId']
     entity.complete_2d=body['settings']['complete2d']
     entity.no_reorder=body['settings']['noReorder']
     entity.strict=body['settings']['strict']
@@ -60,12 +53,18 @@ def processing_request(request):
             return HttpResponse(status=500)
 
     entity.save()
+    redis_cursor = redis.StrictRedis(host='127.0.0.1', port='6379', db='1', password='')
+    queue = django_rq.get_queue('default', connection=redis_cursor)
+    queue.enqueue(add_to_queue, entity.id)
+    entity.status=2
+
+    entity.save()
+
     return HttpResponse(content='{"orderId":"'+str(entity.id)+'"}', content_type='application/json')
 
 @csrf_exempt
 def file_handler(request):
     if(request.FILES['structure']):
-        
         return HttpResponse(status=200,content='{\"id\": \"%s\"}'%(handle_uploaded_file(request.FILES['structure'])), content_type='application/json')
     else:
         return HttpResponse(status=500)

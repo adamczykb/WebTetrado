@@ -24,5 +24,7 @@ import backend.urls
 
 urlpatterns = [
     path('api/',include(backend.urls)),
-    path('admin/', admin.site.urls) 
+    path('admin/rq/', include('django_rq.urls')),
+    path('admin/', admin.site.urls),
+
     ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

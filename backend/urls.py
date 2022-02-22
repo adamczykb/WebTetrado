@@ -1,9 +1,9 @@
 from django.contrib import admin
 from django.urls import path,include
-from backend.views import file_handler,show,processing_request
+from backend.views import file_handler,show,adding_request
 
 urlpatterns = [
-    path('show/',show),
+    path('process/result/',show),
     path('upload/structure/',file_handler),
-    path('processing/request/', processing_request)
+    path('process/request/', adding_request)
 ]

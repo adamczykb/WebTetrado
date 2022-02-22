@@ -5,17 +5,22 @@ import { useState } from 'react';
 import { InboxOutlined } from '@ant-design/icons';
 import config from '../../config.json'
 import { processingRequest } from '../../utils/adapters/ProcessingRequest';
+import { useCookies } from 'react-cookie';
 export const RequestForm = () => {
+    const [cookies, setCookie] = useCookies(["userId"]);
+
     let form_values = {
         fileId: '',
         rscbPdbId:'',
+        userId:cookies.userId,
         settings:{
             complete2d:false,
             noReorder:false,
-            stackingMatch:false,
+            stackingMatch:2,
             strict:false
         }
     }
+    
     const [formValues, setFormValues] = useState(form_values);
     const [loading,setLoading]=useState(false);
     const props = {
@@ -40,9 +45,7 @@ export const RequestForm = () => {
             }
             if (status === 'done') {
                 message.success(`${info.file.name} file uploaded successfully.`);
-
                 setFormValues({...formValues,rscbPdbId:'', fileId: info.file.response.id})
-
             } else if (status === 'error') {
                 message.error(`${info.file.name} file upload failed.`);
                 setFormValues({...formValues, fileId: '' })
@@ -57,9 +60,12 @@ export const RequestForm = () => {
             message.error('None of structure sources are provided 😱')
             return null
         }
-        // setLoading(true);
+        if(formValues.settings.stackingMatch<1 && formValues.settings.stackingMatch>2){
+            message.error('Wrong value in stacking match option')
+            return null
+        }
+        setLoading(true);
         processingRequest(formValues);
-        // console.log('Success:', formValues);
       };
     return (
         <Form
@@ -102,11 +108,11 @@ export const RequestForm = () => {
                     <Form.Item label='No reorder' valuePropName="checked">
                         <Switch size="small" checkedChildren="Yes" unCheckedChildren="No"  onChange={()=>setFormValues({...formValues, settings:{...formValues.settings,noReorder: !formValues.settings.noReorder}})}/>
                     </Form.Item>
-                    <Form.Item label='Stacking mismatch' valuePropName="checked">
-                        <Switch size="small" checkedChildren="Yes" unCheckedChildren="No"  onChange={()=>setFormValues({...formValues, settings:{...formValues.settings,stackingMatch: !formValues.settings.stackingMatch}})}/>
-                    </Form.Item>
                     <Form.Item label='Strict' valuePropName="checked">
                         <Switch size="small" checkedChildren="Yes" unCheckedChildren="No"  onChange={()=>setFormValues({...formValues, settings:{...formValues.settings,strict: !formValues.settings.strict}})}/>
+                    </Form.Item>
+                    <Form.Item label='Stacking mismatch'>
+                        <Input size="small" type={'number'} min="1" max="2" value={formValues.settings.stackingMatch} onChange={(e)=> setFormValues({...formValues, settings:{...formValues.settings,stackingMatch: e.target.valueAsNumber}})}/>
                     </Form.Item>
                 </div>
             </div>

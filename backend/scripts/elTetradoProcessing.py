@@ -1,0 +1,114 @@
+from django.core.files.temp import NamedTemporaryFile
+import time
+from backend.models import  Helice, Loop, Metadata, Nucleotide, Quadruplex, Tetrad, Tetrad_Pairs, TetradoRequest
+import requests, json,base64
+
+def add_to_queue(db_id):
+    user_request = TetradoRequest.objects.get(id=db_id)
+    base64file = base64.b64encode((open(user_request.structure_body.path,'rb').read()))
+
+    r = requests.post('http://localhost:8080/v1/structure', data=json.dumps({"pdb_mmcif_b64": str(base64file.decode('utf-8')),"strict":user_request.strict,"stackingMismatch":user_request.stacking_mismatch,"noReorder":user_request.no_reorder,"complete2D":user_request.complete_2d}), headers={"Content-Type": "application/json"})
+
+    if r.status_code==200:
+        request_key=json.loads(r.content)['structureId']
+        user_request.elTetradoKey=request_key
+        user_request.status=3
+        user_request.save()
+        while(True):
+            r=requests.get('http://localhost:8080/v1/result/'+request_key)
+            if r.status_code==200:
+                user_request.status=4
+                result = json.loads(r.content)
+                for nucleodity in result['nucleotides']:
+                    nucleodity_entity=Nucleotide()
+                    nucleodity_entity.query_id=db_id
+                    nucleodity_entity.number=nucleodity['number']
+                    nucleodity_entity.symbol=nucleodity['shortName']
+                    nucleodity_entity.symbol=nucleodity['shortName']
+                    nucleodity_entity.chain=nucleodity['chain'] 
+                    nucleodity_entity.glycosidicBond=nucleodity['glycosidicBond'] 
+                    nucleodity_entity.name=nucleodity['fullName'] 
+                    nucleodity_entity.chi_angle=nucleodity['chi'] 
+                    nucleodity_entity.molecule=nucleodity['molecule'] 
+                    nucleodity_entity.save()
+                for helice in result['helices']:
+                    helice_entity=Helice()
+                    helice_entity.save()
+                    for quadruplex in helice['quadruplexes']:
+                        quadruplex_entity=Quadruplex()
+                        quadruplex_entity_metadata=Metadata()
+                        quadruplex_entity_metadata.tetrad_combination= ",".join(str(x) for x in quadruplex['gbaClassification'])
+                        quadruplex_entity_metadata.onz_class=quadruplex['onzm']
+                        quadruplex_entity_metadata.loopClassification=quadruplex['loopClassification']
+                        quadruplex_entity_metadata.save()
+
+                        data_file = NamedTemporaryFile()
+                        r=requests.get('http://localhost:8080/v1/varna/'+request_key)
+                        data_file.write(r.content)
+                        quadruplex_entity_metadata.varna.save(name=request_key+'.svg',content=data_file)
+                        data_file.close()
+
+                        data_file = NamedTemporaryFile()
+                        r=requests.get('http://localhost:8080/v1/r-chie/'+request_key)
+                        data_file.write(r.content)
+                        quadruplex_entity_metadata.r_chie.save(name=request_key+'.svg',content=data_file)
+                        data_file.close()
+
+                        data_file = NamedTemporaryFile()
+                        r=requests.get('http://localhost:8080/v1/draw-tetrado/'+request_key)
+                        data_file.write(r.content)
+                        quadruplex_entity_metadata.layers.save(name=request_key+'.svg',content=data_file)
+                        data_file.close()
+
+                        quadruplex_entity_metadata.save()
+                        quadruplex_entity.metadata=quadruplex_entity_metadata
+                        quadruplex_entity.save()
+                        for loop in quadruplex['loops']:
+                            quadruplex_entity_loop=Loop()
+                            quadruplex_entity_loop.type=loop['type']
+                            quadruplex_entity_loop.full_sequence=",".join(str(x) for x in loop['nucleotides'])
+                            quadruplex_entity_loop.length=len(loop['nucleotides'])
+                            quadruplex_entity_loop.save()
+                            for nucleotide in loop['nucleotides']:
+                                quadruplex_entity_loop.nucleotide.add(Nucleotide.objects.get(query_id=db_id,name=nucleotide))
+                            quadruplex_entity_loop.save()
+                            quadruplex_entity.loop.add(quadruplex_entity_loop)
+                        for tetrad in quadruplex['tetrads']:
+                            quadruplex_entity_tetrad=Tetrad()
+                            quadruplex_entity_tetrad_metadata=Metadata()
+                            quadruplex_entity_tetrad_metadata.tetrad_combination=tetrad['gbaClassification']
+                            quadruplex_entity_tetrad_metadata.planarity=tetrad['planarityDeviation']
+                            quadruplex_entity_tetrad_metadata.onz_class=tetrad['onz']
+                            quadruplex_entity_tetrad_metadata.save()
+                            quadruplex_entity_tetrad.metadata=quadruplex_entity_tetrad_metadata
+                            quadruplex_entity_tetrad.name=tetrad['id']
+                            quadruplex_entity_tetrad.query_id=db_id
+                            quadruplex_entity_tetrad.nt1=Nucleotide.objects.get(query_id=db_id,name=tetrad['nt1'])
+                            quadruplex_entity_tetrad.nt2=Nucleotide.objects.get(query_id=db_id,name=tetrad['nt2'])
+                            quadruplex_entity_tetrad.nt3=Nucleotide.objects.get(query_id=db_id,name=tetrad['nt3'])
+                            quadruplex_entity_tetrad.nt4=Nucleotide.objects.get(query_id=db_id,name=tetrad['nt4'])
+                            quadruplex_entity_tetrad.save()
+                            quadruplex_entity.tetrad.add(quadruplex_entity_tetrad)
+                        quadruplex_entity.save()
+                        helice_entity.quadruplex.add(quadruplex_entity)
+                        
+                    for tetrad_pair in helice['tetradPairs']:
+                        tetrad_pair_entity=Tetrad_Pairs()
+                        tetrad_pair_entity.tetrad1=Tetrad.objects.get(name=tetrad_pair['tetrad1'],query_id=db_id)
+                        tetrad_pair_entity.tetrad2=Tetrad.objects.get(name=tetrad_pair['tetrad2'],query_id=db_id)
+                        tetrad_pair_entity.rise=tetrad_pair['rise']
+                        tetrad_pair_entity.twist=tetrad_pair['twist']
+                        tetrad_pair_entity.strand_direction=tetrad_pair['direction']
+                        tetrad_pair_entity.save()
+                        helice_entity.tetrad_pair.add(tetrad_pair_entity)
+                    user_request.helice.add(helice_entity)    
+                user_request.save()
+                break
+            if r.status_code==500:
+                user_request.status=5
+                user_request.save()
+                break
+            time.sleep(1)
+        return True
+    else:
+        return False

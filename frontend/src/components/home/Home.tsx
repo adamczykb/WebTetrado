@@ -2,11 +2,18 @@ import logo from '../../assets/images/logo_bordered.png'
 import { Divider } from '../layout/common/Divider';
 import { RequestForm } from './RequestForm';
 import { Results } from './Results';
-
+import { useCookies } from "react-cookie";
+//@ts-ignore
+import { v4 as uuid } from 'uuid';
 
 export const Home = () => {
-
-
+    const [cookies, setCookie] = useCookies(["userId"]);
+    if(!cookies.userId){
+        setCookie("userId",uuid(),{
+            sameSite: true,
+            maxAge:3600*24*365
+          })
+    }
     return (
         <>
             <div id='introduction' className={'horizontal-center'}>
