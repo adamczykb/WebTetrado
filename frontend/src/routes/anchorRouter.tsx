@@ -17,9 +17,12 @@ const ResultAnchor = () =>{
     <Link href="#result" title="Analytics result" />
     <Link href="#two-d-structure" title="2D structure" />
     <Link href="#tetrads" title="Tetrads" />
-    <Link href="#tetrad-pairs" title="Tetrad pairs" />
     <Link href="#loops" title="Loops" />
     <Link href="#chi-angle"  title="Chi angle value and type in each nucleotide" />
+    <Link href="#tetrad-pairs" title="Tetrad pairs" />
+    <Link href="#base-pairs"  title="Base pairs" />
+    <Link href="#nucleotides"  title="Nucleotides" />
+
     </>)
 }
 const AnchorRouter: React.FC = (): ReactElement => {

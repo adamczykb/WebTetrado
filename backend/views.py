@@ -3,6 +3,8 @@ from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from backend.models import TemporaryFile, TetradoRequest
 import json,requests,uuid
+from backend.scripts.Cipher.Cryptography import HashId
+from backend.scripts.orderResultCompose import compose
 import django_rq
 import redis
 
@@ -18,8 +20,8 @@ def handle_uploaded_file(f):
     data_file.close()
     return str(n.id)
 
-def show(request):
-    return HttpResponse(content=TemporaryFile.objects.get(id=request.GET['id']).file.path,content_type='text/plain')
+# def show(request):
+#     return HttpResponse(content=TemporaryFile.objects.get(id=request.GET['id']).file.path,content_type='text/plain')
 
 
 @csrf_exempt
@@ -55,12 +57,12 @@ def adding_request(request):
     entity.save()
     redis_cursor = redis.StrictRedis(host='127.0.0.1', port='6379', db='1', password='')
     queue = django_rq.get_queue('default', connection=redis_cursor)
+
     queue.enqueue(add_to_queue, entity.id)
     entity.status=2
-
     entity.save()
-
-    return HttpResponse(content='{"orderId":"'+str(entity.id)+'"}', content_type='application/json')
+    encryptor = HashId()
+    return HttpResponse(content='{"orderId":"'+ str(entity.id)+'"}', content_type='application/json')
 
 @csrf_exempt
 def file_handler(request):
@@ -68,3 +70,6 @@ def file_handler(request):
         return HttpResponse(status=200,content='{\"id\": \"%s\"}'%(handle_uploaded_file(request.FILES['structure'])), content_type='application/json')
     else:
         return HttpResponse(status=500)
+
+def request_result(request,orderId):
+    return HttpResponse(status=200,content=compose(orderId), content_type='application/json')

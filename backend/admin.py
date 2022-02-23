@@ -1,5 +1,5 @@
 from django.contrib import admin
-from backend.models import Helice, Loop, Metadata, Nucleotide, Quadruplex, TemporaryFile, Tetrad, Tetrad_Pairs, TetradoRequest
+from backend.models import Helice, Loop, Metadata, Nucleotide, Quadruplex, TemporaryFile, Tetrad, TetradPair, TetradoRequest,BasePair
 # Register your models here.
 @admin.register(TemporaryFile)
 class TemporaryFiles(admin.ModelAdmin):
@@ -13,16 +13,16 @@ class TetradoRequest(admin.ModelAdmin):
 class Quadruplex(admin.ModelAdmin):
     list_display = ('id', 'metadata')
 
-# @admin.register(Helice)
-# class Helice(admin.ModelAdmin):
-#     list_display = ('id')
+@admin.register(BasePair)
+class Base_Pair(admin.ModelAdmin):
+    list_display = ('id','nt1','nt2','edge3','edge5','stericity')
 
 @admin.register(Loop)
 class Loop(admin.ModelAdmin):
     list_display = ('id','short_sequence','full_sequence','type','length')
 
-@admin.register(Tetrad_Pairs)
-class Tetrad_Pairs(admin.ModelAdmin):
+@admin.register(TetradPair)
+class Tetrad_Pair(admin.ModelAdmin):
     list_display = ('id','tetrad1','tetrad2','rise','twist','strand_direction')
 
 @admin.register(Tetrad)
@@ -35,4 +35,4 @@ class Nucleotide(admin.ModelAdmin):
 
 @admin.register(Metadata)
 class Metadata(admin.ModelAdmin):
-    list_display = ('molecule','method','planarity','onz_class','tetrad_combination','loopClassification','structure_dot_bracked','varna','r_chie','layers')
+    list_display = ('id','molecule','method','planarity','onz_class','tetrad_combination','loopClassification','structure_dot_bracked','varna','r_chie','layers')

@@ -26,7 +26,7 @@ export const RequestForm = () => {
     const props = {
         name: 'structure',
         multiple: false,
-        action: config.SERVER_URL+'api/upload/structure/',
+        action: config.SERVER_URL+'/api/upload/structure/',
         maxCount: 1,
         beforeUpload: (file: File) => {
             const isCifOrPdb = file.type === 'text/plain' || file.type === 'chemical/x-cif' || file.type === 'chemical/x-pdb';

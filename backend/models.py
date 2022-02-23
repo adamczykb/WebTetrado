@@ -32,14 +32,18 @@ class Nucleotide(models.Model):
     name=models.CharField(max_length=100)
     chi_angle=models.FloatField()
     molecule=models.CharField(max_length=50)
+    def __str__(self):
+        return str(self.name)
 
-class Base_Pair(models.Model):
+class BasePair(models.Model):
     id = models.AutoField(primary_key=True)
     edge3=models.CharField(max_length=20)
     edge5=models.CharField(max_length=20)
     nt1=models.ForeignKey(to=Nucleotide,related_name='nucleotide_bp_1', on_delete=models.DO_NOTHING)
     nt2=models.ForeignKey(to=Nucleotide,related_name='nucleotide_bp_2', on_delete=models.DO_NOTHING)
     stericity=models.CharField(max_length=20)
+    def __str__(self):
+        return str(self.nt1.name)+'-'+str(self.nt2.name)
 
 class Tetrad(models.Model):
     id = models.AutoField(primary_key=True)
@@ -51,8 +55,9 @@ class Tetrad(models.Model):
     nt3=models.ForeignKey(to=Nucleotide,related_name='nucleotide3', on_delete=models.DO_NOTHING)
     nt4=models.ForeignKey(to=Nucleotide,related_name='nucleotide4', on_delete=models.DO_NOTHING)
     def __str__(self):
-        return self.name
-class Tetrad_Pairs(models.Model):
+        return '('+str(self.query_id)+') '+self.name
+
+class TetradPair(models.Model):
     id = models.AutoField(primary_key=True)
     # metadata=models.ForeignKey(to=Metadata, on_delete=models.CASCADE)
     tetrad1=models.ForeignKey(to=Tetrad,related_name='tetrad1', on_delete=models.DO_NOTHING)
@@ -80,7 +85,7 @@ class Quadruplex(models.Model):
 class Helice(models.Model):
     id = models.AutoField(primary_key=True)
     quadruplex=models.ManyToManyField(Quadruplex)
-    tetrad_pair=models.ManyToManyField(Tetrad_Pairs)
+    tetrad_pair=models.ManyToManyField(TetradPair)
     def __str__(self):
             return 'Helice '+str(self.id)
 class TemporaryFile(models.Model):
@@ -114,9 +119,15 @@ class TetradoRequest(models.Model):
     stacking_mismatch=models.IntegerField()
     strict=models.BooleanField()
 
+    name =models.CharField(max_length=200) 
+    structure_method =models.CharField(max_length=200)
+    idcode=models.CharField(max_length=20)
+
     helice = models.ManyToManyField(Helice)
     timestamp=models.DateTimeField(auto_now=True)
     elTetradoKey=models.CharField(max_length=100)
-    base_pair=models.ManyToManyField(Base_Pair)
-    
+    base_pair=models.ManyToManyField(BasePair)
+
+    def __str__(self):
+            return 'Request '+str(self.id)+' ('+str(self.source)+') <'+str(self.status)+'> '
 

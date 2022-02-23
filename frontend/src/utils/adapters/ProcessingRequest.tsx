@@ -17,7 +17,7 @@ export function processingRequest(data:form_values) {
         body: JSON.stringify(data),
         headers: {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
     };
-    fetch(config.SERVER_URL + 'api/process/request/', requestOptions)
+    fetch(config.SERVER_URL + '/api/process/request/', requestOptions)
         .then(response => response.json())
         .then(response => {
             window.open('http://127.0.0.1:3000/result/'+response.orderId, '_self')
