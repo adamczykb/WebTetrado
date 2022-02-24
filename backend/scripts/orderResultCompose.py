@@ -8,7 +8,7 @@ def compose(orderId):
     try:
         tetrado_request = TetradoRequest.objects.get(id=orderId)
     except Exception:
-        return '{"status":0}'
+        return '{"status":0,"helice":[],"base_pair":[],"nucleotide":[]}'
     result['name']=tetrado_request.name
     result['status']=tetrado_request.status
     result['structure_method']=tetrado_request.structure_method
@@ -47,6 +47,7 @@ def compose(orderId):
             quadruplex_single['layers']=quadruplex.metadata.layers.url  
             quadruplex_single['tetrads_no']=quadruplex.tetrad.count()
             quadruplex_single['tetrad']=[]
+            quadruplex_single['chi_angle_value']=[]
             counter_tetrad=1
             for tetrad in quadruplex.tetrad.all():
                 tetrad_quadruplex_single={}
@@ -54,16 +55,24 @@ def compose(orderId):
                 tetrad_quadruplex_single['name']=tetrad.name
                 tetrad_quadruplex_single['sequence']=tetrad.nt1.symbol+tetrad.nt2.symbol+tetrad.nt3.symbol+tetrad.nt4.symbol
                 tetrad_quadruplex_single['onz_class']=tetrad.metadata.onz_class
-                tetrad_quadruplex_single['planarity']=tetrad.metadata.planarity
+                tetrad_quadruplex_single['planarity']=format('%.2f'%tetrad.metadata.planarity)
                 quadruplex_single['tetrad'].append(tetrad_quadruplex_single)
+                chi_angle_value_tetrad_quadruplex_single={}
+                chi_angle_value_tetrad_quadruplex_single['number']=counter_tetrad
+                chi_angle_value_tetrad_quadruplex_single['nt1']=str(format('%.2f'%tetrad.nt1.chi_angle))+ '° / '+tetrad.nt1.glycosidicBond
+                chi_angle_value_tetrad_quadruplex_single['nt2']=str(format('%.2f'%tetrad.nt2.chi_angle))+ '° / '+tetrad.nt2.glycosidicBond
+                chi_angle_value_tetrad_quadruplex_single['nt3']=str(format('%.2f'%tetrad.nt3.chi_angle))+ '° / '+tetrad.nt3.glycosidicBond
+                chi_angle_value_tetrad_quadruplex_single['nt4']=str(format('%.2f'%tetrad.nt4.chi_angle))+ '° / '+tetrad.nt4.glycosidicBond
+                quadruplex_single['chi_angle_value'].append(chi_angle_value_tetrad_quadruplex_single)
                 counter_tetrad+=1
+                
             counter_loop=1
             quadruplex_single['loop']=[]
             for loop in quadruplex.loop.all():
                 loop_quadruplex_single={}
                 loop_quadruplex_single['number']=counter_loop
-                loop_quadruplex_single['short_sequence']=loop.short_sequence
-                loop_quadruplex_single['full_sequence']=loop.full_sequence
+                loop_quadruplex_single['short_sequence']=''.join([nucleotide.symbol for nucleotide in loop.nucleotide.all()])
+                loop_quadruplex_single['full_sequence']=', '.join([nucleotide.name for nucleotide in loop.nucleotide.all()])
                 loop_quadruplex_single['length']=loop.length
                 loop_quadruplex_single['type']=loop.type
                 quadruplex_single['loop'].append(loop_quadruplex_single)
@@ -75,8 +84,8 @@ def compose(orderId):
             tetrad_pair_single={}
             tetrad_pair_single['number']=counter
             tetrad_pair_single['pair']=tetrad_pair.tetrad1.name+' | '+tetrad_pair.tetrad2.name
-            tetrad_pair_single['rise']=tetrad_pair.rise
-            tetrad_pair_single['twist']=tetrad_pair.twist
+            tetrad_pair_single['rise']=format('%.2f'%tetrad_pair.rise)
+            tetrad_pair_single['twist']=format('%.2f'%tetrad_pair.twist)
             tetrad_pair_single['strand_direction']=tetrad_pair.strand_direction
             helice_result['tetrad_pair'].append(tetrad_pair_single)
             counter+=1
@@ -90,7 +99,7 @@ def compose(orderId):
         nucleotide_single['symbol']=nucleotide.symbol
         nucleotide_single['name']=nucleotide.name
         nucleotide_single['glycosidicBond']=nucleotide.glycosidicBond
-        nucleotide_single['chi_angle']=nucleotide.chi_angle
+        nucleotide_single['chi_angle']=format('%.2f'%nucleotide.chi_angle)
         result['nucleotide'].append(nucleotide_single)
         counter+=1
     return json.dumps(result)

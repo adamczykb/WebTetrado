@@ -16,12 +16,10 @@ def handle_uploaded_file(f):
         data_file.write(chunk)
     n = TemporaryFile()
     n.file.save(name=str(uuid.uuid1()),content=data_file)
+    n.file_extension=f.name.split('.')[-1]
     n.save()
     data_file.close()
     return str(n.id)
-
-# def show(request):
-#     return HttpResponse(content=TemporaryFile.objects.get(id=request.GET['id']).file.path,content_type='text/plain')
 
 
 @csrf_exempt
@@ -40,6 +38,7 @@ def adding_request(request):
         entity.source=2
         temp_file=TemporaryFile.objects.get(id=body['fileId'])
         entity.structure_body.save(name= temp_file.file.name.split('/')[-1],content=temp_file.file.open('rb'))
+        entity.file_extension=temp_file.file_extension
         TemporaryFile.objects.get(id=body['fileId']).delete()
     elif 'rscbPdbId' in body and len(body['rscbPdbId'])>0:
         url = 'http://files.rcsb.org/download/' + body['rscbPdbId'] + '.cif'

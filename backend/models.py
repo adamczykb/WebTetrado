@@ -68,8 +68,6 @@ class TetradPair(models.Model):
 
 class Loop(models.Model):
     id = models.AutoField(primary_key=True)
-    short_sequence=models.CharField(max_length=100)
-    full_sequence=models.CharField(max_length=1000)
     length=models.IntegerField()
     type=models.CharField(max_length=50)
     nucleotide=models.ManyToManyField(Nucleotide)
@@ -90,9 +88,10 @@ class Helice(models.Model):
             return 'Helice '+str(self.id)
 class TemporaryFile(models.Model):
     id = models.AutoField(primary_key=True)
-    file=models.FileField(upload_to='uploads/%Y/%m/') #,storage=FileSystemStorage(location=str(BASE_DIR)+'/tmp')
+    file=models.FileField(upload_to='uploads/')
+    file_extension=models.CharField(max_length=20)
     timestamp = models.DateTimeField(auto_now=True)
-
+    
 @receiver(pre_delete,sender=TemporaryFile)
 def remove_file(**kwargs):
     instance = kwargs.get('instance')
@@ -114,6 +113,7 @@ class TetradoRequest(models.Model):
     source = models.IntegerField(choices=Sources.choices)
     status = models.IntegerField(choices=Statuses.choices)
     structure_body=models.FileField(upload_to='files/structures/')
+    file_extension=models.CharField(max_length=20)
     complete_2d=models.BooleanField()
     no_reorder=models.BooleanField()
     stacking_mismatch=models.IntegerField()

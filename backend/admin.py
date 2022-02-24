@@ -1,9 +1,9 @@
 from django.contrib import admin
 from backend.models import Helice, Loop, Metadata, Nucleotide, Quadruplex, TemporaryFile, Tetrad, TetradPair, TetradoRequest,BasePair
-# Register your models here.
+
 @admin.register(TemporaryFile)
 class TemporaryFiles(admin.ModelAdmin):
-    list_display = ('id', 'file','timestamp')
+    list_display = ('id', 'file','file_extension','timestamp')
 
 @admin.register(TetradoRequest)
 class TetradoRequest(admin.ModelAdmin):
@@ -19,7 +19,7 @@ class Base_Pair(admin.ModelAdmin):
 
 @admin.register(Loop)
 class Loop(admin.ModelAdmin):
-    list_display = ('id','short_sequence','full_sequence','type','length')
+    list_display = ('id','type','length')
 
 @admin.register(TetradPair)
 class Tetrad_Pair(admin.ModelAdmin):
