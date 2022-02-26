@@ -5,8 +5,9 @@
   "main": "src/index.tsx",
   "scripts": {
     "start": "concurrently --kill-others \"less-watch-compiler --config less-watcher.config.json\" \"react-scripts start\"",
-    "less": "lessc --js src/assets/less/App.less src/assets/css/App.css ",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "less": "less-watch-compiler --config less-watcher-docker.config.json",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "react-scripts build"
   },
   "author": "Bartosz Adamczyk",
   "license": "ISC",
@@ -39,7 +40,6 @@
     ]
   },
   "devDependencies": {
-    "compile-less-cli": "^1.8.11",
     "concurrently": "^7.0.0",
     "less": "^4.1.2",
     "less-watch-compiler": "^1.16.3",

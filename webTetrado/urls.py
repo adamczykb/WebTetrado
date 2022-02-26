@@ -16,14 +16,20 @@ Including another URLconf
 from django.http import HttpResponse
 from django.contrib import admin
 from django.urls import path,include,re_path
-
+from django.contrib.staticfiles.storage import staticfiles_storage
 from django.conf.urls.static import static
 from django.conf import settings
+from django.views.generic import RedirectView
+
 import backend.urls
 
 
 urlpatterns = [
-    path('api/',include(backend.urls)),
+    re_path(r'^favicon.ico$', RedirectView.as_view(url=staticfiles_storage.url('favicon.ico'))),
+    re_path(r'^logo192.png$', RedirectView.as_view(url=staticfiles_storage.url('logo192.png'))),
+    re_path(r'^manifest.json$', RedirectView.as_view(url=staticfiles_storage.url('manifest.json'))),
+    re_path(r'^asset-manifest.json$', RedirectView.as_view(url=staticfiles_storage.url('asset-manifest.json'))),
+    path('',include(backend.urls)),
     path('admin/rq/', include('django_rq.urls')),
     path('admin/', admin.site.urls),
 

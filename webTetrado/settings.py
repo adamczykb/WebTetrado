@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
 from pathlib import Path
-
+import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -24,7 +24,7 @@ SECRET_KEY = 'django-insecure-)264wld6f3%_a^kz%*q(n0d$38b-4-bm&*t^dm+xqf*!k8_+2n
 ENCRYPT_KEY = b'WkdGMFlWOHhSRFU1Q2lNZ0NsOWxiblJ5ZVM1cFpDQWc='
 SALT=b'\xec\xc4\xf2\xd1\x13\xdf5\xb0n\x12\x9b\xdb\xd5@G!'
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 CORS_ALLOW_ALL_ORIGINS = True # If this is used then `CORS_ALLOWED_ORIGINS` will not have any effect
@@ -43,7 +43,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'corsheaders',
     "django_rq",
-    'backend'
+    'backend',
+    'frontend'
 ]
 
 MIDDLEWARE = [
@@ -82,12 +83,26 @@ WSGI_APPLICATION = 'webTetrado.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+if DEBUG:
+    PROCESSOR_URL = 'http://localhost:8080'
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
     }
-}
+else:
+    PROCESSOR_URL = 'http://processor:8080'
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': 'webtetrado',
+            'USER': 'webtetrado',
+            'PASSWORD': 'pylSnieguZajaczek8<',
+            'HOST': 'db',
+            'PORT': '',
+        }
+    }
 
 
 # Password validation
@@ -152,7 +167,20 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-CACHES = {
+
+
+if DEBUG:
+    RQ_QUEUES = {
+        'default': {
+            'HOST': 'localhost',
+            'PORT': 6379,
+            'DB': 0,
+            'PASSWORD': '',
+            'DEFAULT_TIMEOUT': 3600,
+            'USE_REDIS_CACHE': 'default',
+        },
+    }
+    CACHES = {
     'default': {
         'BACKEND': 'redis_cache.cache.RedisCache',
         'LOCATION': 'localhost:6379',
@@ -161,18 +189,45 @@ CACHES = {
             'MAX_ENTRIES': 5000,
         },
     },
+    }
+else:
+    RQ = {
+    'host': 'redis',
+    'db': 0,
 }
-
-RQ_QUEUES = {
+    RQ_QUEUES = {
+        'default': {
+            'HOST': 'redis',
+            'PORT': 6379,
+            'DB': 0,
+            'PASSWORD': '',
+            'DEFAULT_TIMEOUT': 3600,
+            'USE_REDIS_CACHE': 'default',
+        },
+    }
+    CACHES = {
     'default': {
-        'HOST': 'localhost',
-        'PORT': 6379,
-        'DB': 0,
-        'PASSWORD': '',
-        'DEFAULT_TIMEOUT': 3600,
-        'USE_REDIS_CACHE': 'default',
+        'BACKEND': 'redis_cache.cache.RedisCache',
+        'LOCATION': 'redis:6379',
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+            'MAX_ENTRIES': 5000,
+        },
     },
-}
+    }
 
 MEDIA_ROOT = str(BASE_DIR) + '/media/'
 MEDIA_URL = '/media/'
+STATIC_URL = '/static/'
+REACT_APP_DIR = os.path.join(BASE_DIR, 'frontend')
+
+if DEBUG:
+    STATICFILES_DIRS = [
+        os.path.join(REACT_APP_DIR, 'build', 'static'),
+        os.path.join(BASE_DIR, 'static')
+    ]
+else:
+    STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+    STATICFILES_DIRS = [
+        os.path.join(REACT_APP_DIR, 'build', 'static'),
+    ]

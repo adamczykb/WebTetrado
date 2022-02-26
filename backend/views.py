@@ -2,13 +2,12 @@ from django.core.files.temp import NamedTemporaryFile
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from backend.models import TemporaryFile, TetradoRequest
-import json,requests,uuid
+from webTetrado import settings
 from backend.scripts.Cipher.Cryptography import HashId
-from backend.scripts.orderResultCompose import compose
-import django_rq
-import redis
-
+from django.views.decorators.csrf import ensure_csrf_cookie
 from backend.scripts.elTetradoProcessing import add_to_queue
+from backend.scripts.orderResultCompose import compose
+import django_rq, redis, os, logging, json, requests, uuid
 
 def handle_uploaded_file(f):
     data_file = NamedTemporaryFile()
@@ -54,7 +53,10 @@ def adding_request(request):
             return HttpResponse(status=500)
 
     entity.save()
-    redis_cursor = redis.StrictRedis(host='127.0.0.1', port='6379', db='1', password='')
+    if settings.DEBUG:
+        redis_cursor = redis.StrictRedis(host='127.0.0.1', port='6379', db='1', password='')
+    else:
+        redis_cursor = redis.StrictRedis(host='redis', port='6379', db='1', password='')
     queue = django_rq.get_queue('default', connection=redis_cursor)
 
     queue.enqueue(add_to_queue, entity.id)
@@ -72,3 +74,12 @@ def file_handler(request):
 
 def request_result(request,orderId):
     return HttpResponse(status=200,content=compose(orderId), content_type='application/json')
+
+@ensure_csrf_cookie
+def index(request):
+    try:
+        with open(os.path.join(settings.REACT_APP_DIR, 'build', 'index.html')) as f:
+            return HttpResponse(f.read())
+    except FileNotFoundError:
+        logging.exception('Production build of app not found')
+        return HttpResponse(status=501)

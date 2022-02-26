@@ -1,28 +1,51 @@
 version: "3.9"
 services:
-
+  web:
+    build: .
+    depends_on:
+      - db
+      - redis
+      - processor
+    restart: always
+    volumes:
+      - .:/home/badamczyk/webtetrado
+      - ./static:/home/badamczyk/webtetrado/static
+      - ./media:/home/badamczyk/webtetrado/media
+    entrypoint: ./docker-entrypoint.sh
+    networks:
+      - web_network
+      - db_network
+      - redis_network
+      - processor_network
+    links:
+      - redis
+      - processor
+      
   processor:
     image: webtetrado
-    ports:
-      - 8080:8080
     environment:
       - WORKDIR=/mnt/workdir
       - QBASE_JAR=/qbase-backend-1.0-SNAPSHOT-jar-with-dependencies.jar
       - LOGLEVEL=INFO
     volumes:
       - workdir:/mnt/workdir
+    networks:
+      - processor_network
+    expose:
+      - "8080"
+
   nginx:
       build:
         context: ./nginx
       ports:
-        - 80:8080
+        - 8080:8080
       depends_on:
         - web
       volumes:
         - ./static:/home/solo/webtetrado/static
         - ./media:/home/solo/webtetrado/media
       networks:
-        - rnasolo
+        - web_network
   db:
     image: postgres:latest
     restart: always
@@ -37,9 +60,7 @@ services:
     image: redis:alpine
     restart: always
     expose:
-      - '6379'
-    ports:
-      - '6379:6379'
+      - "6379"
     networks:
       - redis_network
 
@@ -48,9 +69,11 @@ volumes:
   pgdata:
 
 networks:
-  webtetrado:
+  web_network:
     driver: bridge
   db_network:
     driver: bridge
   redis_network:
+    driver: bridge
+  processor_network:
     driver: bridge

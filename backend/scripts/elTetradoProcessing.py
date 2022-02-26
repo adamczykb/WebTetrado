@@ -3,6 +3,7 @@ import time
 from backend.models import  BasePair, Helice, Loop, Metadata, Nucleotide, Quadruplex, Tetrad, TetradPair, TetradoRequest
 import requests, json,base64
 from Bio.PDB import PDBParser,MMCIFParser
+from webTetrado.settings import PROCESSOR_URL
 
 def add_base_pairs(base_pairs,db_id,user_request):
     base_pair_tetrad=set([])
@@ -48,6 +49,7 @@ def add_tetrads(quadruplexes,db_id,quadruplex_entity):
         quadruplex_entity_tetrad.nt4=Nucleotide.objects.get(query_id=db_id,name=tetrad['nt4'])
         quadruplex_entity_tetrad.save()
         quadruplex_entity.tetrad.add(quadruplex_entity_tetrad)
+
 def add_loops(loops,db_id,quadruplex_entity):
     for loop in loops:
         quadruplex_entity_loop=Loop()
@@ -78,12 +80,11 @@ def add_quadruplexes(quadruplexes,data,db_id,helice_entity,request_key):
         quadruplex_entity_metadata.onz_class=quadruplex['onzm']
         quadruplex_entity_metadata.loopClassification=quadruplex['loopClassification']
         quadruplex_entity_metadata.molecule = data.header['head'].upper()
-
         quadruplex_entity_metadata.save()
 
         while(True):
             data_file = NamedTemporaryFile()
-            r=requests.get('http://localhost:8080/v1/varna/'+request_key)
+            r=requests.get(PROCESSOR_URL+'/v1/varna/'+request_key)
             data_file.write(r.content)
             quadruplex_entity_metadata.varna.save(name=request_key+'.svg',content=data_file)
             data_file.close()
@@ -93,7 +94,7 @@ def add_quadruplexes(quadruplexes,data,db_id,helice_entity,request_key):
 
         while(True):
             data_file = NamedTemporaryFile()
-            r=requests.get('http://localhost:8080/v1/r-chie/'+request_key)
+            r=requests.get(PROCESSOR_URL+'/v1/r-chie/'+request_key)
             data_file.write(r.content)
             quadruplex_entity_metadata.r_chie.save(name=request_key+'.svg',content=data_file)
             data_file.close()
@@ -103,7 +104,7 @@ def add_quadruplexes(quadruplexes,data,db_id,helice_entity,request_key):
 
         while(True):    
             data_file = NamedTemporaryFile()
-            r=requests.get('http://localhost:8080/v1/draw-tetrado/'+request_key)
+            r=requests.get(PROCESSOR_URL+'/v1/draw-tetrado/'+request_key)
             data_file.write(r.content)
             quadruplex_entity_metadata.layers.save(name=request_key+'.svg',content=data_file)
             data_file.close()
@@ -122,8 +123,7 @@ def add_quadruplexes(quadruplexes,data,db_id,helice_entity,request_key):
 def add_to_queue(db_id):
     user_request = TetradoRequest.objects.get(id=db_id)
     base64file = base64.b64encode((open(user_request.structure_body.path,'rb').read()))
-
-    r = requests.post('http://localhost:8080/v1/structure', data=json.dumps({"pdb_mmcif_b64": str(base64file.decode('utf-8')),"strict":user_request.strict,"stackingMismatch":user_request.stacking_mismatch,"noReorder":user_request.no_reorder,"complete2D":user_request.complete_2d}), headers={"Content-Type": "application/json"})
+    r = requests.post(PROCESSOR_URL+'/v1/structure', data=json.dumps({"pdb_mmcif_b64": str(base64file.decode('utf-8')),"strict":user_request.strict,"stackingMismatch":user_request.stacking_mismatch,"noReorder":user_request.no_reorder,"complete2D":user_request.complete_2d}), headers={"Content-Type": "application/json"})
 
     if r.status_code==200:
         request_key=json.loads(r.content)['structureId']
@@ -148,7 +148,7 @@ def add_to_queue(db_id):
     
         user_request.save()
         while(True):
-            r=requests.get('http://localhost:8080/v1/result/'+request_key)
+            r=requests.get(PROCESSOR_URL+'/v1/result/'+request_key)
             if r.status_code==200:
                 user_request.status=4
                 result = json.loads(r.content)
