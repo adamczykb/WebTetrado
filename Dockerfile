@@ -1,7 +1,7 @@
 FROM ubuntu:20.04
 FROM python:3.10
 FROM node:17
-
+USER root
 ENV PYTHONUNBUFFERED 1
 RUN apt-get update && apt-get install -y python3-pip
 RUN mkdir -p /home/badamczyk/webtetrado
@@ -18,9 +18,9 @@ WORKDIR /home/badamczyk/webtetrado/frontend
 RUN npm install
 WORKDIR /home/badamczyk/webtetrado
 EXPOSE 8000
+RUN python3 manage.py collectstatic --no-input
+
 WORKDIR /home/badamczyk/webtetrado/build/
 RUN ./build_front.sh
 WORKDIR /home/badamczyk/webtetrado
 # RUN mkdir /home/badamczyk/webtetrado/supervisor
-
-CMD ["supervisord"]

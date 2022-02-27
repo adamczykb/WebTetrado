@@ -2,6 +2,7 @@ from django.core.files.temp import NamedTemporaryFile
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from backend.models import TemporaryFile, TetradoRequest
+from backend.scripts.userRequestList import user_request_list
 from webTetrado import settings
 from backend.scripts.Cipher.Cryptography import HashId
 from django.views.decorators.csrf import ensure_csrf_cookie
@@ -14,7 +15,7 @@ def handle_uploaded_file(f):
     for chunk in f.chunks():
         data_file.write(chunk)
     n = TemporaryFile()
-    n.file.save(name=str(uuid.uuid1()),content=data_file)
+    n.file.save(name=f.name,content=data_file)
     n.file_extension=f.name.split('.')[-1]
     n.save()
     data_file.close()
@@ -22,7 +23,7 @@ def handle_uploaded_file(f):
 
 
 @csrf_exempt
-def adding_request(request):
+def user_request_setup_action(request):
     body_unicode = request.body.decode('utf-8')
     body = json.loads(body_unicode)
     entity = TetradoRequest()
@@ -66,14 +67,17 @@ def adding_request(request):
     return HttpResponse(content='{"orderId":"'+ str(entity.id)+'"}', content_type='application/json')
 
 @csrf_exempt
-def file_handler(request):
+def file_handler_entity(request):
     if(request.FILES['structure']):
         return HttpResponse(status=200,content='{\"id\": \"%s\"}'%(handle_uploaded_file(request.FILES['structure'])), content_type='application/json')
     else:
         return HttpResponse(status=500)
 
-def request_result(request,orderId):
+def user_request_result_entity(request,orderId):
     return HttpResponse(status=200,content=compose(orderId), content_type='application/json')
+
+def user_request_list_entity(request, userId):
+    return HttpResponse(status=200,content=json.dumps(user_request_list(userId)), content_type='application/json')
 
 @ensure_csrf_cookie
 def index(request):
