@@ -13,6 +13,7 @@ def compose(orderId):
     result['status']=tetrado_request.status
     result['structure_method']=tetrado_request.structure_method
     result['idcode']=tetrado_request.idcode
+    result['structure_file']=tetrado_request.structure_body.url
 
     result['base_pair']=[]
     counter=1

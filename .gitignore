@@ -181,3 +181,4 @@ sketch
 
 # End of https://www.toptal.com/developers/gitignore/api/react,node,visualstudiocode
 db.sqlite3
+db.sqlite3

@@ -5,6 +5,7 @@ import { Results } from './Results';
 import { useCookies } from "react-cookie";
 //@ts-ignore
 import { v4 as uuid } from 'uuid';
+import { MolStarWrapper } from '../molstar/MolStarWrapper';
 
 export const Home = () => {
     const [cookies, setCookie] = useCookies(["userId"]);
@@ -32,6 +33,7 @@ export const Home = () => {
             <Divider/>
             <h1 id='check-your-result' style={{ padding: '20px 0', textAlign: 'center', fontSize: '32px' }}>Check your result</h1>
             <Results />
+            
         </>)
 
 }

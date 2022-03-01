@@ -69,6 +69,7 @@ export type result_values = {
     name: string;
     status: number;
     structure_method: string;
+    structure_file:string;
     idcode: string;
     base_pair: base_pair[];
     helice: helice[];
