@@ -15,7 +15,7 @@ const HomeAnchor = () =>{
 const ResultAnchor = () =>{
     return (<> 
     <Link href="#result" title="Analytics result" />
-    <Link href="#two-d-structure" title="2D structure" />
+    <Link href="#two-d-structure" title="Structure visualizations" />
     <Link href="#tetrads" title="Tetrads" />
     <Link href="#loops" title="Loops" />
     <Link href="#chi-angle"  title="Chi angle value and type in each nucleotide" />

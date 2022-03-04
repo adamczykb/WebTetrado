@@ -13,12 +13,14 @@ import { TetradPairTable } from "./TetradPairTable";
 import { BasePairTable } from "./BasePairTable";
 import { NucleotideTable } from "./NucleotideTable";
 import { processingResponse } from "../../utils/adapters/ProcessingResponse";
+import config from '../../config.json'
 
 export const Result = () => {
   let result: result_values = {
     name: "",
     status: 0,
     structure_method: "",
+    structure_file: "",
     idcode: "",
     base_pair: [],
     helice: [],
@@ -163,7 +165,7 @@ export const Result = () => {
                         ..([..([..-..........-..)]..)]..-..........
                         <br />
                       </p>
-                      {StructureVisualisation(v)}
+                      {StructureVisualisation(v,resultSet.structure_file,resultSet.structure_file.split('.').splice(-1)[0])}
                       <Divider />
                       {TetradTable(v.tetrad)}
                       <Divider />

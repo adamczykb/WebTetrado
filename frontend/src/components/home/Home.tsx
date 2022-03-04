@@ -32,6 +32,7 @@ export const Home = () => {
             <Divider/>
             <h1 id='check-your-result' style={{ padding: '20px 0', textAlign: 'center', fontSize: '32px' }}>Check your result</h1>
             <Results />
+            
         </>)
 
 }

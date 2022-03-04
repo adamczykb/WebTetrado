@@ -2,6 +2,7 @@ import { Descriptions, Button, Image, message } from "antd";
 import config from "../../config.json";
 import { DownloadOutlined } from "@ant-design/icons";
 import { quadruplex } from "../../types/RestultSet";
+import { MolStarWrapper } from "../molstar/MolStarWrapper";
 
 function downloadFile(type: any, url: any) {
   const requestOptions = {
@@ -16,12 +17,12 @@ function downloadFile(type: any, url: any) {
       let url=  URL.createObjectURL(blob);
       let pom = document.createElement('a');
       pom.setAttribute('href',url)
-      pom.setAttribute('download', type+'.svg');
+      pom.setAttribute('download', type);
       pom.click(); 
     })
     .catch((error) => console.log(error));
 }
-export const StructureVisualisation = (data: quadruplex) => {
+export const StructureVisualisation = (data: quadruplex,structure_file:string,extension:string) => {
   return (
     <Descriptions
       bordered
@@ -41,7 +42,7 @@ export const StructureVisualisation = (data: quadruplex) => {
             style={{ marginTop: "15px" }}
             size={"large"}
             onClick={() =>
-              downloadFile("varna", config.SERVER_URL + data.varna)
+              downloadFile("varna.svg", config.SERVER_URL + data.varna)
             }
           >
             Download
@@ -62,7 +63,7 @@ export const StructureVisualisation = (data: quadruplex) => {
             style={{ marginTop: "15px" }}
             size={"large"}
             onClick={() =>
-              downloadFile("r_chie", config.SERVER_URL + data.r_chie)
+              downloadFile("r_chie.svg", config.SERVER_URL + data.r_chie)
             }
           >
             Download
@@ -83,19 +84,17 @@ export const StructureVisualisation = (data: quadruplex) => {
             style={{ marginTop: "15px" }}
             size={"large"}
             onClick={() =>
-              downloadFile("layers", config.SERVER_URL + data.layers)
+              downloadFile("layers.svg", config.SERVER_URL + data.layers)
             }
           >
             Download
           </Button>
         </div>
       </Descriptions.Item>
-      <Descriptions.Item label="LiteMol" className="two-d-description-item">
-        <div className="blure">
-          <Image
-            className="two-d-image"
-            src={"https://onquadro.cs.put.poznan.pl/static/pymol/Q111.png"}
-          />
+      {structure_file!=''?
+      <Descriptions.Item label="Mol*" className="two-d-description-item">
+        <div >
+      <MolStarWrapper structure_file={config.SERVER_URL + structure_file}/>
           <br />
           <Button
             type="primary"
@@ -103,11 +102,14 @@ export const StructureVisualisation = (data: quadruplex) => {
             icon={<DownloadOutlined />}
             style={{ marginTop: "15px" }}
             size={"large"}
+            onClick={() =>
+              downloadFile("structure."+extension, config.SERVER_URL + structure_file)
+            }
           >
             Download
           </Button>
         </div>
-      </Descriptions.Item>
+      </Descriptions.Item>:<></>}
     </Descriptions>
   );
 };

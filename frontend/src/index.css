@@ -42,3 +42,8 @@ table {
     white-space: -moz-pre-wrap; /* Firefox */
     word-wrap: break-word; /* IE */
 }
+.msp-plugin{
+    width: 100%;
+    height: 500px; 
+    position: relative;
+}

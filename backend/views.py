@@ -8,7 +8,7 @@ from backend.scripts.Cipher.Cryptography import HashId
 from django.views.decorators.csrf import ensure_csrf_cookie
 from backend.scripts.elTetradoProcessing import add_to_queue
 from backend.scripts.orderResultCompose import compose
-import django_rq, redis, os, logging, json, requests, uuid
+import django_rq, redis, os, logging, json, requests
 
 def handle_uploaded_file(f):
     data_file = NamedTemporaryFile()
@@ -47,6 +47,7 @@ def user_request_setup_action(request):
             data_file = NamedTemporaryFile()
             data_file.write(r.content)
             entity.source=1
+            entity.file_extension='cif'
             entity.structure_body.save(name= body['rscbPdbId'],content=data_file)
         else:
             return HttpResponse(status=500)
@@ -67,16 +68,16 @@ def user_request_setup_action(request):
     return HttpResponse(content='{"orderId":"'+ str(entity.id)+'"}', content_type='application/json')
 
 @csrf_exempt
-def file_handler_entity(request):
+def file_handler_action(request):
     if(request.FILES['structure']):
         return HttpResponse(status=200,content='{\"id\": \"%s\"}'%(handle_uploaded_file(request.FILES['structure'])), content_type='application/json')
     else:
         return HttpResponse(status=500)
 
-def user_request_result_entity(request,orderId):
+def user_request_result_action(request,orderId):
     return HttpResponse(status=200,content=compose(orderId), content_type='application/json')
 
-def user_request_list_entity(request, userId):
+def user_request_list_action(request, userId):
     return HttpResponse(status=200,content=json.dumps(user_request_list(userId)), content_type='application/json')
 
 @ensure_csrf_cookie
