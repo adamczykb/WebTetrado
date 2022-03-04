@@ -11,7 +11,8 @@ WORKDIR /home/badamczyk/webtetrado/
 COPY . /home/badamczyk/webtetrado/
 
 RUN apt-get install supervisor
-
+RUN systemctl enable snapd
+RUN systemctl start snapd
 RUN snap install --classic certbot
 RUN ln -s /snap/bin/certbot /usr/bin/certbot
 RUN ufw allow 'Nginx Full'
