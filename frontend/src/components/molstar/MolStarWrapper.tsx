@@ -7,23 +7,15 @@ import { createPluginUI } from "molstar/lib/mol-plugin-ui/index";
 import { PluginConfig } from "molstar/lib/mol-plugin/config";
 import { PluginUIContext } from "molstar/lib/mol-plugin-ui/context";
 
-import "./molstar.css";
-import { CustomElementProperty } from "molstar/lib/mol-model-props/common/custom-element-property";
+import "molstar/build/viewer/molstar.css";
 import {
-  Model,
-  ElementIndex,
-  StructureSelection,
   StructureElement,
 } from "molstar/lib/mol-model/structure";
-import { Color } from "molstar/lib/mol-util/color";
-import { isPositionLocation } from "molstar/lib/mol-geo/util/location-iterator";
-import { Vec3 } from "molstar/lib/mol-math/linear-algebra";
 import { ColorTheme } from "molstar/lib/mol-theme/color";
 import { ThemeDataContext } from "molstar/lib/mol-theme/theme";
 import { ColorNames } from "molstar/lib/mol-util/color/names";
 import { ParamDefinition as PD } from "molstar/lib/mol-util/param-definition";
-import { Script } from "molstar/lib/mol-script/script";
-import Column from "antd/lib/table/Column";
+
 
 
 export const StructureQualityReportColorThemeParams = {
