@@ -47,6 +47,7 @@ def user_request_setup_action(request):
             data_file = NamedTemporaryFile()
             data_file.write(r.content)
             entity.source=1
+            entity.file_extension='cif'
             entity.structure_body.save(name= body['rscbPdbId'],content=data_file)
         else:
             return HttpResponse(status=500)

@@ -165,7 +165,7 @@ export const Result = () => {
                         ..([..([..-..........-..)]..)]..-..........
                         <br />
                       </p>
-                      {StructureVisualisation(v,config.SERVER_URL+resultSet.structure_file,resultSet.structure_file.split('.').splice(-1)[0])}
+                      {StructureVisualisation(v,resultSet.structure_file,resultSet.structure_file.split('.').splice(-1)[0])}
                       <Divider />
                       {TetradTable(v.tetrad)}
                       <Divider />

@@ -5,7 +5,6 @@ import { Results } from './Results';
 import { useCookies } from "react-cookie";
 //@ts-ignore
 import { v4 as uuid } from 'uuid';
-import { MolStarWrapper } from '../molstar/MolStarWrapper';
 
 export const Home = () => {
     const [cookies, setCookie] = useCookies(["userId"]);

@@ -94,7 +94,7 @@ export const StructureVisualisation = (data: quadruplex,structure_file:string,ex
       {structure_file!=''?
       <Descriptions.Item label="Mol*" className="two-d-description-item">
         <div >
-      <MolStarWrapper structure_file={structure_file}/>
+      <MolStarWrapper structure_file={config.SERVER_URL + structure_file}/>
           <br />
           <Button
             type="primary"
