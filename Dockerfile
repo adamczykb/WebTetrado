@@ -1,5 +1,6 @@
 FROM ubuntu:20.04
 FROM python:3.10
+FROM node:17
 
 ENV PYTHONUNBUFFERED 1
 RUN apt-get update && apt-get install -y python3-pip curl
