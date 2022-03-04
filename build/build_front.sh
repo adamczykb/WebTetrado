@@ -1,5 +1,5 @@
-rm ../static/* -R
 
+rm ../static/* -R
 cd ../frontend
 npm run less 
 npm run build --scripts-prepend-node-path=auto;
