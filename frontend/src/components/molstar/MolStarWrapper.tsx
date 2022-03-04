@@ -7,7 +7,7 @@ import { createPluginUI } from "molstar/lib/mol-plugin-ui/index";
 import { PluginConfig } from "molstar/lib/mol-plugin/config";
 import { PluginUIContext } from "molstar/lib/mol-plugin-ui/context";
 
-import "../../assets/css/molstar.css";
+import "./molstar.css";
 import { CustomElementProperty } from "molstar/lib/mol-model-props/common/custom-element-property";
 import {
   Model,
