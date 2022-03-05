@@ -16,6 +16,7 @@ export const RequestForm = () => {
       complete2d: false,
       noReorder: false,
       stackingMatch: 2,
+      g4Limited:false,
       strict: false,
     },
   };
@@ -159,6 +160,23 @@ export const RequestForm = () => {
                   settings: {
                     ...formValues.settings,
                     noReorder: !formValues.settings.noReorder,
+                  },
+                })
+              }
+            />
+          </Form.Item>
+          <Form.Item label="G4-limited search" valuePropName="checked">
+            <Switch
+              size="small"
+              checkedChildren="Yes"
+              unCheckedChildren="No"
+              defaultChecked
+              onChange={() =>
+                setFormValues({
+                  ...formValues,
+                  settings: {
+                    ...formValues.settings,
+                    g4Limited: !formValues.settings.g4Limited,
                   },
                 })
               }

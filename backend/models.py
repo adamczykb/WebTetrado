@@ -118,6 +118,7 @@ class TetradoRequest(models.Model):
     no_reorder=models.BooleanField()
     stacking_mismatch=models.IntegerField()
     strict=models.BooleanField()
+    g4_limited=models.BooleanField()
 
     name =models.CharField(max_length=200) 
     structure_method =models.CharField(max_length=200)

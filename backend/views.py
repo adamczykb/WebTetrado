@@ -32,6 +32,7 @@ def user_request_setup_action(request):
     entity.no_reorder=body['settings']['noReorder']
     entity.strict=body['settings']['strict']
     entity.stacking_mismatch=body['settings']['stackingMatch']
+    entity.g4_limited=body['settings']['g4Limited']
     entity.status=1
 
     if 'fileId' in body and len(body['fileId'])>0:
