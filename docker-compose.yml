@@ -39,11 +39,13 @@ services:
         context: ./nginx
       ports:
         - 80:8080
+        - 443:443
       depends_on:
         - web
       volumes:
         - ./static:/home/solo/webtetrado/static
         - ./media:/home/solo/webtetrado/media
+     # entrypoint: bash ./nginx/docker-entrypoint.sh
       networks:
         - web_network
   db:
