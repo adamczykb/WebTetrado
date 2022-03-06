@@ -124,10 +124,10 @@ const createPlugin = async (
     };
 
   await plugin.builders.structure.hierarchy
-    .applyPreset(trajectory, "all-models", {
-      // showUnitcell: false,
-      // representationPreset: "auto",
-      // model:1
+    .applyPreset(trajectory, "default", {
+      showUnitcell: false,
+      representationPreset: "auto",
+      structure:{'name':'model',params:{}}
     })
     ?.then(() => {
       // plugin.representation.structure.themes.colorThemeRegistry.add(
