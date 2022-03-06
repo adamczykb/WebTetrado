@@ -80,37 +80,6 @@ def add_quadruplexes(quadruplexes,data,db_id,helice_entity,request_key):
         quadruplex_entity_metadata.onz_class=quadruplex['onzm']
         quadruplex_entity_metadata.loopClassification=quadruplex['loopClassification']
         quadruplex_entity_metadata.molecule = data.header['head'].upper()
-        quadruplex_entity_metadata.save()
-
-        while(True):
-            data_file = NamedTemporaryFile()
-            r=requests.get(PROCESSOR_URL+'/v1/varna/'+request_key)
-            data_file.write(r.content)
-            quadruplex_entity_metadata.varna.save(name=request_key+'.svg',content=data_file)
-            data_file.close()
-            if r.status_code==200:
-                break
-            time.sleep(1)
-
-        while(True):
-            data_file = NamedTemporaryFile()
-            r=requests.get(PROCESSOR_URL+'/v1/r-chie/'+request_key)
-            data_file.write(r.content)
-            quadruplex_entity_metadata.r_chie.save(name=request_key+'.svg',content=data_file)
-            data_file.close()
-            if r.status_code==200:
-                break
-            time.sleep(1)
-
-        while(True):    
-            data_file = NamedTemporaryFile()
-            r=requests.get(PROCESSOR_URL+'/v1/draw-tetrado/'+request_key)
-            data_file.write(r.content)
-            quadruplex_entity_metadata.layers.save(name=request_key+'.svg',content=data_file)
-            data_file.close()
-            if r.status_code==200:
-                break
-            time.sleep(1)
             
         quadruplex_entity_metadata.save()
         quadruplex_entity.metadata=quadruplex_entity_metadata
@@ -145,13 +114,44 @@ def add_to_queue(db_id):
         user_request.name = data.header['name'].upper()
         user_request.structure_method = data.header['structure_method'].upper()
         user_request.idcode = data.header['idcode'].upper()
-    
+
         user_request.save()
         while(True):
             r=requests.get(PROCESSOR_URL+'/v1/result/'+request_key)
             if r.status_code==200:
                 user_request.status=4
                 result = json.loads(r.content)
+                
+                while(True):
+                    data_file = NamedTemporaryFile()
+                    r=requests.get(PROCESSOR_URL+'/v1/varna/'+request_key)
+                    data_file.write(r.content)
+                    user_request.varna.save(name=request_key+'.svg',content=data_file)
+                    data_file.close()
+                    if r.status_code==200:
+                        break
+                    time.sleep(1)
+
+                while(True):
+                    data_file = NamedTemporaryFile()
+                    r=requests.get(PROCESSOR_URL+'/v1/r-chie/'+request_key)
+                    data_file.write(r.content)
+                    user_request.r_chie.save(name=request_key+'.svg',content=data_file)
+                    data_file.close()
+                    if r.status_code==200:
+                        break
+                    time.sleep(1)
+
+                while(True):    
+                    data_file = NamedTemporaryFile()
+                    r=requests.get(PROCESSOR_URL+'/v1/draw-tetrado/'+request_key)
+                    data_file.write(r.content)
+                    user_request.draw_tetrado.save(name=request_key+'.svg',content=data_file)
+                    data_file.close()
+                    if r.status_code==200:
+                        break
+                    time.sleep(1)
+
                 add_nucleodities(result['nucleotides'],db_id)
 
                 for helice in result['helices']:

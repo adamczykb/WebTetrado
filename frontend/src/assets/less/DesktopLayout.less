@@ -1,3 +1,6 @@
+
+@import './App.less';
+
 .site-layout .site-layout-background {
     background: #fff;
 }
@@ -6,13 +9,15 @@
     display: flex;
     align-items: center;
 }
-.nav_slider{
+
+.nav_slider {
     display: none;
 
     @media screen and (min-width: 1820px) {
         display: block;
     }
 }
+
 .horizontal-center {
     display: flex;
     justify-content: center;
@@ -43,11 +48,18 @@
     }
 }
 
-.ant-table-thead > tr > th {
+.ant-table-thead>tr>th {
     text-align: center;
     font-weight: bold;
 }
 
-.ant-table-tbody > tr > td {
+.ant-table-tbody>tr>td {
     text-align: center;
+}
+
+.colored-row {
+    background-color: @row-selection;
+}
+.colored-row .ant-table-cell-row-hover{
+    background-color: @row-selection !important;
 }

@@ -21,7 +21,11 @@ export const Result = () => {
     status: 0,
     structure_method: "",
     structure_file: "",
+    varna: "",
+    r_chie: "",
+    draw_tetrado: "",
     idcode: "",
+    g4_limited:false,
     base_pair: [],
     helice: [],
     nucleotide: [],
@@ -92,11 +96,12 @@ export const Result = () => {
                       <Descriptions
                         title="Analytics result"
                         bordered
-                        layout="vertical"
-                        labelStyle={{ fontWeight: "bold" }}
+                        layout="horizontal"
+                  
+                        labelStyle={{ fontWeight: "bold",textAlign:'left' }}
                       >
                         {resultSet.idcode != "" ? (
-                          <Descriptions.Item label="PDB ID">
+                          <Descriptions.Item label="PDB ID:">
                             {resultSet.idcode}
                           </Descriptions.Item>
                         ) : (
@@ -104,41 +109,41 @@ export const Result = () => {
                         )}
 
                         {v.molecule != "" ? (
-                          <Descriptions.Item label="Molecule">
+                          <Descriptions.Item label="Molecule:">
                             {v.molecule}
                           </Descriptions.Item>
                         ) : (
                           <></>
                         )}
                         {resultSet.structure_method != "" ? (
-                          <Descriptions.Item label="Experimental method">
+                          <Descriptions.Item label="Experimental method:">
                             {resultSet.structure_method}
                           </Descriptions.Item>
                         ) : (
                           <></>
                         )}
-                        <Descriptions.Item label="Type (by no. of strands)">
+                        <Descriptions.Item label="Type (by no. of strands):">
                           ???
                         </Descriptions.Item>
-                        <Descriptions.Item label="No. of tetrads">
+                        <Descriptions.Item label="No. of tetrads:">
                           {v.tetrads_no}
                         </Descriptions.Item>
                         {v.onz_class != "" ? (
-                          <Descriptions.Item label="ONZM class">
+                          <Descriptions.Item label="ONZM class:">
                             {v.onz_class}
                           </Descriptions.Item>
                         ) : (
                           <></>
                         )}
                         {v.loopClassification != "" ? (
-                          <Descriptions.Item label="Loop topology">
+                          <Descriptions.Item label="Loop topology:">
                             {v.loopClassification}
                           </Descriptions.Item>
                         ) : (
                           <></>
                         )}
                         {v.tetrad_combination != "" ? (
-                          <Descriptions.Item label="Tetrad combination">
+                          <Descriptions.Item label="Tetrad combination:">
                             {v.tetrad_combination}
                           </Descriptions.Item>
                         ) : (
@@ -165,9 +170,9 @@ export const Result = () => {
                         ..([..([..-..........-..)]..)]..-..........
                         <br />
                       </p>
-                      {StructureVisualisation(v,resultSet.structure_file,resultSet.structure_file.split('.').splice(-1)[0])}
+                      {StructureVisualisation(v,resultSet)}
                       <Divider />
-                      {TetradTable(v.tetrad)}
+                      {TetradTable(v.tetrad,resultSet.g4_limited)}
                       <Divider />
                       {LoopTable(v.loop)}
                       <Divider />

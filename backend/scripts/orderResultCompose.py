@@ -3,6 +3,7 @@ from backend.models import Nucleotide, TetradoRequest
 
 import json
 
+
 def compose(orderId):
     result={}
     try:
@@ -13,8 +14,14 @@ def compose(orderId):
     result['status']=tetrado_request.status
     result['structure_method']=tetrado_request.structure_method
     result['idcode']=tetrado_request.idcode
+    result['g4_limited']=tetrado_request.g4_limited
     result['structure_file']=tetrado_request.structure_body.url
-
+    if tetrado_request.varna:
+        result['varna']=tetrado_request.varna.url
+    if tetrado_request.varna:
+        result['r_chie']=tetrado_request.r_chie.url
+    if tetrado_request.draw_tetrado:
+        result['draw_tetrado']=tetrado_request.draw_tetrado.url  
     result['base_pair']=[]
     counter=1
     for base_pair in tetrado_request.base_pair.all():
@@ -43,9 +50,6 @@ def compose(orderId):
             quadruplex_single['tetrad_combination']=quadruplex.metadata.tetrad_combination
             quadruplex_single['loopClassification']=quadruplex.metadata.loopClassification
             quadruplex_single['structure_dot_bracked']=quadruplex.metadata.structure_dot_bracked
-            quadruplex_single['varna']=quadruplex.metadata.varna.url
-            quadruplex_single['r_chie']=quadruplex.metadata.r_chie.url
-            quadruplex_single['layers']=quadruplex.metadata.layers.url  
             quadruplex_single['tetrads_no']=quadruplex.tetrad.count()
             quadruplex_single['tetrad']=[]
             quadruplex_single['chi_angle_value']=[]
@@ -54,6 +58,7 @@ def compose(orderId):
                 tetrad_quadruplex_single={}
                 tetrad_quadruplex_single['number']=counter_tetrad
                 tetrad_quadruplex_single['name']=tetrad.name
+                tetrad_quadruplex_single['nucleotities']=[tetrad.nt1.name,tetrad.nt2.name,tetrad.nt3.name,tetrad.nt4.name]
                 tetrad_quadruplex_single['sequence']=tetrad.nt1.symbol+tetrad.nt2.symbol+tetrad.nt3.symbol+tetrad.nt4.symbol
                 tetrad_quadruplex_single['onz_class']=tetrad.metadata.onz_class
                 tetrad_quadruplex_single['planarity']=format('%.2f'%tetrad.metadata.planarity)
@@ -103,4 +108,5 @@ def compose(orderId):
         nucleotide_single['chi_angle']=format('%.2f'%nucleotide.chi_angle)
         result['nucleotide'].append(nucleotide_single)
         counter+=1
+    
     return json.dumps(result)

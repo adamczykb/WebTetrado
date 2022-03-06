@@ -6,7 +6,6 @@ import AnchorRouter from "../../../routes/anchorRouter";
 
 import logo from "../../../assets/images/logo_simple.png";
 const { Header, Content, Footer } = Layout;
-const { Link } = Anchor;
 
 import pp_img from "../../../assets/images/PP-PUT_logo_jasne.png";
 import ichb_img from "../../../assets/images/ICHB_PAN_EN_kolor.png";
@@ -128,7 +127,16 @@ export class DesktopLayout extends React.Component {
             <IndexRouter />
           </div>
         </Content>
-        <Footer style={{ textAlign: "center" }}>WebTetrado 2022 | XYZ</Footer>
+        <Footer style={{ textAlign: "center" }}>
+          WebTetrado 2022 |{" "}
+          <a
+            href="https://github.com/adamczykb"
+            rel="noreferrer"
+            style={{ textDecoration: "none", color: "rgba(0, 0, 0, 0.85)" }}
+          >
+            Bartosz Adamczyk
+          </a>
+        </Footer>
       </Layout>
     );
   }

@@ -7,7 +7,7 @@ class TemporaryFiles(admin.ModelAdmin):
 
 @admin.register(TetradoRequest)
 class TetradoRequest(admin.ModelAdmin):
-    list_display = ('id', 'source','status','cookie_user_id','timestamp','structure_body','complete_2d','no_reorder','stacking_mismatch','strict','elTetradoKey')
+    list_display = ('id', 'source','status','cookie_user_id','timestamp','structure_body','varna','r_chie','draw_tetrado','complete_2d','no_reorder','stacking_mismatch','strict','elTetradoKey')
 
 @admin.register(Quadruplex)
 class Quadruplex(admin.ModelAdmin):
@@ -35,4 +35,4 @@ class Nucleotide(admin.ModelAdmin):
 
 @admin.register(Metadata)
 class Metadata(admin.ModelAdmin):
-    list_display = ('id','molecule','method','planarity','onz_class','tetrad_combination','loopClassification','structure_dot_bracked','varna','r_chie','layers')
+    list_display = ('id','molecule','method','planarity','onz_class','tetrad_combination','loopClassification','structure_dot_bracked')

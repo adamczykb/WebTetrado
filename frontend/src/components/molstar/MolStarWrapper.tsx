@@ -4,89 +4,19 @@ import {
   PluginUISpec,
 } from "molstar/lib/mol-plugin-ui/spec";
 import { createPluginUI } from "molstar/lib/mol-plugin-ui/index";
-import { PluginConfig } from "molstar/lib/mol-plugin/config";
+import { PluginConfig, PluginConfigItem } from "molstar/lib/mol-plugin/config";
 import { PluginUIContext } from "molstar/lib/mol-plugin-ui/context";
 
 import "molstar/build/viewer/molstar.css";
-import {
-  StructureElement,
-} from "molstar/lib/mol-model/structure";
+import { StructureElement } from "molstar/lib/mol-model/structure";
 import { ColorTheme } from "molstar/lib/mol-theme/color";
 import { ThemeDataContext } from "molstar/lib/mol-theme/theme";
 import { ColorNames } from "molstar/lib/mol-util/color/names";
 import { ParamDefinition as PD } from "molstar/lib/mol-util/param-definition";
+import { tetrad } from "../../types/RestultSet";
+import { ONZ_COLORS } from "../../assets/data/onzClassColor";
+import { Color } from "molstar/lib/mol-util/color";
 
-
-
-export const StructureQualityReportColorThemeParams = {
-  type: PD.MappedStatic('issue-count', {
-      'issue-count': PD.Group({}),
-      'specific-issue': PD.Group({
-          kind: PD.Text()
-      })
-  })
-};
-
-export function CustomColorTheme(
-  ctx: ThemeDataContext,
-  props: PD.Values<{}>
-): ColorTheme<{}> {
-  // const { radius, center } = ctx.structure;
-  // const radiusSq = Math.max(radius * radius, 0.001);
-  // const scale = ColorTheme.PaletteScale;
-  // console.log(ctx.structure?.model.atomicHierarchy.atoms.type_symbol.toArray()) //typy
-  // console.log(ctx.structure?.model.atomicConformation.occupancy.toArray())  //odleglosc
-  // console.log(ctx.structure?.model.atomicConformation.x.toArray())  //x
-  // console.log(ctx.structure?.model.atomicConformation.y.toArray())  //x
-  return {
-    factory: CustomColorTheme,
-    granularity: "group",
-    color: (location) => {
-      
-      if (!StructureElement.Location.is(location)) return ColorNames.green;
-      const { unit, element } = location;
-      // console.log(unit.model.atomicHierarchy.residueAtomSegments.index[element].)
-      if(unit.model.atomicHierarchy.atoms.label_comp_id.value(element)=='DG')
-      return ColorNames.pink
-      if(element==202)
-      return ColorNames.red
-      console.log(unit.model.atomicHierarchy.atomSourceIndex.toArray())
-      // console.log(unit.model.atomicHierarchy.residues.auth_seq_id.toArray()[element])
-      // if (location.structure.model.atomicHierarchy.residues.auth_seq_id.) {
-      //   return ColorNames.aliceblue;
-      // } else {
-        return ColorNames.gold;
-      // }
-    },
-    // palette: {
-    //   filter: "nearest",
-    //   colors: [
-    //     ColorNames.red,
-    //     Color(0xaaaaaa),
-    //     ColorNames.violet,
-    //     ColorNames.orange,
-    //     ColorNames.yellow,
-    //     ColorNames.green,
-    //     ColorNames.blue,
-    //   ],
-    // },
-    props: props,
-    description: "",
-  };
-}
-
-export const CustomColorThemeProvider: ColorTheme.Provider<
-  {},
-  "show-quadruplexes"
-> = {
-  name: "show-quadruplexes",
-  label: "Show quadruplexes",
-  category: "WebTetrado",
-  factory: CustomColorTheme,
-  getParams: () => ({ eodod: "eee" }),
-  defaultValues: {},
-  isApplicable: (ctx: ThemeDataContext) => true,
-};
 // const StripedResidues = CustomElementProperty.create<number>({
 //   label: "Show quadruplexes",
 //   name: "basic-wrapper",
@@ -109,11 +39,13 @@ export const CustomColorThemeProvider: ColorTheme.Provider<
 //     return "";
 //   },
 // });
-const MySpec: PluginUISpec = {
+
+const MolStarPluginSpec: PluginUISpec = {
   ...DefaultPluginUISpec(),
   config: [
     [PluginConfig.VolumeStreaming.Enabled, false],
     [PluginConfig.Viewport.ShowSettings, false],
+
   ],
   layout: {
     initial: {
@@ -124,27 +56,78 @@ const MySpec: PluginUISpec = {
   },
 };
 
-const createPlugin = async (parent: HTMLDivElement, url: string) => {
-  const plugin = await createPluginUI(parent, MySpec);
+const createPlugin = async (
+  parent: HTMLDivElement,
+  url: string,
+  tetrads: tetrad[]
+) => {
+  const plugin = await createPluginUI(parent, MolStarPluginSpec);
   const data = await plugin.builders.data.download(
     { url: url },
     { state: { isGhost: true } }
   );
-  let structure;
-  // if(url.split(".").splice(-1)[0] == "cif"){
-  //   structure=BuiltInTrajectoryFormats[0]
-  // }else{
-  //   structure=BuiltInTrajectoryFormats[2]
-  // }
+
   let trajectory = await plugin.builders.structure.parseTrajectory(
     data,
     "mmcif"
   );
+  function CustomColorTheme(
+    ctx: ThemeDataContext,
+    props: PD.Values<{}>
+  ): ColorTheme<{}> {
+    return {
+      factory: CustomColorTheme,
+      granularity: "group",
+      color: (location) => {
+        if (!StructureElement.Location.is(location)) return ColorNames.green;
+        const { unit, element } = location;
+        let outputColor = Color(0xeeeeee);
+
+        const atom_data = unit.model.atomicHierarchy;
+        const residue =
+          atom_data.chains.label_asym_id
+            .value(atom_data.chainAtomSegments.index[element])
+            .toString() +
+          "." +
+          atom_data.atoms.auth_comp_id.value(element) +
+          atom_data.residues.auth_seq_id
+            .value(atom_data.residueAtomSegments.index[element])
+            .toString();
+        tetrads.forEach((x) => {
+          if (x.nucleotities.includes(residue)) {
+            outputColor = Color(ONZ_COLORS[x.onz_class]);
+          }
+        });
+
+        // console.log(unit.model.atomicHierarchy.atomSourceIndex.toArray())
+        // console.log(unit.model.atomicHierarchy.residues.auth_seq_id.toArray()[element])
+        // if (location.structure.model.atomicHierarchy.residues.auth_seq_id.) {
+        //   return ColorNames.aliceblue;
+        // } else {
+        return outputColor;
+        // }
+      },
+      props: props,
+      description: "",
+    };
+  }
+
+  const CustomColorThemeProvider: ColorTheme.Provider<{}, "show-quadruplexes"> =
+    {
+      name: "show-quadruplexes",
+      label: "Show quadruplexes",
+      category: "WebTetrado",
+      factory: CustomColorTheme,
+      getParams: () => ({}),
+      isApplicable: (ctx: ThemeDataContext) => true,
+      defaultValues: {},
+    };
 
   await plugin.builders.structure.hierarchy
-    .applyPreset(trajectory, "default", {
-      showUnitcell: false,
-      representationPreset: "auto",
+    .applyPreset(trajectory, "all-models", {
+      // showUnitcell: false,
+      // representationPreset: "auto",
+      // model:1
     })
     ?.then(() => {
       // plugin.representation.structure.themes.colorThemeRegistry.add(
@@ -175,16 +158,16 @@ const createPlugin = async (parent: HTMLDivElement, url: string) => {
       //     dataeee
       // );
       // const loci = StructureSelection.toLociWithSourceUnits(sel);
-      // plugin.managers.interactivity.lociSelects.select({ loci }); 
-
+      // plugin.managers.interactivity.lociSelects.select({ loci });
     });
 
   return plugin;
 };
-type MyProps = {
+type MolStarWrapperProps = {
   structure_file: string;
+  tetrads: tetrad[];
 };
-export class MolStarWrapper extends React.Component<MyProps> {
+export class MolStarWrapper extends React.Component<MolStarWrapperProps> {
   parent: React.RefObject<HTMLDivElement>;
   plugin: Promise<PluginUIContext> | undefined;
   constructor(props: any) {
@@ -196,9 +179,10 @@ export class MolStarWrapper extends React.Component<MyProps> {
     async function init(
       plugin: Promise<PluginUIContext> | undefined,
       parent: any,
-      url: string
+      url: string,
+      tetrads: tetrad[]
     ) {
-      plugin = createPlugin(parent.current, url);
+      plugin = createPlugin(parent.current, url, tetrads);
 
       return () => {
         plugin?.then(function (result) {
@@ -207,7 +191,12 @@ export class MolStarWrapper extends React.Component<MyProps> {
       };
     }
 
-    init(this.plugin, this.parent, this.props.structure_file);
+    init(
+      this.plugin,
+      this.parent,
+      this.props.structure_file,
+      this.props.tetrads
+    );
   }
   render() {
     return <div ref={this.parent}></div>;

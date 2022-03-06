@@ -11,16 +11,7 @@ class Metadata(models.Model):
     loopClassification=models.CharField(max_length=50,blank=True)
 
     structure_dot_bracked=models.TextField(blank=True)
-    varna=models.FileField(upload_to='files/results/varna/',blank=True)
-    r_chie=models.FileField(upload_to='files/results/r_chie/',blank=True)
-    layers=models.FileField(upload_to='files/results/layers/',blank=True)
-
-@receiver(pre_delete,sender=Metadata)
-def remove_file(**kwargs):
-    instance = kwargs.get('instance')
-    instance.varna.delete(save=False)
-    instance.r_chie.delete(save=False)
-    instance.layers.delete(save=False)
+    
 
 class Nucleotide(models.Model):
     id = models.AutoField(primary_key=True)
@@ -128,7 +119,16 @@ class TetradoRequest(models.Model):
     timestamp=models.DateTimeField(auto_now=True)
     elTetradoKey=models.CharField(max_length=100)
     base_pair=models.ManyToManyField(BasePair)
+    varna=models.FileField(upload_to='files/results/varna/',blank=True)
+    r_chie=models.FileField(upload_to='files/results/r_chie/',blank=True)
+    draw_tetrado=models.FileField(upload_to='files/results/layers/',blank=True)
 
     def __str__(self):
             return 'Request '+str(self.id)+' ('+str(self.source)+') <'+str(self.status)+'> '
 
+@receiver(pre_delete,sender=TetradoRequest)
+def remove_file(**kwargs):
+    instance = kwargs.get('instance')
+    instance.varna.delete(save=False)
+    instance.r_chie.delete(save=False)
+    instance.layers.delete(save=False)

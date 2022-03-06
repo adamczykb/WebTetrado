@@ -19,6 +19,7 @@ export type tetrad = {
     number: number;
     name: string;
     sequence: string;
+    nucleotities:string[];
     onz_class: string;
     planarity: number;
 };
@@ -37,9 +38,6 @@ export type quadruplex = {
     tetrad_combination: string;
     loopClassification: string;
     structure_dot_bracked: string;
-    varna: string;
-    r_chie: string;
-    layers: string;
     tetrads_no: number;
     tetrad: tetrad[];
     chi_angle_value: chi_angle_value[];
@@ -58,6 +56,7 @@ export type nucleotide = {
     number: number;
     symbol: string;
     name: string;
+    nucleotities:string[];
     glycosidicBond: string;
     chi_angle: number;
 };
@@ -70,7 +69,11 @@ export type result_values = {
     status: number;
     structure_method: string;
     structure_file:string;
+    g4_limited:boolean;
     idcode: string;
+    varna: string;
+    r_chie: string;
+    draw_tetrado: string;
     base_pair: base_pair[];
     helice: helice[];
     nucleotide: nucleotide[];

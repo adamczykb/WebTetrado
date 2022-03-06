@@ -1,7 +1,7 @@
 import { Descriptions, Button, Image, message } from "antd";
 import config from "../../config.json";
 import { DownloadOutlined } from "@ant-design/icons";
-import { quadruplex } from "../../types/RestultSet";
+import { quadruplex, result_values } from "../../types/RestultSet";
 import { MolStarWrapper } from "../molstar/MolStarWrapper";
 
 function downloadFile(type: any, url: any) {
@@ -22,7 +22,8 @@ function downloadFile(type: any, url: any) {
     })
     .catch((error) => console.log(error));
 }
-export const StructureVisualisation = (data: quadruplex,structure_file:string,extension:string) => {
+export const StructureVisualisation = (data: quadruplex,resultSet:result_values) => {
+  const extension =resultSet.structure_file.split('.').splice(-1)[0]
   return (
     <Descriptions
       bordered
@@ -33,7 +34,7 @@ export const StructureVisualisation = (data: quadruplex,structure_file:string,ex
     >
       <Descriptions.Item label="VARNA" className="two-d-description-item">
         <div>
-          <Image className="two-d-image" src={config.SERVER_URL + data.varna} />
+          <Image className="two-d-image" src={config.SERVER_URL + resultSet.varna} />
           <br />
           <Button
             type="primary"
@@ -42,7 +43,7 @@ export const StructureVisualisation = (data: quadruplex,structure_file:string,ex
             style={{ marginTop: "15px" }}
             size={"large"}
             onClick={() =>
-              downloadFile("varna.svg", config.SERVER_URL + data.varna)
+              downloadFile("varna.svg", config.SERVER_URL + resultSet.varna)
             }
           >
             Download
@@ -53,7 +54,7 @@ export const StructureVisualisation = (data: quadruplex,structure_file:string,ex
         <div>
           <Image
             className="two-d-image"
-            src={config.SERVER_URL + data.r_chie}
+            src={config.SERVER_URL + resultSet.r_chie}
           />
           <br />
           <Button
@@ -63,18 +64,18 @@ export const StructureVisualisation = (data: quadruplex,structure_file:string,ex
             style={{ marginTop: "15px" }}
             size={"large"}
             onClick={() =>
-              downloadFile("r_chie.svg", config.SERVER_URL + data.r_chie)
+              downloadFile("r_chie.svg", config.SERVER_URL + resultSet.r_chie)
             }
           >
             Download
           </Button>
         </div>
       </Descriptions.Item>
-      <Descriptions.Item label="Layers" className="two-d-description-item">
+      <Descriptions.Item label="DrawTetrado (2.5D structure)" className="two-d-description-item">
         <div>
           <Image
             className="two-d-image"
-            src={config.SERVER_URL + data.layers}
+            src={config.SERVER_URL + resultSet.draw_tetrado}
           />
           <br />
           <Button
@@ -84,17 +85,17 @@ export const StructureVisualisation = (data: quadruplex,structure_file:string,ex
             style={{ marginTop: "15px" }}
             size={"large"}
             onClick={() =>
-              downloadFile("layers.svg", config.SERVER_URL + data.layers)
+              downloadFile("drawTetrado.svg", config.SERVER_URL + resultSet.draw_tetrado)
             }
           >
             Download
           </Button>
         </div>
       </Descriptions.Item>
-      {structure_file!=''?
+      {resultSet.structure_file!=''?
       <Descriptions.Item label="Mol*" className="two-d-description-item">
         <div >
-      <MolStarWrapper structure_file={config.SERVER_URL + structure_file}/>
+      <MolStarWrapper structure_file={config.SERVER_URL + resultSet.structure_file} tetrads={data.tetrad}/>
           <br />
           <Button
             type="primary"
@@ -103,7 +104,7 @@ export const StructureVisualisation = (data: quadruplex,structure_file:string,ex
             style={{ marginTop: "15px" }}
             size={"large"}
             onClick={() =>
-              downloadFile("structure."+extension, config.SERVER_URL + structure_file)
+              downloadFile("structure."+extension, config.SERVER_URL + resultSet.structure_file)
             }
           >
             Download

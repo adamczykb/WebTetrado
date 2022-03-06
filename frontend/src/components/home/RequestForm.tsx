@@ -16,7 +16,7 @@ export const RequestForm = () => {
       complete2d: false,
       noReorder: false,
       stackingMatch: 2,
-      g4Limited:false,
+      g4Limited:true,
       strict: false,
     },
   };

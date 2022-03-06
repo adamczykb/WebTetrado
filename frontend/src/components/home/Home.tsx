@@ -3,7 +3,6 @@ import { Divider } from '../layout/common/Divider';
 import { RequestForm } from './RequestForm';
 import { Results } from './Results';
 import { useCookies } from "react-cookie";
-//@ts-ignore
 import { v4 as uuid } from 'uuid';
 
 export const Home = () => {

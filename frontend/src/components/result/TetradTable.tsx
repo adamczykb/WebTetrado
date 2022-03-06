@@ -1,7 +1,7 @@
 import { Table } from "antd";
 import { tetrad } from "../../types/RestultSet";
-
-export const TetradTable = (data: tetrad[]) => {
+import '../../assets/css/DesktopLayout.css'
+export const TetradTable = (data: tetrad[],g4Limited:boolean) => {
   const columns_tetrad = [
     {
       title: "Number",
@@ -38,6 +38,7 @@ export const TetradTable = (data: tetrad[]) => {
         style={{ textAlign: "center" }}
         dataSource={data}
         columns={columns_tetrad}
+        rowClassName={(_r, i) => (data[i].sequence=='GGGG' && g4Limited ? 'colored-row' : '')}
       />
     </>
   );
