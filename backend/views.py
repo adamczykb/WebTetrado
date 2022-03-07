@@ -84,8 +84,8 @@ def user_request_list_action(request, userId):
 @ensure_csrf_cookie
 def index(request):
     try:
-        with open(os.path.join(settings.REACT_APP_DIR, 'build', 'index.html')) as f:
+        with open(os.path.join(settings.STATIC_ROOT, 'index.html')) as f:
             return HttpResponse(f.read())
     except FileNotFoundError:
         logging.exception('Production build of app not found')
-        return HttpResponse(status=501)
+        return HttpResponse(status=501,content="The frontend is currently under deploy")

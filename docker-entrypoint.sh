@@ -2,6 +2,11 @@
 python3 manage.py makemigrations
 python3 manage.py migrate
 python3 manage.py collectstatic --no-input
+cd /home/badamczyk/webtetrado/frontend
+npm install
+cd /home/badamczyk/webtetrado/build/
+bash ./build_front.sh
+cd /home/badamczyk/webtetrado/
 mkdir supervisor
 supervisord
 #python3 manage.py loaddata db.json

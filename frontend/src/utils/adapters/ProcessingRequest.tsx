@@ -20,6 +20,7 @@ export function processingRequest(data: form_values) {
       "Access-Control-Allow-Origin": "*",
     },
   };
+  requestOptions.headers["Access-Control-Allow-Origin"]="*"
   fetch(config.SERVER_URL + "/api/process/request/", requestOptions)
     .then((response) => response.json())
     .then((response) => {

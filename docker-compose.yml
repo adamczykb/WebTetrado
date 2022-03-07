@@ -43,8 +43,9 @@ services:
       depends_on:
         - web
       volumes:
-        - ./static:/home/solo/webtetrado/static
-        - ./media:/home/solo/webtetrado/media
+        - ./static:/home/badamczyk/webtetrado/static
+        - ./media:/home/badamczyk/webtetrado/media
+        - ./ssl:/var/letsencrypt
      # entrypoint: bash ./nginx/docker-entrypoint.sh
       networks:
         - web_network
