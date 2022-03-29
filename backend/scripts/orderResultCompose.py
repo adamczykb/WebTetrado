@@ -1,4 +1,5 @@
 
+from re import T
 from backend.models import Nucleotide, TetradoRequest
 
 import json
@@ -18,7 +19,7 @@ def compose(orderId):
     result['structure_file']=tetrado_request.structure_body.url
     if tetrado_request.varna:
         result['varna']=tetrado_request.varna.url
-    if tetrado_request.varna:
+    if tetrado_request.r_chie:
         result['r_chie']=tetrado_request.r_chie.url
     if tetrado_request.draw_tetrado:
         result['draw_tetrado']=tetrado_request.draw_tetrado.url  
@@ -62,6 +63,7 @@ def compose(orderId):
                 tetrad_quadruplex_single['sequence']=tetrad.nt1.symbol+tetrad.nt2.symbol+tetrad.nt3.symbol+tetrad.nt4.symbol
                 tetrad_quadruplex_single['onz_class']=tetrad.metadata.onz_class
                 tetrad_quadruplex_single['planarity']=format('%.2f'%tetrad.metadata.planarity)
+                tetrad_quadruplex_single['file']=tetrad.tetrad_file.url
                 quadruplex_single['tetrad'].append(tetrad_quadruplex_single)
                 chi_angle_value_tetrad_quadruplex_single={}
                 chi_angle_value_tetrad_quadruplex_single['number']=counter_tetrad

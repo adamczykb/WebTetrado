@@ -7,7 +7,7 @@
     "start": "concurrently --kill-others \"less-watch-compiler --config less-watcher.config.json\" \"react-scripts start\"",
     "less": "less-watch-compiler --config less-watcher-docker.config.json",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "react-scripts build"
+    "build": "less-watch-compiler --config less-watcher.config.json; react-scripts build"
   },
   "author": "Bartosz Adamczyk",
   "license": "ISC",

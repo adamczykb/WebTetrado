@@ -27,7 +27,7 @@ class Tetrad_Pair(admin.ModelAdmin):
 
 @admin.register(Tetrad)
 class Tetrad(admin.ModelAdmin):
-    list_display = ('id','name','query_id','metadata','nt1','nt2','nt3','nt4')
+    list_display = ('id','name','query_id','metadata','nt1','nt2','nt3','nt4','tetrad_file')
 
 @admin.register(Nucleotide)
 class Nucleotide(admin.ModelAdmin):

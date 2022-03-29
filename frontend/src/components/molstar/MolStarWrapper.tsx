@@ -19,7 +19,6 @@ import {Color} from "molstar/lib/mol-util/color";
 import {MolScriptBuilder as MS} from "molstar/lib/mol-script/language/builder";
 import {StateObjectRef} from "molstar/lib/mol-state";
 import {PluginStateObject as SO} from "molstar/lib/mol-plugin-state/objects";
-import {StateTransforms} from "molstar/lib/mol-plugin-state/transforms";
 
 // const StripedResidues = CustomElementProperty.create<number>({
 //   label: "Show quadruplexes",

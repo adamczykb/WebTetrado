@@ -13,7 +13,6 @@ import { TetradPairTable } from "./TetradPairTable";
 import { BasePairTable } from "./BasePairTable";
 import { NucleotideTable } from "./NucleotideTable";
 import { processingResponse } from "../../utils/adapters/ProcessingResponse";
-import config from '../../config.json'
 
 export const Result = () => {
   let result: result_values = {

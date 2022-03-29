@@ -9,7 +9,6 @@ class Metadata(models.Model):
     onz_class=models.CharField(max_length=100,blank=True)
     tetrad_combination=models.CharField(max_length=100,blank=True)
     loopClassification=models.CharField(max_length=50,blank=True)
-
     structure_dot_bracked=models.TextField(blank=True)
     
 
@@ -33,6 +32,7 @@ class BasePair(models.Model):
     nt1=models.ForeignKey(to=Nucleotide,related_name='nucleotide_bp_1', on_delete=models.DO_NOTHING)
     nt2=models.ForeignKey(to=Nucleotide,related_name='nucleotide_bp_2', on_delete=models.DO_NOTHING)
     stericity=models.CharField(max_length=20)
+
     def __str__(self):
         return str(self.nt1.name)+'-'+str(self.nt2.name)
 
@@ -45,8 +45,15 @@ class Tetrad(models.Model):
     nt2=models.ForeignKey(to=Nucleotide,related_name='nucleotide2', on_delete=models.DO_NOTHING)
     nt3=models.ForeignKey(to=Nucleotide,related_name='nucleotide3', on_delete=models.DO_NOTHING)
     nt4=models.ForeignKey(to=Nucleotide,related_name='nucleotide4', on_delete=models.DO_NOTHING)
+    tetrad_file=models.FileField(upload_to='files/results/tetrad/',blank=True)
+
     def __str__(self):
         return '('+str(self.query_id)+') '+self.name
+
+@receiver(pre_delete,sender=Tetrad)
+def remove_file(**kwargs):
+    instance = kwargs.get('instance')
+    instance.tetrad_file.delete(save=False)
 
 class TetradPair(models.Model):
     id = models.AutoField(primary_key=True)
@@ -56,6 +63,8 @@ class TetradPair(models.Model):
     rise=models.FloatField()
     twist=models.FloatField()
     strand_direction=models.CharField(max_length=100)
+
+
 
 class Loop(models.Model):
     id = models.AutoField(primary_key=True)

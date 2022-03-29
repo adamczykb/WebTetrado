@@ -22,6 +22,7 @@ export type tetrad = {
     nucleotities:string[];
     onz_class: string;
     planarity: number;
+    file: string;
 };
 export type loop = {
     number: number;
