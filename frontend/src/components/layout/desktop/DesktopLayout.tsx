@@ -106,7 +106,8 @@ export class DesktopLayout extends React.Component {
             >
               <Menu.Item key="1">Home</Menu.Item>
               <Menu.Item key="2">Help</Menu.Item>
-              <Menu.Item key="3">About</Menu.Item>
+              <a href="/citeus"><Menu.Item key="3">Cite us</Menu.Item></a>
+              <Menu.Item key="4">About</Menu.Item>
             </Menu>
           </div>
         </Header>
