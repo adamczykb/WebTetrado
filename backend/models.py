@@ -71,8 +71,7 @@ class Loop(models.Model):
     length=models.IntegerField()
     type=models.CharField(max_length=50)
     nucleotide=models.ManyToManyField(Nucleotide)
-    def __str__(self):
-        return self.full_sequence
+    
 
 class Quadruplex(models.Model):
     id = models.AutoField(primary_key=True)
