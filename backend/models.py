@@ -140,3 +140,13 @@ def remove_file(**kwargs):
     instance.varna.delete(save=False)
     instance.r_chie.delete(save=False)
     instance.draw_tetrado.delete(save=False)
+
+class Log(models.Model):
+    type = models.CharField(max_length=255)
+    info = models.CharField(max_length=255)
+    traceback = models.TextField(default='')
+    timestamp = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name_plural = "Error logs"
+        db_table = "webtetrado_logs"

@@ -1,6 +1,7 @@
+import traceback
 from django.core.files.temp import NamedTemporaryFile
 import time
-from backend.models import  BasePair, Helice, Loop, Metadata, Nucleotide, Quadruplex, Tetrad, TetradPair, TetradoRequest
+from backend.models import  BasePair, Helice, Log, Loop, Metadata, Nucleotide, Quadruplex, Tetrad, TetradPair, TetradoRequest
 import requests, json,base64
 from Bio.PDB import PDBParser,MMCIFParser
 from backend.scripts.tetradFileCreator import get_tetrad_file
@@ -181,4 +182,6 @@ def add_to_queue(db_id):
             return False
     except Exception:
         user_request.status=5
+        Log.objects.create(type='Error [processing] ',
+                           info=str(db_id), traceback=traceback.format_exc()).save()
         user_request.save()
