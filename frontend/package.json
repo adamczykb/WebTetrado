@@ -5,9 +5,9 @@
   "main": "src/index.tsx",
   "scripts": {
     "start": "concurrently --kill-others \"less-watch-compiler --config less-watcher.config.json\" \"react-scripts start\"",
-    "less": "less-watch-compiler --config less-watcher-docker.config.json",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "less-watch-compiler --config less-watcher.config.json; react-scripts build"
+    "build": "react-scripts build",
+    "less": "less-watch-compiler --config less-watcher.config.json",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Bartosz Adamczyk",
   "license": "ISC",
