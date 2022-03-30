@@ -140,4 +140,4 @@ def remove_file(**kwargs):
     instance = kwargs.get('instance')
     instance.varna.delete(save=False)
     instance.r_chie.delete(save=False)
-    instance.layers.delete(save=False)
+    instance.draw_tetrado.delete(save=False)

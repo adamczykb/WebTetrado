@@ -33,10 +33,12 @@ export const TetradTable = (data: tetrad[], g4Limited: boolean) => {
       title: "Download",
       dataIndex: "file",
       key: "file",
-      render: (text: string) => (
+      render: (text: string) => (()=>
+        { text!=''?
         <a href={text}>
           <Button type="primary" icon={<DownloadOutlined />} />
-        </a>
+        </a>:<></>
+      }
       ),
     },
   ];

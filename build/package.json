@@ -1,6 +1,0 @@
-{
-  "dependencies": {
-    "cli": "^1.0.1",
-    "molstar": "^3.3.1"
-  }
-}

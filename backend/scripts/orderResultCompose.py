@@ -63,7 +63,10 @@ def compose(orderId):
                 tetrad_quadruplex_single['sequence']=tetrad.nt1.symbol+tetrad.nt2.symbol+tetrad.nt3.symbol+tetrad.nt4.symbol
                 tetrad_quadruplex_single['onz_class']=tetrad.metadata.onz_class
                 tetrad_quadruplex_single['planarity']=format('%.2f'%tetrad.metadata.planarity)
-                tetrad_quadruplex_single['file']=tetrad.tetrad_file.url
+                if tetrad.tetrad_file:
+                    tetrad_quadruplex_single['file']=tetrad.tetrad_file.url
+                else:
+                    tetrad_quadruplex_single['file']=''
                 quadruplex_single['tetrad'].append(tetrad_quadruplex_single)
                 chi_angle_value_tetrad_quadruplex_single={}
                 chi_angle_value_tetrad_quadruplex_single['number']=counter_tetrad
