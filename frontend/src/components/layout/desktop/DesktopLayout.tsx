@@ -104,10 +104,21 @@ export class DesktopLayout extends React.Component {
               mode="horizontal"
               style={{ float: "left", paddingLeft: "10px" }}
             >
-              <Menu.Item key="1">Home</Menu.Item>
-              <Menu.Item key="2">Help</Menu.Item>
-              <a href="/citeus"><Menu.Item key="3">Cite us</Menu.Item></a>
-              <Menu.Item key="4">About</Menu.Item>
+              <Menu.Item key="1">
+                <a href="/">Home</a>
+              </Menu.Item>
+
+              <Menu.Item key="2">
+                <a href="/help">Help</a>
+              </Menu.Item>
+
+              <Menu.Item key="3">
+                <a href="/citeus">Cite us</a>
+              </Menu.Item>
+
+              <Menu.Item key="4">
+                <a href="/about">About</a>
+              </Menu.Item>
             </Menu>
           </div>
         </Header>

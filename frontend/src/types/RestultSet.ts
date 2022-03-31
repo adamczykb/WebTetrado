@@ -67,6 +67,7 @@ export type helice = {
 };
 export type result_values = {
     name: string;
+    dot_bracket:dot_bracket_values;
     status: number;
     structure_method: string;
     structure_file:string;
@@ -79,3 +80,9 @@ export type result_values = {
     helice: helice[];
     nucleotide: nucleotide[];
 };
+export type dot_bracket_values={
+    line1:string;
+    line2:string;
+    sequence:string;
+
+}

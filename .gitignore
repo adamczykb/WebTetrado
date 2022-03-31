@@ -179,5 +179,6 @@ sketch
 .ionide
 # Support for Project snippet scope
 **/package-lock.json
+**/molstar.css
 # End of https://www.toptal.com/developers/gitignore/api/react,node,visualstudiocode
 !frontend/src/assets/css/molstar.css

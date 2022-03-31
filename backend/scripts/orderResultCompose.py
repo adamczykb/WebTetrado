@@ -15,6 +15,10 @@ def compose(orderId):
     result['status']=tetrado_request.status
     result['structure_method']=tetrado_request.structure_method
     result['idcode']=tetrado_request.idcode
+    result['dot_bracket']={}
+    result['dot_bracket']['line1']=tetrado_request.dot_bracket_line1
+    result['dot_bracket']['line2']=tetrado_request.dot_bracket_line2
+    result['dot_bracket']['sequence']=tetrado_request.dot_bracket_sequence
     result['g4_limited']=tetrado_request.g4_limited
     result['structure_file']=tetrado_request.structure_body.url
     if tetrado_request.varna:

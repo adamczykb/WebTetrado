@@ -31,9 +31,9 @@ def get_tetrad_file(file_data, tetrad_residue, tetrad_output_file, db_id, cif=Tr
     io.save(tetrad_file.name, TetradSelect(tetrad_residue))
     if cif:
         add_necessary_column_cif(tetrad_file.name)
-        add_symetry_data_cif(file_data, tetrad_file.name)
+        add_symetry_data_cif(tetrad_file.name, tetrad_file.name)
     else:
-        add_symetry_data_pdb(file_data, tetrad_file.name)
-    tetrad_output_file.save('-'.join(tetrad_residue) +
+        add_symetry_data_pdb(tetrad_file.name, tetrad_file.name)
+    tetrad_output_file.save('-'.join(tetrad_residue).replace('.','-')
                             +'_'+str(db_id)+output_extension, tetrad_file)
     tetrad_file.close()
