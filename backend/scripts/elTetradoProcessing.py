@@ -121,9 +121,6 @@ def add_to_queue(db_id):
                 return False
 
             user_request.name = data.header['name'].upper()
-            user_request.dot_bracket_line1 = data.header['dotBracket'].header['line1']
-            user_request.dot_bracket_line2 = data.header['dotBracket'].header['line2']
-            user_request.dot_bracket_sequence = data.header['dotBracket'].header['sequence']
             user_request.structure_method = data.header['structure_method'].upper()
             user_request.idcode = data.header['idcode'].upper()
 
@@ -172,6 +169,9 @@ def add_to_queue(db_id):
                         add_tetrad_pairs(helice['tetradPairs'],db_id,helice_entity)
                         user_request.helice.add(helice_entity)
                     add_base_pairs(result['basePairs'],db_id,user_request)
+                    user_request.dot_bracket_line1 = data['dotBracket']['line1']
+                    user_request.dot_bracket_line2 = data['dotBracket']['line2']
+                    user_request.dot_bracket_sequence = data['dotBracket']['sequence']
                     user_request.status=4
                     user_request.save()
                     break
