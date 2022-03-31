@@ -143,6 +143,10 @@ def remove_file(**kwargs):
     instance.varna.delete(save=False)
     instance.r_chie.delete(save=False)
     instance.draw_tetrado.delete(save=False)
+    for base_pair in instance.base_pair.all():
+        base_pair.delete()
+    for helice in instance.helice.all():
+        helice.delete()
 
 class Log(models.Model):
     type = models.CharField(max_length=255)

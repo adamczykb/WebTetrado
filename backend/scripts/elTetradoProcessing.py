@@ -169,9 +169,9 @@ def add_to_queue(db_id):
                         add_tetrad_pairs(helice['tetradPairs'],db_id,helice_entity)
                         user_request.helice.add(helice_entity)
                     add_base_pairs(result['basePairs'],db_id,user_request)
-                    user_request.dot_bracket_line1 = data['dotBracket']['line1']
-                    user_request.dot_bracket_line2 = data['dotBracket']['line2']
-                    user_request.dot_bracket_sequence = data['dotBracket']['sequence']
+                    user_request.dot_bracket_line1 = result['dotBracket']['line1']
+                    user_request.dot_bracket_line2 = result['dotBracket']['line2']
+                    user_request.dot_bracket_sequence = result['dotBracket']['sequence']
                     user_request.status=4
                     user_request.save()
                     break
