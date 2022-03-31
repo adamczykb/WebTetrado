@@ -121,9 +121,9 @@ def add_to_queue(db_id):
                 return False
 
             user_request.name = data.header['name'].upper()
-            user_request.dot_bracket_line1 = data.header['dotBracket']['line1']
-            user_request.dot_bracket_line2 = data.header['dotBracket']['line2']
-            user_request.dot_bracket_sequence = data.header['dotBracket']['sequence']
+            user_request.dot_bracket_line1 = data.header['dotBracket'].header['line1']
+            user_request.dot_bracket_line2 = data.header['dotBracket'].header['line2']
+            user_request.dot_bracket_sequence = data.header['dotBracket'].header['sequence']
             user_request.structure_method = data.header['structure_method'].upper()
             user_request.idcode = data.header['idcode'].upper()
 
