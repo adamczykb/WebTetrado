@@ -45,7 +45,7 @@ services:
       volumes:
         - ./static:/home/badamczyk/webtetrado/static
         - ./media:/home/badamczyk/webtetrado/media
-        - ./ssl:/var/letsencrypt
+        - ./ssl:/etc/letsencrypt/
         - ./nginx/conf/:/etc/nginx/conf.d/
      # entrypoint: bash ./nginx/docker-entrypoint.sh
       networks:

@@ -52,6 +52,7 @@ def compose(orderId):
             quadruplex_single['molecule']=quadruplex.metadata.molecule
             quadruplex_single['method']=quadruplex.metadata.method
             quadruplex_single['onz_class']=quadruplex.metadata.onz_class
+            quadruplex_single['type']=quadruplex.metadata.type
             quadruplex_single['tetrad_combination']=quadruplex.metadata.tetrad_combination
             quadruplex_single['loopClassification']=quadruplex.metadata.loopClassification
             quadruplex_single['structure_dot_bracked']=quadruplex.metadata.structure_dot_bracked

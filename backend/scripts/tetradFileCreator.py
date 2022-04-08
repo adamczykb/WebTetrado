@@ -34,6 +34,6 @@ def get_tetrad_file(file_data, tetrad_residue, tetrad_output_file, db_id, cif=Tr
         add_symetry_data_cif(tetrad_file.name, tetrad_file.name)
     else:
         add_symetry_data_pdb(tetrad_file.name, tetrad_file.name)
-    tetrad_output_file.save('-'.join(tetrad_residue).replace('.','-')
-                            +'_'+str(db_id)+output_extension, tetrad_file)
+    tetrad_output_file.save('-'.join(tetrad_residue).replace('.','_')
+                            +'__'+str(db_id)+output_extension, tetrad_file)
     tetrad_file.close()

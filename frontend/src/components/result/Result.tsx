@@ -141,7 +141,7 @@ export const Result = () => {
                             <></>
                           )}
                           <Descriptions.Item label="Type (by no. of strands):">
-                            ???
+                            {v.type}
                           </Descriptions.Item>
                           <Descriptions.Item label="No. of tetrads:">
                             {v.tetrads_no}

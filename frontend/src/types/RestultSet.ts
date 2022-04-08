@@ -42,7 +42,7 @@ export type quadruplex = {
     tetrads_no: number;
     tetrad: tetrad[];
     chi_angle_value: chi_angle_value[];
-
+    type: string;
     loop: loop[];
 };
 export type tetrad_pair = {

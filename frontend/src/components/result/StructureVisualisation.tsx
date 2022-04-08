@@ -3,6 +3,8 @@ import config from "../../config.json";
 import { DownloadOutlined } from "@ant-design/icons";
 import { quadruplex, result_values } from "../../types/RestultSet";
 import { MolStarWrapper } from "../molstar/MolStarWrapper";
+import { VisualisationLegend } from "./Legend";
+
 
 function downloadFile(type: any, url: any) {
   const requestOptions = {
@@ -12,18 +14,21 @@ function downloadFile(type: any, url: any) {
     },
   };
   fetch(url, requestOptions)
-    .then((res)=>res.blob())
-    .then((blob)=>{
-      let url=  URL.createObjectURL(blob);
-      let pom = document.createElement('a');
-      pom.setAttribute('href',url)
-      pom.setAttribute('download', type);
-      pom.click(); 
+    .then((res) => res.blob())
+    .then((blob) => {
+      let url = URL.createObjectURL(blob);
+      let pom = document.createElement("a");
+      pom.setAttribute("href", url);
+      pom.setAttribute("download", type);
+      pom.click();
     })
     .catch((error) => console.log(error));
 }
-export const StructureVisualisation = (data: quadruplex,resultSet:result_values) => {
-  const extension =resultSet.structure_file.split('.').splice(-1)[0]
+export const StructureVisualisation = (
+  data: quadruplex,
+  resultSet: result_values
+) => {
+  const extension = resultSet.structure_file.split(".").splice(-1)[0];
   return (
     <Descriptions
       bordered
@@ -34,7 +39,10 @@ export const StructureVisualisation = (data: quadruplex,resultSet:result_values)
     >
       <Descriptions.Item label="VARNA" className="two-d-description-item">
         <div>
-          <Image className="two-d-image" src={config.SERVER_URL + resultSet.varna} />
+          <Image
+            className="two-d-image"
+            src={config.SERVER_URL + resultSet.varna}
+          />
           <br />
           <Button
             type="primary"
@@ -71,7 +79,10 @@ export const StructureVisualisation = (data: quadruplex,resultSet:result_values)
           </Button>
         </div>
       </Descriptions.Item>
-      <Descriptions.Item label="DrawTetrado (2.5D structure)" className="two-d-description-item">
+      <Descriptions.Item
+        label="DrawTetrado (2.5D structure)"
+        className="two-d-description-item"
+      >
         <div>
           <Image
             className="two-d-image"
@@ -85,32 +96,47 @@ export const StructureVisualisation = (data: quadruplex,resultSet:result_values)
             style={{ marginTop: "15px" }}
             size={"large"}
             onClick={() =>
-              downloadFile("drawTetrado.svg", config.SERVER_URL + resultSet.draw_tetrado)
+              downloadFile(
+                "drawTetrado.svg",
+                config.SERVER_URL + resultSet.draw_tetrado
+              )
             }
           >
             Download
           </Button>
         </div>
       </Descriptions.Item>
-      {resultSet.structure_file!=''?
-      <Descriptions.Item label="Mol*" className="two-d-description-item">
-        <div >
-      <MolStarWrapper structure_file={config.SERVER_URL + resultSet.structure_file} tetrads={data.tetrad}/>
-          <br />
-          <Button
-            type="primary"
-            shape="round"
-            icon={<DownloadOutlined />}
-            style={{ marginTop: "15px" }}
-            size={"large"}
-            onClick={() =>
-              downloadFile("structure."+extension, config.SERVER_URL + resultSet.structure_file)
-            }
-          >
-            Download
-          </Button>
-        </div>
-      </Descriptions.Item>:<></>}
+      {resultSet.structure_file != "" ? (
+        <Descriptions.Item label="Mol*" className="two-d-description-item">
+          <div>
+            <MolStarWrapper
+              structure_file={config.SERVER_URL + resultSet.structure_file}
+              tetrads={data.tetrad}
+            />
+            <br/>
+            <VisualisationLegend/>
+            <br />
+            <Button
+              type="primary"
+              shape="round"
+              icon={<DownloadOutlined />}
+              style={{ marginTop: "15px" }}
+              size={"large"}
+              onClick={() =>
+                downloadFile(
+                  "structure." + extension,
+                  config.SERVER_URL + resultSet.structure_file
+                )
+              }
+            >
+              Download
+            </Button>
+            
+          </div>
+        </Descriptions.Item>
+      ) : (
+        <></>
+      )}
     </Descriptions>
   );
 };
