@@ -141,7 +141,10 @@ export const Result = () => {
                             <></>
                           )}
                           <Descriptions.Item label="Type (by no. of strands):">
-                            {v.type}
+                            {v.type=='UNI'?'unimolecular':''}
+                            {v.type=='BI'?'bimolecular':''}
+                            {v.type=='TETRA'?'tetramolecular':''}
+                            {v.type=='OTHER'?'other':''}
                           </Descriptions.Item>
                           <Descriptions.Item label="No. of tetrads:">
                             {v.tetrads_no}
