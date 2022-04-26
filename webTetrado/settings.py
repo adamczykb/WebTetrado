@@ -29,7 +29,7 @@ ALLOWED_HOSTS = ['webtetrado.cs.put.poznan.pl','127.0.0.1']
 # CORS_ALLOW_ALL_ORIGINS = True # If this is used then `CORS_ALLOWED_ORIGINS` will not have any effect
 # CORS_ALLOW_CREDENTIALS = True # Application definition
 CSRF_COOKIE_NAME = "csrftoken"
-CSRF_TRUSTED_ORIGINS = ['http://localhost:3000']
+
 PROTECTED_MEDIA_FOLDERS=['uploads']
 # Application definition
 
@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_celery_beat',
     # 'corsheaders',
     "django_rq",
     'backend',
@@ -167,53 +168,40 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-
 if DEBUG:
-    RQ_QUEUES = {
-        'default': {
-            'HOST': 'localhost',
-            'PORT': 6379,
-            'DB': 0,
-            'PASSWORD': '',
-            'DEFAULT_TIMEOUT': 3600,
-            'USE_REDIS_CACHE': 'default',
-        },
-    }
-    CACHES = {
+    REDIS_HOST = '127.0.0.1'
+else:
+    REDIS_HOST = 'redis'
+    
+CELERY_BROKER_URL = 'redis://'+REDIS_HOST+':6379'
+CELERY_RESULT_BACKEND = 'redis://'+REDIS_HOST+':6379'
+CELERY_TASK_TRACK_STARTED = True
+CELERY_CACHE_BACKEND = 'default'
+
+CACHES = {
     'default': {
         'BACKEND': 'redis_cache.cache.RedisCache',
-        'LOCATION': 'localhost:6379',
+        'LOCATION': REDIS_HOST+':6379',
         'OPTIONS': {
             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
             'MAX_ENTRIES': 5000,
         },
     },
-    }
-else:
-    RQ = {
-    'host': 'redis',
+}
+RQ = {
+    'host': REDIS_HOST,
     'db': 0,
 }
-    RQ_QUEUES = {
-        'default': {
-            'HOST': 'redis',
-            'PORT': 6379,
-            'DB': 0,
-            'PASSWORD': '',
-            'DEFAULT_TIMEOUT': 3600,
-            'USE_REDIS_CACHE': 'default',
-        },
-    }
-    CACHES = {
+RQ_QUEUES = {
     'default': {
-        'BACKEND': 'redis_cache.cache.RedisCache',
-        'LOCATION': 'redis:6379',
-        'OPTIONS': {
-            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
-            'MAX_ENTRIES': 5000,
-        },
+        'HOST': REDIS_HOST,
+        'PORT': 6379,
+        'DB': 0,
+        'PASSWORD': '',
+        'DEFAULT_TIMEOUT': 3600,
+        'USE_REDIS_CACHE': 'default',
     },
-    }
+}
 
 MEDIA_ROOT = str(BASE_DIR) + '/media/'
 MEDIA_URL = '/media/'
