@@ -29,8 +29,7 @@ urlpatterns = [
     re_path(r'^logo192.png$', RedirectView.as_view(url=staticfiles_storage.url('logo192.png'))),
     re_path(r'^manifest.json$', RedirectView.as_view(url=staticfiles_storage.url('manifest.json'))),
     re_path(r'^asset-manifest.json$', RedirectView.as_view(url=staticfiles_storage.url('asset-manifest.json'))),
+    re_path('^admin/rq/', include('django_rq.urls')),
+    re_path('^admin/', admin.site.urls),
     path('',include(backend.urls)),
-    path('admin/rq/', include('django_rq.urls')),
-    path('admin/', admin.site.urls),
-
     ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
