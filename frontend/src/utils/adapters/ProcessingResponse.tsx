@@ -6,7 +6,7 @@ export function processingResponse(orderId:any,setResultSet:any,setLoading:any) 
         method: 'GET',
         headers: {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
     };
-    fetch(config.SERVER_URL + '/api/process/result/'+orderId+'/', requestOptions)
+    fetch(config.SERVER_URL + '/api/process/result/'+orderId, requestOptions)
         .then(response => response.json())
         .then(response => {
             setResultSet(response);

@@ -20,8 +20,9 @@ from django.contrib.staticfiles.storage import staticfiles_storage
 from django.conf.urls.static import static
 from django.conf import settings
 from django.views.generic import RedirectView
+from backend import views
 
-import backend.urls
+import backend.urls 
 
 
 urlpatterns = [
@@ -31,5 +32,7 @@ urlpatterns = [
     re_path(r'^asset-manifest.json$', RedirectView.as_view(url=staticfiles_storage.url('asset-manifest.json'))),
     re_path('^admin/rq/', include('django_rq.urls')),
     re_path('^admin/', admin.site.urls),
-    path('',include(backend.urls)),
+    re_path('^api/',include(backend.urls)),
     ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+urlpatterns.append(path('', views.index))
