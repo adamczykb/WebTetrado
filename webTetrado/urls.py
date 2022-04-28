@@ -35,4 +35,4 @@ urlpatterns = [
     re_path('^api/',include(backend.urls)),
     ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
-urlpatterns.append(path('', views.index))
+urlpatterns.append(re_path('^', views.index))
