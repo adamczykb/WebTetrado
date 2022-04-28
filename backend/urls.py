@@ -3,10 +3,9 @@ from django.urls import path,re_path
 from backend import views
 
 urlpatterns = [
-    path('api/process/result/<int:orderId>',views.user_request_result_action),
-    path('api/upload/structure/',views.file_handler_action),
-    path('api/process/request/', views.user_request_setup_action),
-    path('api/process/client/list/<slug:userId>', views.user_request_list_action)
+    re_path('^api/process/result/<slug:orderId>/$',views.user_request_result_endpoint),
+    re_path('^api/upload/structure/$',views.file_handler_endpoint),
+    re_path('^api/process/request/$', views.user_request_setup_endpoint),
+    re_path('^api/process/client/list/<slug:userId>/$', views.user_request_list_endpoint)
 ]
-urlpatterns.append(path('', views.index))
-urlpatterns.append(re_path('^result/', views.index))
+urlpatterns.append(re_path('^', views.index))

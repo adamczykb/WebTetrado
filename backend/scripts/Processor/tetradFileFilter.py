@@ -1,11 +1,12 @@
-from tempfile import NamedTemporaryFile
 import Bio
+
+from tempfile import NamedTemporaryFile
 from Bio.PDB import MMCIFParser
 from Bio.PDB.mmcifio import MMCIFIO
 from Bio.PDB import PDBIO
-from backend.scripts.fileParser import add_necessary_column_cif, add_symetry_data_cif, add_symetry_data_pdb
+from backend.scripts.Processor.structureSymteryAdder import add_necessary_column_cif, add_symetry_data_cif, add_symetry_data_pdb
 
-
+ 
 class TetradSelect(Bio.PDB.Select):
     ids = []
 
@@ -19,7 +20,7 @@ class TetradSelect(Bio.PDB.Select):
             return 0
 
 
-def get_tetrad_file(file_data, tetrad_residue, tetrad_output_file, db_id, cif=True):
+def get_cetrain_tetrad_file(file_data, tetrad_residue, tetrad_output_file, db_id, cif=True):
     tetrad_file = NamedTemporaryFile()
     if cif:
         io = MMCIFIO()

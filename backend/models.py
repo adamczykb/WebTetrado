@@ -1,7 +1,7 @@
 from django.db import models
 from django.dispatch import receiver
 from django.db.models.signals import pre_delete
-
+import uuid
 
 class Metadata(models.Model):
     COLOR_CHOICES = (
@@ -29,7 +29,7 @@ class Nucleotide(models.Model):
     chain = models.CharField(max_length=20)
     glycosidicBond = models.CharField(max_length=100)
     name = models.CharField(max_length=100)
-    chi_angle = models.FloatField()
+    chi_angle = models.CharField(max_length=20)
     molecule = models.CharField(max_length=50)
 
     def __str__(self):
@@ -78,7 +78,6 @@ def remove_file(**kwargs):
 
 class TetradPair(models.Model):
     id = models.AutoField(primary_key=True)
-    # metadata=models.ForeignKey(to=Metadata, on_delete=models.CASCADE)
     tetrad1 = models.ForeignKey(
         to=Tetrad, related_name='tetrad1', on_delete=models.DO_NOTHING)
     tetrad2 = models.ForeignKey(
@@ -138,6 +137,7 @@ class TetradoRequest(models.Model):
 
     
     id = models.AutoField(primary_key=True)
+    hash_id = models.UUIDField(default=uuid.uuid1, editable=False)
     cookie_user_id = models.CharField(max_length=50)
     source = models.IntegerField(choices=Sources.choices)
     status = models.IntegerField(choices=Statuses.choices)
@@ -164,6 +164,8 @@ class TetradoRequest(models.Model):
     r_chie = models.FileField(upload_to='files/results/r_chie/', blank=True)
     draw_tetrado = models.FileField(
         upload_to='files/results/layers/', blank=True)
+
+    cached_result= models.TextField(blank=True)
 
     def __str__(self):
         return 'Request '+str(self.id)+' ('+str(self.source)+') <'+str(self.status)+'> '

@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { Anchor, Layout, Menu } from "antd";
-import "../../../assets/css/DesktopLayout.css";
 import IndexRouter from "../../../routes/router";
 import AnchorRouter from "../../../routes/anchorRouter";
-
 import logo from "../../../assets/images/logo_simple.png";
+
 const { Header, Content, Footer } = Layout;
 
+import "../../../assets/css/DesktopLayout.css";
 import pp_img from "../../../assets/images/PP-PUT_logo_jasne.png";
 import ichb_img from "../../../assets/images/ICHB_PAN_EN_kolor.png";
 import rna_polis_img from "../../../assets/images/RNApolis-logo.png";
@@ -26,12 +26,15 @@ const ContentList: React.FC = () => {
         top: "100px",
         width: "200px",
         left: "calc((100% - 1400px) / 2 - 200px )",
+        paddingRight: "13px"
       }}
     >
-      <Anchor targetOffset={targetOffset}>
+      <Anchor style={{
+        marginBottom: "50px"
+      }} targetOffset={targetOffset}>
         <AnchorRouter />
       </Anchor>
-      <div style={{ marginTop: "100px" }}>
+      <div >
         <div
           style={{
             display: "flex",

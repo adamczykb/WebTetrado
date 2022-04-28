@@ -1,2 +1,7 @@
-node_modules/
+frontend/node_modules/
 npm-debug.log
+./venv
+./media
+media
+media/
+nginx/conf

@@ -75,10 +75,10 @@ def compose(orderId):
                 quadruplex_single['tetrad'].append(tetrad_quadruplex_single)
                 chi_angle_value_tetrad_quadruplex_single={}
                 chi_angle_value_tetrad_quadruplex_single['number']=counter_tetrad
-                chi_angle_value_tetrad_quadruplex_single['nt1']=str(format('%.2f'%tetrad.nt1.chi_angle))+ '° / '+tetrad.nt1.glycosidicBond
-                chi_angle_value_tetrad_quadruplex_single['nt2']=str(format('%.2f'%tetrad.nt2.chi_angle))+ '° / '+tetrad.nt2.glycosidicBond
-                chi_angle_value_tetrad_quadruplex_single['nt3']=str(format('%.2f'%tetrad.nt3.chi_angle))+ '° / '+tetrad.nt3.glycosidicBond
-                chi_angle_value_tetrad_quadruplex_single['nt4']=str(format('%.2f'%tetrad.nt4.chi_angle))+ '° / '+tetrad.nt4.glycosidicBond
+                chi_angle_value_tetrad_quadruplex_single['nt1']=tetrad.nt1.chi_angle+ '° / '+tetrad.nt1.glycosidicBond
+                chi_angle_value_tetrad_quadruplex_single['nt2']=tetrad.nt2.chi_angle+ '° / '+tetrad.nt2.glycosidicBond
+                chi_angle_value_tetrad_quadruplex_single['nt3']=tetrad.nt3.chi_angle+ '° / '+tetrad.nt3.glycosidicBond
+                chi_angle_value_tetrad_quadruplex_single['nt4']=tetrad.nt4.chi_angle+ '° / '+tetrad.nt4.glycosidicBond
                 quadruplex_single['chi_angle_value'].append(chi_angle_value_tetrad_quadruplex_single)
                 counter_tetrad+=1
                 
@@ -115,7 +115,7 @@ def compose(orderId):
         nucleotide_single['symbol']=nucleotide.symbol
         nucleotide_single['name']=nucleotide.name
         nucleotide_single['glycosidicBond']=nucleotide.glycosidicBond
-        nucleotide_single['chi_angle']=format('%.2f'%nucleotide.chi_angle)
+        nucleotide_single['chi_angle']=nucleotide.chi_angle
         result['nucleotide'].append(nucleotide_single)
         counter+=1
     

@@ -7,7 +7,7 @@ export function clientRequestList(setResultSet:any,setLoading:any,userId:string)
         headers: {'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*'},
     };
 
-    fetch(config.SERVER_URL + '/api/process/client/list/'+userId, requestOptions)
+    fetch(config.SERVER_URL + '/api/process/client/list/'+userId+'/', requestOptions)
         .then(response => response.json())
         .then(response => {
             setResultSet(response);

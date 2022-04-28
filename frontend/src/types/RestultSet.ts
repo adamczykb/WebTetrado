@@ -59,7 +59,7 @@ export type nucleotide = {
     name: string;
     nucleotities:string[];
     glycosidicBond: string;
-    chi_angle: number;
+    chi_angle: string;
 };
 export type helice = {
     quadruplex: quadruplex[];

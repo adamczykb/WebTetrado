@@ -24,5 +24,5 @@ RUN python3 manage.py collectstatic --no-input
 
 
 WORKDIR /home/badamczyk/webtetrado
-# RUN mkdir /home/badamczyk/webtetrado/supervisor
+RUN mkdir -p /home/badamczyk/webtetrado/logs/celery/
 RUN supervisord

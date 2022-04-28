@@ -38,7 +38,7 @@ export const Result = () => {
   }, []);
   return (
     <>
-      <h1 style={{ marginTop: "20px" }}>Request number #{requestNumber}</h1>
+      <h1 style={{ marginTop: "20px" }}>Request code: {requestNumber}</h1>
       {resultSet.status == 5 ? (
         <Alert
           message="Error"

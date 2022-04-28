@@ -1,13 +1,15 @@
 import traceback
-from django.core.files.temp import NamedTemporaryFile
 import time
-from backend.models import BasePair, Helice, Log, Loop, Metadata, Nucleotide, Quadruplex, Tetrad, TetradPair, TetradoRequest
 import requests
 import json
 import base64
+
+from backend.models import BasePair, Helice, Log, Loop, Metadata, Nucleotide, Quadruplex, Tetrad, TetradPair, TetradoRequest
+from django.core.files.temp import NamedTemporaryFile
 from Bio.PDB import PDBParser, MMCIFParser
-from backend.scripts.tetradFileCreator import get_tetrad_file
+from backend.scripts.Processor.tetradFileFilter import get_cetrain_tetrad_file
 from webTetrado.settings import PROCESSOR_URL
+from backend.scripts.Processor.resultComposer import compose
 
 
 def add_base_pairs(base_pairs, db_id, user_request):
@@ -38,7 +40,7 @@ def add_nucleodities(nucleodities, db_id):
         nucleodity_entity.chain = nucleodity['chain']
         nucleodity_entity.glycosidicBond = nucleodity['glycosidicBond']
         nucleodity_entity.name = nucleodity['fullName']
-        nucleodity_entity.chi_angle = nucleodity['chi']
+        nucleodity_entity.chi_angle =  str(format('%.2f'%nucleodity['chi'])) if 'chi' in nucleodity else '-'
         nucleodity_entity.molecule = nucleodity['molecule']
         nucleodity_entity.save()
 
@@ -64,7 +66,7 @@ def add_tetrads(quadruplexes, db_id, quadruplex_entity, file_data, cif=False):
             query_id=db_id, name=tetrad['nt4'])
         quadruplex_entity_tetrad.save()
 
-        get_tetrad_file(file_data, [quadruplex_entity_tetrad.nt1.name, quadruplex_entity_tetrad.nt2.name,
+        get_cetrain_tetrad_file(file_data, [quadruplex_entity_tetrad.nt1.name, quadruplex_entity_tetrad.nt2.name,
                         quadruplex_entity_tetrad.nt3.name, quadruplex_entity_tetrad.nt4.name], quadruplex_entity_tetrad.tetrad_file, db_id, cif)
         quadruplex_entity_tetrad.save()
         quadruplex_entity.tetrad.add(quadruplex_entity_tetrad)
@@ -226,6 +228,8 @@ def add_to_queue(db_id):
                     user_request.dot_bracket_sequence = result['dotBracket']['sequence']
 
                     user_request.status = 4
+                    user_request.save()
+                    user_request.cached_result=compose(user_request.id)
                     user_request.save()
                     break
                 if r.status_code == 500:
