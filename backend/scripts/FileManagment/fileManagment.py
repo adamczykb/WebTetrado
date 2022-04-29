@@ -1,4 +1,5 @@
 from django.core.files.temp import NamedTemporaryFile
+from backend.models import TemporaryFile
 
 def handle_uploaded_file(f):
     data_file = NamedTemporaryFile()

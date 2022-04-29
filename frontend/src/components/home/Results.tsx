@@ -58,7 +58,7 @@ export const Results = () => {
               fontSize: "17px",
             }}
             placeholder={"Order number"}
-            maxLength={4}
+            maxLength={100}
           />
           <Button type="primary" onClick={()=> {if(inputValue!='') window.open('/result/'+inputValue,'_self')} }>Show</Button>
         </Input.Group>
