@@ -73,7 +73,7 @@ const MolStarPluginSpec: PluginUISpec = {
 function parseTetrad(tetrad: string) {
   return tetrad.split("-")
     .map(nucleotide => {
-      const chainId = nucleotide.charAt(0); // FIXME: sometimes chains have long names (> 1 char)
+      const chainId = nucleotide.split('.')[0]; // FIXME: sometimes chains have long names (> 1 char)
       const numbers = nucleotide.match(/(\d)+$/);
       if (!numbers) return;
       const residueId = parseInt(numbers[0], 10);
@@ -99,7 +99,7 @@ async function addTetradComponents(plugin: PluginUIContext, tetrads: tetrad[], s
   });
 
   // Create quadruplex structure
-  const quadruplexNumber = 1; // FIXME: should be unique for each quadruplex
+  let quadruplexNumber = 1; // FIXME: should be unique for each quadruplex
   const quadruplexExpression = MS.core.logic.or(nucleotideTetradExpressions);
   const quadruplexComponent = await plugin.builders.structure.tryCreateComponentFromExpression(
     structure,
@@ -108,7 +108,7 @@ async function addTetradComponents(plugin: PluginUIContext, tetrads: tetrad[], s
     {label: `Quadruplex ${quadruplexNumber}`}
   );
   if (!quadruplexComponent) return;
-
+  quadruplexNumber++
   // For each expression in nucleotides expression array, create tetrad component
   for (let i = 0; i < nucleotideTetradExpressions.length; i++) {
     const tetradExpression = MS.struct.generator.atomGroups({
@@ -198,9 +198,13 @@ const createPlugin = async (
   url: string,
   tetrads: tetrad[]
 ) => {
+  const file_format: String =
+    url.split(".")[url.split(".").length - 1] === "cif" ? "mmcif" : "pdb";
+  
   const plugin = await createPluginUI(parent, MolStarPluginSpec);
   const data = await plugin.builders.data.download({url: url}, {state: {isGhost: true}});
-  const trajectory = await plugin.builders.structure.parseTrajectory(data, "mmcif");
+  //@ts-ignore
+  const trajectory = await plugin.builders.structure.parseTrajectory(data, file_format);
   const model = await plugin.builders.structure.createModel(trajectory);
   const structure = await plugin.builders.structure.createStructure(model, {name: "model", params: {}});
   await addTetradComponents(plugin, tetrads, structure);
@@ -239,7 +243,6 @@ export class MolStarWrapper extends React.Component<MolStarWrapperProps> {
         });
       };
     }
-
     return init(
       this.plugin,
       this.parent,

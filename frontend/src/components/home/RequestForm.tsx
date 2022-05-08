@@ -1,17 +1,18 @@
-import { message, Input, Button, Switch, Form } from "antd";
+import { message, Input, Button, Switch, Form, Collapse } from "antd";
 import Dragger from "antd/lib/upload/Dragger";
 import { useState } from "react";
 import { InboxOutlined } from "@ant-design/icons";
 import config from "../../config.json";
 import { processingRequest } from "../../utils/adapters/ProcessingRequest";
 import { useCookies } from "react-cookie";
+import { useMediaQuery } from "react-responsive";
+const { Panel } = Collapse;
+
 export const RequestForm = () => {
-  const [cookies, setCookie] = useCookies(["userId"]);
 
   let form_values = {
     fileId: "",
     rscbPdbId: "",
-    userId: cookies.userId,
     settings: {
       complete2d: false,
       noReorder: false,
@@ -20,7 +21,7 @@ export const RequestForm = () => {
       strict: false,
     },
   };
-
+  let isDesktop = useMediaQuery({ query: "(min-width: 900px)" })
   const [formValues, setFormValues] = useState(form_values);
   const [loading, setLoading] = useState(false);
   const props = {
@@ -76,147 +77,224 @@ export const RequestForm = () => {
       return null;
     }
     setLoading(true);
-    processingRequest(formValues);
+    processingRequest(formValues,setLoading);
   };
   return (
     <Form labelCol={{ span: 16 }} wrapperCol={{ span: 32 }}>
-      <div className={"horizontal-center"}>
-        <div>
-          <div style={{ width: "400px", height: "200px" }}>
-            <Dragger {...props} style={{ padding: "20px" }}>
-              <p className="ant-upload-drag-icon">
-                <InboxOutlined />
-              </p>
-              <h3 className="ant-upload-text">
-                Click or drag file to this area to upload
-              </h3>
-              <h3 className="ant-upload-hint">*.cif, *.pdb</h3>
-            </Dragger>
-          </div>
-        </div>
-        <div className="split-layout__divider" style={{ width: "90px" }}>
-          <div className="split-layout__rule"></div>
-          <div className="split-layout__label">Or</div>
-          <div className="split-layout__rule"></div>
-        </div>
-        <div style={{ width: "400px" }} className={"vertical-center"}>
+      {isDesktop ? (
+        <div className={"horizontal-center"} style={{ height: 250 }}>
           <div>
-            <p style={{ margin: "0" }}>Get structure from RCSB:</p>
-            <Form.Item>
-              <Input
-                name="rcsbPdbId"
-                value={formValues.rscbPdbId}
-                onChange={(e) =>
-                  setFormValues({
-                    ...formValues,
-                    rscbPdbId: e.target.value.toUpperCase(),
-                  })
-                }
-                disabled={formValues.fileId != ""}
-                style={{
-                  width: "200px",
-                  paddingTop: "2px",
-                  paddingBottom: "2px",
-                }}
-                placeholder={"PDB ID eg. 1D59 "}
-                maxLength={4}
-              />
-            </Form.Item>
+            <div style={{ width: "400px", height: "200px" }}>
+              <h4 style={{ margin: "0", marginBottom: "5px" }}>
+                From local drive:
+              </h4>
+              <Dragger {...props} style={{ padding: "20px" }}>
+                <p className="ant-upload-drag-icon">
+                  <InboxOutlined />
+                </p>
+                <h3 className="ant-upload-text">
+                  Click or drag file to this area to upload
+                </h3>
+                <h3 className="ant-upload-hint">*.cif, *.pdb</h3>
+              </Dragger>
+            </div>
+          </div>
+          <div className="split-layout__divider" style={{ width: "90px" }}>
+            <div className="split-layout__rule"></div>
+            <div className="split-layout__label">Or</div>
+            <div className="split-layout__rule"></div>
+          </div>
+          <div style={{ width: "400px" }} className={"vertical-center"}>
+            <div>
+              <h4 style={{ margin: "0" }}>From Protein Data Bank:</h4>
+              <Form.Item>
+                <Input
+                  name="rcsbPdbId"
+                  value={formValues.rscbPdbId}
+                  onChange={(e) =>
+                    setFormValues({
+                      ...formValues,
+                      rscbPdbId: e.target.value.toUpperCase(),
+                    })
+                  }
+                  disabled={formValues.fileId != ""}
+                  style={{
+                    width: "200px",
+                    paddingTop: "2px",
+                    paddingBottom: "2px",
+                  }}
+                  placeholder={"PDB ID eg. 1D59 "}
+                  maxLength={4}
+                />
+              </Form.Item>
+            </div>
           </div>
         </div>
-      </div>
+      ) : (
+        <div>
+          <div
+            className="split-layout__rule__row"
+            style={{ borderStyle: "dashed", margin: "20px 0" }}
+          ></div>
+          <h4 style={{ margin: "0", marginBottom: "5px" }}>
+            From local drive:
+          </h4>
+          <Dragger {...props} style={{ padding: "20px" }}>
+            <p className="ant-upload-drag-icon">
+              <InboxOutlined />
+            </p>
+            <h3 className="ant-upload-text">
+              Click or drag file to this area to upload
+            </h3>
+            <h3 className="ant-upload-hint">*.cif, *.pdb</h3>
+          </Dragger>
+
+          <div className="split-layout__divider__row">
+            <div className="split-layout__rule__row"></div>
+            <div className="split-layout__label__row">Or</div>
+            <div className="split-layout__rule__row"></div>
+          </div>
+
+          <h4 style={{ margin: "0" }}>From Protein Data Bank:</h4>
+          <Form.Item>
+            <Input
+              name="rcsbPdbId"
+              value={formValues.rscbPdbId}
+              onChange={(e) =>
+                setFormValues({
+                  ...formValues,
+                  rscbPdbId: e.target.value.toUpperCase(),
+                })
+              }
+              disabled={formValues.fileId != ""}
+              style={{
+                paddingTop: "2px",
+                paddingBottom: "2px",
+                fontSize: "20px",
+              }}
+              placeholder={"PDB ID eg. 1D59 "}
+              maxLength={4}
+            />
+          </Form.Item>
+          <div
+            className="split-layout__rule__row"
+            style={{ borderStyle: "dashed", margin: "20px 0" }}
+          ></div>
+        </div>
+      )}
+
       <div
         className={"horizontal-center"}
         style={{ paddingTop: "30px", fontSize: "17px" }}
       >
-        <div
-          className="requestSetting"
-          style={{ width: "300px", paddingRight: "70px" }}
-        >
-          <Form.Item label="Complete 2D" valuePropName="checked">
-            <Switch
-              size="small"
-              checkedChildren="Yes"
-              unCheckedChildren="No"
-              onChange={() =>
-                setFormValues({
-                  ...formValues,
-                  settings: {
-                    ...formValues.settings,
-                    complete2d: !formValues.settings.complete2d,
-                  },
-                })
-              }
-            />
-          </Form.Item>
-          <Form.Item label="No reorder" valuePropName="checked">
-            <Switch
-              size="small"
-              checkedChildren="Yes"
-              unCheckedChildren="No"
-              onChange={() =>
-                setFormValues({
-                  ...formValues,
-                  settings: {
-                    ...formValues.settings,
-                    noReorder: !formValues.settings.noReorder,
-                  },
-                })
-              }
-            />
-          </Form.Item>
-          <Form.Item label="G4-limited search" valuePropName="checked">
-            <Switch
-              size="small"
-              checkedChildren="Yes"
-              unCheckedChildren="No"
-              defaultChecked
-              onChange={() =>
-                setFormValues({
-                  ...formValues,
-                  settings: {
-                    ...formValues.settings,
-                    g4Limited: !formValues.settings.g4Limited,
-                  },
-                })
-              }
-            />
-          </Form.Item>
-          <Form.Item label="Strict" valuePropName="checked">
-            <Switch
-              size="small"
-              checkedChildren="Yes"
-              unCheckedChildren="No"
-              onChange={() =>
-                setFormValues({
-                  ...formValues,
-                  settings: {
-                    ...formValues.settings,
-                    strict: !formValues.settings.strict,
-                  },
-                })
-              }
-            />
-          </Form.Item>
-          <Form.Item label="Stacking mismatch">
-            <Input
-              size="small"
-              type={"number"}
-              min="0"
-              max="4"
-              value={formValues.settings.stackingMatch}
-              onChange={(e) =>
-                setFormValues({
-                  ...formValues,
-                  settings: {
-                    ...formValues.settings,
-                    stackingMatch: e.target.valueAsNumber,
-                  },
-                })
-              }
-            />
-          </Form.Item>
-        </div>
+        <Collapse defaultActiveKey={1} style={{ width: "70%" }}>
+          <Panel header="Additional settings" key="1">
+            <Form.Item valuePropName="checked">
+              <div className="horizontal-item-center">
+                <div className="item-label">Complete 2D: </div>
+                <Switch
+                  size={isDesktop ? "small" : "default"}
+                  checkedChildren="Yes"
+                  unCheckedChildren="No"
+                  onChange={() =>
+                    setFormValues({
+                      ...formValues,
+                      settings: {
+                        ...formValues.settings,
+                        complete2d: !formValues.settings.complete2d,
+                      },
+                    })
+                  }
+                />
+              </div>
+            </Form.Item>
+            <Form.Item valuePropName="checked">
+              <div className="horizontal-item-center">
+                <div className="item-label">No reorder: </div>
+                <Switch
+                  size={isDesktop ? "small" : "default"}
+                  checkedChildren="Yes"
+                  unCheckedChildren="No"
+                  onChange={() =>
+                    setFormValues({
+                      ...formValues,
+                      settings: {
+                        ...formValues.settings,
+                        noReorder: !formValues.settings.noReorder,
+                      },
+                    })
+                  }
+                />
+              </div>
+            </Form.Item>
+            <Form.Item valuePropName="checked">
+              <div className="horizontal-item-center">
+                <div className="item-label">G4-limited search: </div>
+                <Switch
+                  size={isDesktop ? "small" : "default"}
+                  checkedChildren="Yes"
+                  unCheckedChildren="No"
+                  defaultChecked
+                  onChange={() =>
+                    setFormValues({
+                      ...formValues,
+                      settings: {
+                        ...formValues.settings,
+                        g4Limited: !formValues.settings.g4Limited,
+                      },
+                    })
+                  }
+                />
+              </div>
+            </Form.Item>
+            <Form.Item valuePropName="checked">
+              <div className="horizontal-item-center">
+                <div className="item-label">Strict: </div>
+                <Switch
+                  size={isDesktop ? "small" : "default"}
+                  checkedChildren="Yes"
+                  unCheckedChildren="No"
+                  onChange={() =>
+                    setFormValues({
+                      ...formValues,
+                      settings: {
+                        ...formValues.settings,
+                        strict: !formValues.settings.strict,
+                      },
+                    })
+                  }
+                />
+              </div>
+            </Form.Item>
+            <Form.Item>
+              <div className="horizontal-item-center">
+                <div
+                  className="item-label"
+                  style={isDesktop ? {} : { padding: "5px 0" }}
+                >
+                  Stacking mismatch:
+                </div>
+                <Input
+                  style={{ width: "calc(50% - 5px)", maxWidth: "100px" }}
+                  size={isDesktop ? "small" : "middle"}
+                  type={"number"}
+                  min="0"
+                  max="4"
+                  value={formValues.settings.stackingMatch}
+                  onChange={(e) =>
+                    setFormValues({
+                      ...formValues,
+                      settings: {
+                        ...formValues.settings,
+                        stackingMatch: e.target.valueAsNumber,
+                      },
+                    })
+                  }
+                />
+              </div>
+            </Form.Item>
+          </Panel>
+        </Collapse>
       </div>
       <div className={"horizontal-center"} style={{ paddingTop: "30px" }}>
         <Form.Item>

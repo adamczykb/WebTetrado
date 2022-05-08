@@ -1,7 +1,7 @@
 import { Table } from "antd";
 import {  tetrad_pair } from "../../types/RestultSet";
 
-export const TetradPairTable = (data: tetrad_pair[]) => {
+export const TetradPairTable = (data: tetrad_pair[],isDesktop:Boolean) => {
   const columns_tetrad_pairs = [
     {
       title: "Number",
@@ -32,13 +32,14 @@ export const TetradPairTable = (data: tetrad_pair[]) => {
   return (
     <>
       <h2 id="tetrad-pairs" style={{ marginTop: "40px" }}>
-                  Tetrad pairs
-                </h2>
-                <Table
-                  style={{ textAlign: "center" }}
-                  dataSource={data}
-                  columns={columns_tetrad_pairs}
-                />
+        Tetrad pairs
+      </h2>
+      <Table
+        style={{ textAlign: "center" }}
+        dataSource={data}
+        scroll={isDesktop ? { x: "auto" } : { x: "100%" }}
+        columns={columns_tetrad_pairs}
+      />
     </>
   );
 };

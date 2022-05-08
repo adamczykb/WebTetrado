@@ -32,7 +32,7 @@ CSRF_COOKIE_NAME = "csrftoken"
 
 PROTECTED_MEDIA_FOLDERS=['uploads']
 # Application definition
-
+DATA_UPLOAD_MAX_NUMBER_FIELDS=10000
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -198,7 +198,7 @@ RQ_QUEUES = {
         'PORT': 6379,
         'DB': 0,
         'PASSWORD': '',
-        'DEFAULT_TIMEOUT': 3600,
+        'DEFAULT_TIMEOUT': 86400,
         'USE_REDIS_CACHE': 'default',
     },
 }

@@ -1,7 +1,7 @@
 import { Table } from "antd";
 import { base_pair } from "../../types/RestultSet";
 
-export const BasePairTable = (data: base_pair[]) => {
+export const BasePairTable = (data: base_pair[],isDesktop:Boolean) => {
   const columns_base_pairs = [
     {
       title: "Number",
@@ -43,6 +43,7 @@ export const BasePairTable = (data: base_pair[]) => {
             style={{ textAlign: "center" }}
             dataSource={data}
             columns={columns_base_pairs}
+            scroll={isDesktop ? { x: "auto" } : { x: "100%" }}
           />
     </>
   );

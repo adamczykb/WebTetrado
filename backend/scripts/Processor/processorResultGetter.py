@@ -15,129 +15,174 @@ from backend.scripts.Processor.resultComposer import compose
 def add_base_pairs(base_pairs, db_id, user_request):
     base_pair_tetrad = set([])
     for base_pair in base_pairs:
-        if not tuple(sorted((base_pair['nt1'], base_pair['nt2']))) in base_pair_tetrad:
-            base_pair_tetrad.add(
-                tuple(sorted((base_pair['nt1'], base_pair['nt2']))))
-            base_pair_entity = BasePair()
-            base_pair_entity.nt1 = Nucleotide.objects.get(
-                query_id=db_id, name=base_pair['nt1'])
-            base_pair_entity.nt2 = Nucleotide.objects.get(
-                query_id=db_id, name=base_pair['nt2'])
-            base_pair_entity.edge3 = base_pair['edge3']
-            base_pair_entity.edge5 = base_pair['edge5']
-            base_pair_entity.stericity = base_pair['stericity']
-            base_pair_entity.save()
-            user_request.base_pair.add(base_pair_entity)
+        try:
+            if not tuple(sorted((base_pair['nt1'], base_pair['nt2']))) in base_pair_tetrad:
+                base_pair_tetrad.add(
+                    tuple(sorted((base_pair['nt1'], base_pair['nt2']))))
+                base_pair_entity = BasePair()
+                base_pair_entity.nt1 = Nucleotide.objects.get(
+                    query_id=db_id, name=base_pair['nt1'])
+                base_pair_entity.nt2 = Nucleotide.objects.get(
+                    query_id=db_id, name=base_pair['nt2'])
+                base_pair_entity.edge3 = base_pair['edge3']
+                base_pair_entity.edge5 = base_pair['edge5']
+                base_pair_entity.stericity = base_pair['stericity']
+                base_pair_entity.save()
+                user_request.base_pair.add(base_pair_entity)
+        except Exception:
+            user_request.status = 5
+            Log.objects.create(type='Error [processing_add_base_pairs] ',
+                            info=str(db_id), traceback=traceback.format_exc()).save()
+            user_request.error='Error during adding base pairs'
+            user_request.save()
 
 
-def add_nucleodities(nucleodities, db_id):
+def add_nucleodities(nucleodities, db_id,user_request):
     for nucleodity in nucleodities:
-        nucleodity_entity = Nucleotide()
-        nucleodity_entity.query_id = db_id
-        nucleodity_entity.number = nucleodity['number']
-        nucleodity_entity.symbol = nucleodity['shortName']
-        nucleodity_entity.symbol = nucleodity['shortName']
-        nucleodity_entity.chain = nucleodity['chain']
-        nucleodity_entity.glycosidicBond = nucleodity['glycosidicBond']
-        nucleodity_entity.name = nucleodity['fullName']
-        nucleodity_entity.chi_angle =  str(format('%.2f'%nucleodity['chi'])) if 'chi' in nucleodity else '-'
-        nucleodity_entity.molecule = nucleodity['molecule']
-        nucleodity_entity.save()
+        try:
+            nucleodity_entity = Nucleotide()
+            nucleodity_entity.query_id = db_id
+            nucleodity_entity.number = nucleodity['number']
+            nucleodity_entity.symbol = nucleodity['shortName']
+            nucleodity_entity.symbol = nucleodity['shortName']
+            nucleodity_entity.chain = nucleodity['chain']
+            nucleodity_entity.glycosidicBond = nucleodity['glycosidicBond']
+            nucleodity_entity.name = nucleodity['fullName']
+            nucleodity_entity.chi_angle =  str(format('%.2f'%nucleodity['chi'])) if 'chi' in nucleodity else '-'
+            nucleodity_entity.molecule = nucleodity['molecule']
+            nucleodity_entity.save()
+        except Exception:
+            user_request.status = 5
+            Log.objects.create(type='Error [processing_add_nucleodities] ',
+                            info=str(db_id), traceback=traceback.format_exc()).save()
+            user_request.error='Error during adding nucleodities'
+            user_request.save()
 
 
-def add_tetrads(quadruplexes, db_id, quadruplex_entity, file_data, cif=False):
+def add_tetrads(quadruplexes, db_id, quadruplex_entity, file_data,user_request, cif=False):
     for tetrad in quadruplexes:
-        quadruplex_entity_tetrad = Tetrad()
-        quadruplex_entity_tetrad_metadata = Metadata()
-        quadruplex_entity_tetrad_metadata.tetrad_combination = tetrad['gbaClassification']
-        quadruplex_entity_tetrad_metadata.planarity = tetrad['planarityDeviation']
-        quadruplex_entity_tetrad_metadata.onz_class = tetrad['onz']
-        quadruplex_entity_tetrad_metadata.save()
-        quadruplex_entity_tetrad.metadata = quadruplex_entity_tetrad_metadata
-        quadruplex_entity_tetrad.name = tetrad['id']
-        quadruplex_entity_tetrad.query_id = db_id
-        quadruplex_entity_tetrad.nt1 = Nucleotide.objects.get(
-            query_id=db_id, name=tetrad['nt1'])
-        quadruplex_entity_tetrad.nt2 = Nucleotide.objects.get(
-            query_id=db_id, name=tetrad['nt2'])
-        quadruplex_entity_tetrad.nt3 = Nucleotide.objects.get(
-            query_id=db_id, name=tetrad['nt3'])
-        quadruplex_entity_tetrad.nt4 = Nucleotide.objects.get(
-            query_id=db_id, name=tetrad['nt4'])
-        quadruplex_entity_tetrad.save()
+        try:
+            quadruplex_entity_tetrad = Tetrad()
+            quadruplex_entity_tetrad_metadata = Metadata()
+            quadruplex_entity_tetrad_metadata.tetrad_combination = tetrad['gbaClassification']
+            quadruplex_entity_tetrad_metadata.planarity = tetrad['planarityDeviation']
+            quadruplex_entity_tetrad_metadata.onz_class = tetrad['onz']
+            quadruplex_entity_tetrad_metadata.save()
+            quadruplex_entity_tetrad.metadata = quadruplex_entity_tetrad_metadata
+            quadruplex_entity_tetrad.name = tetrad['id']
+            quadruplex_entity_tetrad.query_id = db_id
+            quadruplex_entity_tetrad.nt1 = Nucleotide.objects.get(
+                query_id=db_id, name=tetrad['nt1'])
+            quadruplex_entity_tetrad.nt2 = Nucleotide.objects.get(
+                query_id=db_id, name=tetrad['nt2'])
+            quadruplex_entity_tetrad.nt3 = Nucleotide.objects.get(
+                query_id=db_id, name=tetrad['nt3'])
+            quadruplex_entity_tetrad.nt4 = Nucleotide.objects.get(
+                query_id=db_id, name=tetrad['nt4'])
+            quadruplex_entity_tetrad.save()
 
-        get_cetrain_tetrad_file(file_data, [quadruplex_entity_tetrad.nt1.name, quadruplex_entity_tetrad.nt2.name,
-                        quadruplex_entity_tetrad.nt3.name, quadruplex_entity_tetrad.nt4.name], quadruplex_entity_tetrad.tetrad_file, db_id, cif)
-        quadruplex_entity_tetrad.save()
-        quadruplex_entity.tetrad.add(quadruplex_entity_tetrad)
+            get_cetrain_tetrad_file(file_data, [quadruplex_entity_tetrad.nt1.name, quadruplex_entity_tetrad.nt2.name,
+                            quadruplex_entity_tetrad.nt3.name, quadruplex_entity_tetrad.nt4.name], quadruplex_entity_tetrad.tetrad_file, db_id, cif)
+            quadruplex_entity_tetrad.save()
+            quadruplex_entity.tetrad.add(quadruplex_entity_tetrad)
+        except Exception:
+            user_request.status = 5
+            Log.objects.create(type='Error [processing_add_tetrad] ',
+                            info=str(db_id), traceback=traceback.format_exc()).save()
+            user_request.error='Error during adding tetrads'
+
+            user_request.save()
 
 
-def add_loops(loops, db_id, quadruplex_entity):
+def add_loops(loops, db_id, quadruplex_entity,user_request):
     for loop in loops:
-        quadruplex_entity_loop = Loop()
-        quadruplex_entity_loop.type = loop['type']
-        quadruplex_entity_loop.length = len(loop['nucleotides'])
-        quadruplex_entity_loop.save()
-        for nucleotide in loop['nucleotides']:
-            quadruplex_entity_loop.nucleotide.add(
-                Nucleotide.objects.get(query_id=db_id, name=nucleotide))
-        quadruplex_entity_loop.save()
-        quadruplex_entity.loop.add(quadruplex_entity_loop)
+        try:
+            quadruplex_entity_loop = Loop()
+            quadruplex_entity_loop.type = loop['type']
+            quadruplex_entity_loop.length = len(loop['nucleotides'])
+            quadruplex_entity_loop.save()
+            for nucleotide in loop['nucleotides']:
+                quadruplex_entity_loop.nucleotide.add(
+                    Nucleotide.objects.get(query_id=db_id, name=nucleotide))
+            quadruplex_entity_loop.save()
+            quadruplex_entity.loop.add(quadruplex_entity_loop)
+        except Exception:
+            user_request.status = 5
+            Log.objects.create(type='Error [processing_add_loops] ',
+                            info=str(db_id), traceback=traceback.format_exc()).save()
+
+            user_request.error='Error during adding loops'
+            user_request.save()  
 
 
-def add_tetrad_pairs(tetradPairs, db_id, helice_entity):
+def add_tetrad_pairs(tetradPairs, db_id, helice_entity,user_request):
     for tetrad_pair in tetradPairs:
-        tetrad_pair_entity = TetradPair()
-        tetrad_pair_entity.tetrad1 = Tetrad.objects.get(
-            name=tetrad_pair['tetrad1'], query_id=db_id)
-        tetrad_pair_entity.tetrad2 = Tetrad.objects.get(
-            name=tetrad_pair['tetrad2'], query_id=db_id)
-        tetrad_pair_entity.rise = tetrad_pair['rise']
-        tetrad_pair_entity.twist = tetrad_pair['twist']
-        tetrad_pair_entity.strand_direction = tetrad_pair['direction']
-        tetrad_pair_entity.save()
-        helice_entity.tetrad_pair.add(tetrad_pair_entity)
+        try:
+            tetrad_pair_entity = TetradPair()
+            tetrad_pair_entity.tetrad1 = Tetrad.objects.get(
+                name=tetrad_pair['tetrad1'], query_id=db_id)
+            tetrad_pair_entity.tetrad2 = Tetrad.objects.get(
+                name=tetrad_pair['tetrad2'], query_id=db_id)
+            tetrad_pair_entity.rise = tetrad_pair['rise']
+            tetrad_pair_entity.twist = tetrad_pair['twist']
+            tetrad_pair_entity.strand_direction = tetrad_pair['direction']
+            tetrad_pair_entity.save()
+            helice_entity.tetrad_pair.add(tetrad_pair_entity)
+        except Exception:
+            user_request.status = 5
+            Log.objects.create(type='Error [processing_add_tetrad_pairs] ',
+                            info=str(db_id), traceback=traceback.format_exc()).save()
+
+            user_request.error='Error during adding tetrad pairs'
+            user_request.save()  
 
 
-def add_quadruplexes(quadruplexes, file_data, db_id, helice_entity, request_key, cif=False):
+def add_quadruplexes(quadruplexes, file_data, db_id, helice_entity,user_request, cif=False):
     for quadruplex in quadruplexes:
-        quadruplex_entity = Quadruplex()
-        quadruplex_entity_metadata = Metadata()
-        quadruplex_entity_metadata.tetrad_combination = ", ".join(
-            str(x) for x in quadruplex['gbaClassification'])
-        quadruplex_entity_metadata.onz_class = quadruplex['onzm']
-        quadruplex_entity_metadata.loopClassification = quadruplex['loopClassification']
-        quadruplex_entity_metadata.molecule = file_data.header['head'].upper()
+        try:
+            quadruplex_entity = Quadruplex()
+            quadruplex_entity_metadata = Metadata()
+            quadruplex_entity_metadata.tetrad_combination = ", ".join(
+                str(x) for x in quadruplex['gbaClassification'])
+            quadruplex_entity_metadata.onz_class = quadruplex['onzm']
+            quadruplex_entity_metadata.loopClassification = quadruplex['loopClassification']
+            quadruplex_entity_metadata.molecule = file_data.header['head'].upper()
 
-        quadruplex_entity_metadata.save()
-        quadruplex_entity.metadata = quadruplex_entity_metadata
-        quadruplex_entity.save()
+            quadruplex_entity_metadata.save()
+            quadruplex_entity.metadata = quadruplex_entity_metadata
+            quadruplex_entity.save()
 
-        add_loops(quadruplex['loops'], db_id, quadruplex_entity)
-        add_tetrads(quadruplex['tetrads'], db_id,
-                    quadruplex_entity, file_data, cif)
-        chains=[]
-        for tetrad in quadruplex_entity.tetrad.all():
-            chains.append(tetrad.nt1.chain)
-            chains.append(tetrad.nt2.chain)
-            chains.append(tetrad.nt3.chain)
-            chains.append(tetrad.nt4.chain)
-        tetrads_chains = len(list(set(chains)))
-        if tetrads_chains == 1:
-            type = 'UNI'
-        elif tetrads_chains == 2:
-            type = 'BI'
-        elif tetrads_chains == 4:
-            type = 'TETRA'
-        else:
-            type = 'OTHER'
-        
-        quadruplex_entity_metadata.type = type
-        quadruplex_entity_metadata.save()
-        quadruplex_entity.metadata = quadruplex_entity_metadata
-        quadruplex_entity.save()
-        helice_entity.quadruplex.add(quadruplex_entity)
+            add_loops(quadruplex['loops'], db_id, quadruplex_entity,user_request)
+            add_tetrads(quadruplex['tetrads'], db_id,
+                        quadruplex_entity, file_data,user_request, cif)
+            chains=[]
+            for tetrad in quadruplex_entity.tetrad.all():
+                chains.append(tetrad.nt1.chain)
+                chains.append(tetrad.nt2.chain)
+                chains.append(tetrad.nt3.chain)
+                chains.append(tetrad.nt4.chain)
+            tetrads_chains = len(list(set(chains)))
+            if tetrads_chains == 1:
+                type = 'UNI'
+            elif tetrads_chains == 2:
+                type = 'BI'
+            elif tetrads_chains == 4:
+                type = 'TETRA'
+            else:
+                type = 'OTHER'
+            
+            quadruplex_entity_metadata.type = type
+            quadruplex_entity_metadata.save()
+            quadruplex_entity.metadata = quadruplex_entity_metadata
+            quadruplex_entity.save()
+            helice_entity.quadruplex.add(quadruplex_entity)
+        except Exception:
+                user_request.status = 5
+                Log.objects.create(type='Error [processing_add_quadruplexes] ',
+                                info=str(db_id), traceback=traceback.format_exc()).save()
 
+                user_request.error='Error during adding quadruplexes'
+                user_request.save()  
 
 def add_to_queue(db_id):
     user_request = TetradoRequest.objects.get(id=db_id)
@@ -212,15 +257,15 @@ def add_to_queue(db_id):
                             break
                         time.sleep(1)
 
-                    add_nucleodities(result['nucleotides'], db_id)
+                    add_nucleodities(result['nucleotides'], db_id,user_request)
 
                     for helice in result['helices']:
                         helice_entity = Helice()
                         helice_entity.save()
-                        add_quadruplexes(helice['quadruplexes'], data, db_id, helice_entity,
-                                            request_key, user_request.file_extension == 'cif')
+                        add_quadruplexes(helice['quadruplexes'], data, db_id, helice_entity,user_request,
+                                             user_request.file_extension == 'cif')
                         add_tetrad_pairs(
-                            helice['tetradPairs'], db_id, helice_entity)
+                            helice['tetradPairs'], db_id, helice_entity,user_request)
                         user_request.helice.add(helice_entity)
                     add_base_pairs(result['basePairs'], db_id, user_request)
                     user_request.dot_bracket_line1 = result['dotBracket']['line1']

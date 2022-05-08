@@ -107,7 +107,7 @@ export const StructureVisualisation = (
         </div>
       </Descriptions.Item>
       {resultSet.structure_file != "" ? (
-        <Descriptions.Item label="Mol*" className="two-d-description-item">
+        <Descriptions.Item span={3} label="Mol*" className="two-d-description-item">
           <div>
             <MolStarWrapper
               structure_file={config.SERVER_URL + resultSet.structure_file}

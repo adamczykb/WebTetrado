@@ -1,7 +1,7 @@
 import { Table } from "antd";
 import { chi_angle_value } from "../../types/RestultSet";
 
-export const ChiAngleTable = (data: chi_angle_value[]) => {
+export const ChiAngleTable = (data: chi_angle_value[],isDesktop:Boolean) => {
   const columns_chi = [
     {
       title: "Number",
@@ -38,6 +38,7 @@ export const ChiAngleTable = (data: chi_angle_value[]) => {
         style={{ textAlign: "center" }}
         dataSource={data}
         columns={columns_chi}
+        scroll={isDesktop ? { x: "auto" } : { x: "100%" }}
       />
     </>
   );

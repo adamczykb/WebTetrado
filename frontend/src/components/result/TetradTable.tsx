@@ -2,7 +2,7 @@ import { Button, Table } from "antd";
 import { tetrad } from "../../types/RestultSet";
 import "../../assets/css/DesktopLayout.css";
 import { DownloadOutlined } from "@ant-design/icons";
-export const TetradTable = (data: tetrad[], g4Limited: boolean) => {
+export const TetradTable = (data: tetrad[], g4Limited: boolean,isDesktop:Boolean) => {
   const columns_tetrad = [
     {
       title: "Number",
@@ -52,6 +52,7 @@ export const TetradTable = (data: tetrad[], g4Limited: boolean) => {
         style={{ textAlign: "center" }}
         dataSource={data}
         columns={columns_tetrad}
+        scroll={isDesktop ? { x: "auto" } : { x: "100%" }}
         rowClassName={(_r, i) =>
           data[i].sequence == "GGGG" && g4Limited ? "colored-row" : ""
         }

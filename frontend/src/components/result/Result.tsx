@@ -13,6 +13,7 @@ import { TetradPairTable } from "./TetradPairTable";
 import { BasePairTable } from "./BasePairTable";
 import { NucleotideTable } from "./NucleotideTable";
 import { processingResponse } from "../../utils/adapters/ProcessingResponse";
+import { useMediaQuery } from "react-responsive";
 
 export const Result = () => {
   let result: result_values = {
@@ -30,6 +31,8 @@ export const Result = () => {
     helice: [],
     nucleotide: [],
   };
+  let isDesktop = useMediaQuery({ query: "(min-width: 900px)" })
+
   const { requestNumber } = useParams();
   let [loading, setLoading] = useState(true);
   let [resultSet, setResultSet] = useState(result);
@@ -192,24 +195,24 @@ export const Result = () => {
                         </p>
                         {StructureVisualisation(v, resultSet)}
                         <Divider />
-                        {TetradTable(v.tetrad, resultSet.g4_limited)}
+                        {TetradTable(v.tetrad, resultSet.g4_limited,isDesktop)}
                         <Divider />
-                        {LoopTable(v.loop)}
+                        {LoopTable(v.loop,isDesktop)}
                         <Divider />
-                        {ChiAngleTable(v.chi_angle_value)}
+                        {ChiAngleTable(v.chi_angle_value,isDesktop)}
                       </TabPane>
                     ))}
                   </Tabs>
                   <Divider />
-                  {TetradPairTable(z.tetrad_pair)}
+                  {TetradPairTable(z.tetrad_pair,isDesktop)}
                   <Divider />
                 </TabPane>
               ))}
             </Tabs>
           )}
-          {BasePairTable(resultSet.base_pair)}
+          {BasePairTable(resultSet.base_pair,isDesktop)}
           <Divider />
-          {NucleotideTable(resultSet.nucleotide)}
+          {NucleotideTable(resultSet.nucleotide,isDesktop)}
         </>
       )}
     </>

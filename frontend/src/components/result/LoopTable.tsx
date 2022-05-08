@@ -1,7 +1,7 @@
 import { Table } from "antd";
 import { loop } from "../../types/RestultSet";
 
-export const LoopTable = (data: loop[]) => {
+export const LoopTable = (data: loop[],isDesktop:Boolean) => {
   const columns_loops = [
     {
       title: "Number",
@@ -38,7 +38,7 @@ export const LoopTable = (data: loop[]) => {
         style={{ textAlign: "center" }}
         dataSource={data}
         columns={columns_loops}
-      />
+        scroll={isDesktop ? { x: "auto" } : { x: "100%" }}/>
     </>
   );
 };

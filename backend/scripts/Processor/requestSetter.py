@@ -3,14 +3,14 @@ from django.core.files.temp import NamedTemporaryFile
 from django.http import HttpResponse
 from backend.models import TemporaryFile, TetradoRequest
 from backend.scripts.Processor.processorResultGetter import add_to_queue
-import django_rq, redis, os, logging, json, requests
+import django_rq, redis, json, requests
 
 
 def set_request_action(request):    
     body_unicode = request.body.decode('utf-8')
     body = json.loads(body_unicode)
     entity = TetradoRequest()
-    entity.cookie_user_id=body['userId']
+    entity.cookie_user_id=""
     entity.complete_2d=body['settings']['complete2d']
     entity.no_reorder=body['settings']['noReorder']
     entity.strict=body['settings']['strict']
@@ -34,7 +34,7 @@ def set_request_action(request):
             entity.file_extension='cif'
             entity.structure_body.save(name= body['rscbPdbId']+'.cif',content=data_file)
         else:
-            return HttpResponse(status=500)
+            return HttpResponse(status=404)
     else:
             return HttpResponse(status=500)
 

@@ -1,7 +1,7 @@
 import { Table } from "antd";
 import {  nucleotide } from "../../types/RestultSet";
 
-export const NucleotideTable = (data: nucleotide[]) => {
+export const NucleotideTable = (data: nucleotide[],isDesktop:Boolean) => {
   const columns_nucleotides = [
     {
       title: "Number",
@@ -37,6 +37,7 @@ export const NucleotideTable = (data: nucleotide[]) => {
       <Table
         style={{ textAlign: "center" }}
         dataSource={data}
+        scroll={isDesktop ? { x: "auto" } : { x: "100%" }}
         columns={columns_nucleotides}
       />
     </>
