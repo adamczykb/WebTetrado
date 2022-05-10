@@ -18,6 +18,10 @@ class Quadruplex(admin.ModelAdmin):
     list_display = ('id', 'metadata')
 
 
+@admin.register(Helice)
+class Helice(admin.ModelAdmin):
+    list_display = ('id',)
+
 @admin.register(BasePair)
 class Base_Pair(admin.ModelAdmin):
     list_display = ('id', 'nt1', 'nt2', 'edge3', 'edge5', 'stericity')
