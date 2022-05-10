@@ -166,7 +166,7 @@ class TetradoRequest(models.Model):
         upload_to='files/results/layers/', blank=True)
 
     cached_result= models.TextField(blank=True)
-    error=models.TextField(default='')
+    error=models.TextField(default='',blank=True)
     def __str__(self):
         return 'Request '+str(self.id)+' ('+str(self.source)+') <'+str(self.status)+'> '
 

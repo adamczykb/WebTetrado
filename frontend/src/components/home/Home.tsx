@@ -3,6 +3,7 @@ import { Divider } from '../layout/common/Divider';
 import { RequestForm } from './RequestForm';
 import { Results } from './Results';
 import { useMediaQuery } from 'react-responsive';
+import { Button } from 'antd';
 
 export const Home = () => {
 
@@ -38,6 +39,11 @@ export const Home = () => {
           from the same tetrad sets the tetrad directionality, clockwise (+) or
           anticlockwise (-).
         </h3>
+        <div className="horizontal-center">
+          <a href="/examples" rel="noreferrer">
+            <Button type="primary">Check out examples</Button>
+          </a>
+        </div>
         <Divider />
         <h1
           id="check-your-structure"

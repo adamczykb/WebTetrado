@@ -104,7 +104,7 @@ export const Result = () => {
               </h2>
             </>
           ) : (
-            <Tabs defaultActiveKey="0" type="card" tabPosition={"top"}>
+            <Tabs defaultActiveKey="0" type="card" tabPosition={"top"} >
               {[...Array.from(resultSet.helice, (z, i) => z)].map((z, i) => (
                 <TabPane tab={`Helice ${i + 1}`} key={i}>
                   <Tabs defaultActiveKey="0" type="card" tabPosition={"top"}>
@@ -114,12 +114,14 @@ export const Result = () => {
                         (v, j) => v
                       ),
                     ].map((v, j) => (
-                      <TabPane tab={`Quadruplex ${j + 1}`} key={j}>
+                      <TabPane  tab={`Quadruplex ${j + 1}`} key={j}>
                         <Descriptions
                           title="Analytics result"
                           bordered
                           layout="horizontal"
                           labelStyle={{ fontWeight: "bold", textAlign: "left" }}
+                          contentStyle={{whiteSpace:'nowrap' }}
+                          style={{width:'100%'}}
                         >
                           {resultSet.idcode != "" ? (
                             <Descriptions.Item label="PDB ID:">

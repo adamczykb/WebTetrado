@@ -10,6 +10,7 @@ import "../../../assets/css/DesktopLayout.css";
 import pp_img from "../../../assets/images/PP-PUT_logo_jasne.png";
 import ichb_img from "../../../assets/images/ICHB_PAN_EN_kolor.png";
 import rna_polis_img from "../../../assets/images/RNApolis-logo.png";
+import { useMediaQuery } from "react-responsive";
 
 const ContentList: React.FC = () => {
   const [targetOffset, setTargetOffset] = useState<number | undefined>(
@@ -71,6 +72,54 @@ const ContentList: React.FC = () => {
     </div>
   );
 };
+const LogoInFooter: React.FC = () => {
+  
+  return useMediaQuery({ query: "(max-width: 1800px)" }) ? (
+    <div>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <a
+          target="_blank"
+          rel="noreferrer"
+          href={"https://www.put.poznan.pl/index.php/en"}
+        >
+          <img
+            alt={"PP logo"}
+            style={{ width: "80px", marginRight: "20px" }}
+            src={pp_img}
+          />
+        </a>
+        <a
+          target="_blank"
+          rel="noreferrer"
+          href={"https://www.ibch.poznan.pl/en.html"}
+        >
+          <img
+            alt={"IBCH logo"}
+            style={{ width: "80px", marginLeft: "20px" }}
+            src={ichb_img}
+          />
+        </a>
+      </div>
+      <div style={{ margin: "30px 0" }}>
+        <a target="_blank" rel="noreferrer" href={"https://www.rnapolis.pl/"}>
+          <img
+            alt={"RNApolis"}
+            style={{ width: "200px" }}
+            src={rna_polis_img}
+          />
+        </a>
+      </div>
+    </div>
+  ) : (
+    <></>
+  );
+};
 export class DesktopLayout extends React.Component {
   render(): React.ReactNode {
     return (
@@ -120,6 +169,10 @@ export class DesktopLayout extends React.Component {
               </Menu.Item>
 
               <Menu.Item key="4">
+                <a href="/examples">Examples</a>
+              </Menu.Item>
+
+              <Menu.Item key="5">
                 <a href="/about">About</a>
               </Menu.Item>
             </Menu>
@@ -143,6 +196,8 @@ export class DesktopLayout extends React.Component {
           </div>
         </Content>
         <Footer style={{ textAlign: "center" }}>
+          <LogoInFooter/>
+            
           WebTetrado 2022 |{" "}
           <a
             href="https://github.com/adamczykb"
