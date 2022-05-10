@@ -20,16 +20,21 @@
         function gtag() {
             dataLayer.push(arguments);
         }
-       
 
         gtag('consent', 'default', {
             'ad_storage': 'denied',
             'analytics_storage': 'denied',
-            'client_storage':'denied'
+            'client_storage':'denied',
+            'user_id':'123',
+
+
 
         });
-       
-        gtag('config', 'G-7P8Q7NQ6CM');
+        gtag('js', new Date());
+
+        gtag('config', 'G-7P8Q7NQ6CM',{
+            'user_id':'123'
+        });
     </script>
     <title>WebTetrado | Online tool for identification and classification of tetrads and quadruplexes</title>
 </head>
