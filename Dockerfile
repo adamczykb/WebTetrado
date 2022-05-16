@@ -21,6 +21,7 @@ RUN pip3 install -r requirements.txt
 
 WORKDIR /home/badamczyk/webtetrado
 EXPOSE 8000
+EXPOSE 8020
 RUN python3 manage.py collectstatic --no-input
 
 
