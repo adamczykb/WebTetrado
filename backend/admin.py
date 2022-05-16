@@ -1,5 +1,7 @@
+import json
 from django.contrib import admin
-from backend.models import Helice, Loop, Metadata, Nucleotide, Quadruplex, TemporaryFile, Tetrad, TetradPair, TetradoRequest, BasePair, Log
+from backend.models import Helice, Loop, Metadata, Nucleotide, PushInformation, Quadruplex, TemporaryFile, Tetrad, TetradPair, TetradoRequest, BasePair, Log
+from backend.scripts.webPush import _send_notification
 
 
 @admin.register(TemporaryFile)
@@ -55,7 +57,22 @@ class Metadata(admin.ModelAdmin):
     list_display = ('id', 'molecule', 'method', 'planarity', 'onz_class',
                     'tetrad_combination', 'loopClassification', 'structure_dot_bracked')
 
+@admin.register(PushInformation)
+class PushInfoAdmin(admin.ModelAdmin):
+    list_display = ("__str__", "hash_id", "browser", "user_agent")
+    actions = ("send_test_message",)
+
+    def send_test_message(self, request, queryset):
+        payload = {"head": "Hey", "body": "Hello World"}
+        for device in queryset:
+            notification = _send_notification(device, json.dumps(payload), 0)
+            if notification:
+                self.message_user(request, "Test sent successfully")
+            else:
+                self.message_user(request, "Deprecated subscription deleted")
+
 
 @admin.register(Log)
 class Log(admin.ModelAdmin):
     list_display = ('type', 'info', 'timestamp')
+

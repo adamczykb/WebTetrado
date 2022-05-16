@@ -123,6 +123,14 @@ def remove_file(**kwargs):
     instance.file.delete(save=False)
 
 
+class PushInformation(models.Model):
+    hash_id = models.UUIDField(default=uuid.uuid1, editable=False)
+    browser = models.CharField(max_length=100)
+    user_agent = models.CharField(max_length=500,blank=True)
+    endpoint = models.URLField(max_length=500)
+    auth = models.CharField(max_length=100)
+    p256dh = models.CharField(max_length=100)
+
 class TetradoRequest(models.Model):
     class Sources(models.IntegerChoices):
         RCSB = 1, 'RCSB'
@@ -156,16 +164,19 @@ class TetradoRequest(models.Model):
     structure_method = models.CharField(max_length=200)
     idcode = models.CharField(max_length=20)
 
-    helice = models.ManyToManyField(Helice)
+    helice = models.ManyToManyField(Helice,blank=True)
     timestamp = models.DateTimeField(auto_now=True)
     elTetradoKey = models.CharField(max_length=100)
-    base_pair = models.ManyToManyField(BasePair)
+    base_pair = models.ManyToManyField(BasePair,blank=True)
     varna = models.FileField(upload_to='files/results/varna/', blank=True)
     r_chie = models.FileField(upload_to='files/results/r_chie/', blank=True)
     draw_tetrado = models.FileField(
         upload_to='files/results/layers/', blank=True)
 
     cached_result= models.TextField(blank=True)
+    
+    push_notification = models.ManyToManyField(PushInformation,blank=True)
+
     error=models.TextField(default='',blank=True)
     def __str__(self):
         return 'Request '+str(self.id)+' ('+str(self.source)+') <'+str(self.status)+'> '
@@ -181,6 +192,9 @@ def remove_file(**kwargs):
         base_pair.delete()
     for helice in instance.helice.all():
         helice.delete()
+
+
+
 
 
 class Log(models.Model):

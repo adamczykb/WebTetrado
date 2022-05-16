@@ -69,6 +69,7 @@ export type result_values = {
     name: string;
     dot_bracket:dot_bracket_values;
     status: number;
+    error_message:string;
     structure_method: string;
     structure_file:string;
     g4_limited:boolean;

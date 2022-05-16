@@ -1,4 +1,5 @@
 {
     "SERVER_URL":"",
-    "FRONTEND_URL":"" 
+    "SERVER_WEB_SOCKET_URL":"ws://webtetrado.cs.put.poznan.pl/ws/",
+    "FRONTEND_URL":""
 }

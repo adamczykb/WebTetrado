@@ -1,4 +1,4 @@
-import { Descriptions, Button, Image, message } from "antd";
+import { Button, Image} from "antd";
 import config from "../../config.json";
 import { DownloadOutlined } from "@ant-design/icons";
 import { quadruplex, result_values } from "../../types/RestultSet";
@@ -24,10 +24,7 @@ function downloadFile(type: any, url: any) {
     })
     .catch((error) => console.log(error));
 }
-export const StructureVisualisation = (
-  data: quadruplex,
-  resultSet: result_values
-) => {
+export const StructureVisualisation = (data: quadruplex, resultSet: result_values) => {
   const extension = resultSet.structure_file.split(".").splice(-1)[0];
   return (
     <div id={"result-visualization"}>
@@ -40,7 +37,10 @@ export const StructureVisualisation = (
       >
         <div className="result-visualization">
           <h2>VARNA</h2>
-          <div style={{ padding: "20px", flexDirection:'column' }} className={'vertical-center'} >
+          <div
+            style={{ padding: "20px", flexDirection: "column" }}
+            className={"vertical-center"}
+          >
             <Image
               className="two-d-image"
               src={config.SERVER_URL + resultSet.varna}
@@ -62,7 +62,10 @@ export const StructureVisualisation = (
         </div>
         <div className="result-visualization">
           <h2>R-chie</h2>
-          <div style={{ padding: "20px", flexDirection:'column' }} className={'vertical-center'} >
+          <div
+            style={{ padding: "20px", flexDirection: "column" }}
+            className={"vertical-center"}
+          >
             <Image
               className="two-d-image"
               src={config.SERVER_URL + resultSet.r_chie}
@@ -84,7 +87,10 @@ export const StructureVisualisation = (
         </div>
         <div className="result-visualization">
           <h2>DrawTetrado (2.5D structure)</h2>
-          <div style={{ padding: "20px", flexDirection:'column' }} className={'vertical-center'}>
+          <div
+            style={{ padding: "20px", flexDirection: "column" }}
+            className={"vertical-center"}
+          >
             <Image
               className="two-d-image"
               src={config.SERVER_URL + resultSet.draw_tetrado}
@@ -125,7 +131,7 @@ export const StructureVisualisation = (
                 type="primary"
                 shape="round"
                 icon={<DownloadOutlined />}
-                style={{ marginTop: "15px"}}
+                style={{ marginTop: "15px" }}
                 size={"large"}
                 onClick={() =>
                   downloadFile(

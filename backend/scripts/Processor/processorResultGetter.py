@@ -8,9 +8,12 @@ from backend.models import BasePair, Helice, Log, Loop, Metadata, Nucleotide, Qu
 from django.core.files.temp import NamedTemporaryFile
 from Bio.PDB import PDBParser, MMCIFParser
 from backend.scripts.Processor.tetradFileFilter import get_cetrain_tetrad_file
+from backend.scripts.webPush import send_to_subscription
 from webTetrado.settings import PROCESSOR_URL
 from backend.scripts.Processor.resultComposer import compose
 
+class GetterException(Exception):
+    pass
 
 def add_base_pairs(base_pairs, db_id, user_request):
     base_pair_tetrad = set([])
@@ -35,6 +38,7 @@ def add_base_pairs(base_pairs, db_id, user_request):
                             info=str(db_id), traceback=traceback.format_exc()).save()
             user_request.error='Error during adding base pairs'
             user_request.save()
+            raise GetterException
 
 
 def add_nucleodities(nucleodities, db_id,user_request):
@@ -57,6 +61,7 @@ def add_nucleodities(nucleodities, db_id,user_request):
                             info=str(db_id), traceback=traceback.format_exc()).save()
             user_request.error='Error during adding nucleodities'
             user_request.save()
+            raise GetterException
 
 
 def add_tetrads(quadruplexes, db_id, quadruplex_entity, file_data,user_request, cif=False):
@@ -92,6 +97,8 @@ def add_tetrads(quadruplexes, db_id, quadruplex_entity, file_data,user_request, 
             user_request.error='Error during adding tetrads'
 
             user_request.save()
+            raise GetterException
+            
 
 
 def add_loops(loops, db_id, quadruplex_entity,user_request):
@@ -113,6 +120,8 @@ def add_loops(loops, db_id, quadruplex_entity,user_request):
 
             user_request.error='Error during adding loops'
             user_request.save()  
+            raise GetterException
+            
 
 
 def add_tetrad_pairs(tetradPairs, db_id, helice_entity,user_request):
@@ -135,6 +144,7 @@ def add_tetrad_pairs(tetradPairs, db_id, helice_entity,user_request):
 
             user_request.error='Error during adding tetrad pairs'
             user_request.save()  
+            break
 
 
 def add_quadruplexes(quadruplexes, file_data, db_id, helice_entity,user_request, cif=False):
@@ -163,26 +173,30 @@ def add_quadruplexes(quadruplexes, file_data, db_id, helice_entity,user_request,
                 chains.append(tetrad.nt4.chain)
             tetrads_chains = len(list(set(chains)))
             if tetrads_chains == 1:
-                type = 'UNI'
+                chains_type = 'UNI'
             elif tetrads_chains == 2:
-                type = 'BI'
+                chains_type = 'BI'
             elif tetrads_chains == 4:
-                type = 'TETRA'
+                chains_type = 'TETRA'
             else:
-                type = 'OTHER'
+                chains_type = 'OTHER'
             
-            quadruplex_entity_metadata.type = type
+            quadruplex_entity_metadata.type = chains_type
             quadruplex_entity_metadata.save()
             quadruplex_entity.metadata = quadruplex_entity_metadata
             quadruplex_entity.save()
             helice_entity.quadruplex.add(quadruplex_entity)
+        except GetterException:
+            raise GetterException
         except Exception:
-                user_request.status = 5
-                Log.objects.create(type='Error [processing_add_quadruplexes] ',
-                                info=str(db_id), traceback=traceback.format_exc()).save()
+            user_request.status = 5
+            Log.objects.create(type='Error [processing_add_quadruplexes] ',
+                            info=str(db_id), traceback=traceback.format_exc()).save()
 
-                user_request.error='Error during adding quadruplexes'
-                user_request.save()  
+            user_request.error='Error during adding quadruplexes'
+            user_request.save()  
+            raise GetterException
+            
 
 def add_to_queue(db_id):
     user_request = TetradoRequest.objects.get(id=db_id)
@@ -273,20 +287,37 @@ def add_to_queue(db_id):
                     user_request.dot_bracket_sequence = result['dotBracket']['sequence']
 
                     user_request.status = 4
-                    user_request.save()
                     user_request.cached_result=compose(user_request.id)
                     user_request.save()
+                    payload = {
+                        "image": "https://webtetrado.cs.put.poznan.pl/static/logo.svg",
+                        "tag":'test',
+                        "url": "https://webtetrado.cs.put.poznan.pl/result/"+str(user_request.hash_id),
+                        "title": "WebTetrado notification ", 
+                        "text": "Your request "+str(user_request.hash_id)+" is completed",
+                         }
+                    # payload = {"head": "Hey", "body": "Hello World"}
+                    for subscriber in TetradoRequest.objects.get(id=user_request.id).push_notification.all():
+                        send_to_subscription(
+                            subscriber, json.dumps(payload), ttl=3600)
                     break
                 if r.status_code == 500:
                     user_request.status = 5
+                    user_request.error='ElTetrado processor error'
                     user_request.save()
                     break
                 time.sleep(1)
             return True
         else:
             return False
+    except GetterException:
+        Log.objects.create(type='Error [processing] ',
+                           info=str(db_id), traceback=traceback.format_exc()).save()
+        user_request.save()
     except Exception:
         user_request.status = 5
+        user_request.error='Unknown server failure'
+
         Log.objects.create(type='Error [processing] ',
                            info=str(db_id), traceback=traceback.format_exc()).save()
         user_request.save()

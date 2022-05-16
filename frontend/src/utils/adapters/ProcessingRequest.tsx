@@ -1,4 +1,5 @@
 import { message } from "antd";
+import { getCookie } from "../../components/csrf";
 import config from "../../config.json";
 type form_values = {
   fileId: string;
@@ -17,6 +18,7 @@ export function processingRequest(data: form_values,setLoading:any) {
     headers: {
       "Content-Type": "application/json",
       "Access-Control-Allow-Origin": "*",
+      "X-CSRFToken": getCookie()
     },
   };
   requestOptions.headers["Access-Control-Allow-Origin"]="*"

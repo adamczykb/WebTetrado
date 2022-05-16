@@ -1,5 +1,4 @@
 import { Button, Result } from "antd";
-import React from "react";
 import { Content } from "antd/es/layout/layout";
 
 const NotFound = () => (

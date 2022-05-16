@@ -11,6 +11,8 @@ def compose(orderId):
         tetrado_request = TetradoRequest.objects.get(id=orderId)
     except Exception:
         return '{"status":0,"helice":[],"base_pair":[],"nucleotide":[]}'
+    if tetrado_request.status==5:
+        return '{"status":5,"helice":[],"base_pair":[],"nucleotide":[],"error_message":"'+tetrado_request.error+'"}'
     result['name']=tetrado_request.name
     result['status']=tetrado_request.status
     result['structure_method']=tetrado_request.structure_method

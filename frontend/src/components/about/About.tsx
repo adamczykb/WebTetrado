@@ -8,14 +8,13 @@ export default function About() {
 
     let renderContent = () => {
         return (
-            <Content
-                style={{ padding: isDesktop ? "0 24px" : "0 0", minHeight: 280 }}
-            >
-                <div className="site-layout-content">
-                    <h1>About</h1>
-                    
-                </div>
-            </Content>
+          <Content
+            style={{ padding: isDesktop ? "0 24px" : "0 0", minHeight: 280 }}
+          >
+            <div className="site-layout-content">
+              <h1>About</h1>
+            </div>
+          </Content>
         );
     };
     return renderContent();

@@ -69,6 +69,9 @@ export const RequestForm = () => {
       message.error("None of structure sources are provided 😱");
       return null;
     }
+    if(formValues.settings.stackingMatch==NaN){
+      formValues.settings.stackingMatch=2
+    }
     if (
       formValues.settings.stackingMatch < 1 &&
       formValues.settings.stackingMatch > 2

@@ -1,4 +1,4 @@
-import { Descriptions, Steps, Tabs, Alert, Spin } from "antd";
+import { Descriptions, Steps, Tabs, Alert, Spin, message } from "antd";
 import { useParams } from "react-router-dom";
 const { Step } = Steps;
 const { TabPane } = Tabs;
@@ -14,12 +14,18 @@ import { BasePairTable } from "./BasePairTable";
 import { NucleotideTable } from "./NucleotideTable";
 import { processingResponse } from "../../utils/adapters/ProcessingResponse";
 import { useMediaQuery } from "react-responsive";
+import { Button } from 'antd';
+import { BellOutlined } from "@ant-design/icons";
+
+import usePushNotifications from "../../hooks/usePushNotifications";
+import { nofificationRequest } from "../../utils/adapters/NotificationRequest";
 
 export const Result = () => {
   let result: result_values = {
     name: "",
-    dot_bracket: {line1:'',line2:'',sequence:''},
+    dot_bracket: { line1: "", line2: "", sequence: "" },
     status: 0,
+    error_message: "",
     structure_method: "",
     structure_file: "",
     varna: "",
@@ -31,38 +37,142 @@ export const Result = () => {
     helice: [],
     nucleotide: [],
   };
-  let isDesktop = useMediaQuery({ query: "(min-width: 900px)" })
+
+  const {
+    userConsent,
+    pushNotificationSupported,
+    userSubscription,
+    onClickAskUserPermission,
+    onClickSusbribeToPushNotification,
+    onClickSendSubscriptionToPushServer,
+    pushServerSubscriptionId,
+    error,
+    loadingPush,
+  } = usePushNotifications();
+  const isConsentGranted = userConsent === "granted";
+
+  let isDesktop = useMediaQuery({ query: "(min-width: 900px)" });
 
   const { requestNumber } = useParams();
-  let [loading, setLoading] = useState(true);
+  let [loadingResult, setLoadingResult] = useState(true);
+  let [subscribed, setSubscribe] = useState(false);
   let [resultSet, setResultSet] = useState(result);
+
+  const requestNotification = async () => {
+    await onClickAskUserPermission();
+    if (!isConsentGranted) {
+      return;
+    }
+    if (!requestNumber || requestNumber.length === 0) {
+      return;
+    }
+    onClickSusbribeToPushNotification();
+    onClickSendSubscriptionToPushServer()
+      .then((response) => {
+        return response.json();
+      })
+      .then((response) => {
+        return response.id;
+      })
+      .then(async function (subscriptionId) {
+        setSubscribe(true);
+        nofificationRequest(requestNumber, subscriptionId).then(function(value){
+          if(value){
+            let pushMessages = localStorage.getItem("pushMessages");
+            if (pushMessages === null) {
+              localStorage.setItem("pushMessages", requestNumber);
+            } else {
+              let temp = pushMessages.split(",");
+              if (!temp.includes(requestNumber)) {
+                temp.push(requestNumber);
+                localStorage.setItem("pushMessages", temp.join(","));
+              }
+            }
+            message.success("Notification turned on");
+          }          
+        })
+       
+      });
+    
+  };
+
   useEffect(() => {
-    processingResponse(requestNumber, setResultSet, setLoading);
+    processingResponse(
+      requestNumber,
+      setResultSet,
+      resultSet,
+      setLoadingResult
+    );
+    if (
+      localStorage.getItem("pushMessages") &&
+      requestNumber &&
+      requestNumber.length > 0
+    ) {
+      if (
+        localStorage.getItem("pushMessages")?.split(",").includes(requestNumber)
+      )
+        setSubscribe(true);
+      if (
+        localStorage
+          .getItem("pushMessages")
+          ?.split(",")
+          .includes(requestNumber) &&
+        resultSet.status > 3
+      ) {
+        let temp = localStorage.getItem("pushMessages")?.split(",");
+        temp = temp?.splice(temp.indexOf(requestNumber), 1);
+        localStorage.setItem("pushMessages", temp!.join(","));
+      }
+    }
   }, []);
   return (
     <>
-      <h1 style={{ marginTop: "20px" }}>Request code: {requestNumber}</h1>
+      <h1 style={{ marginTop: "20px" }}>Request</h1>
+      {resultSet.status > 0 && resultSet.status < 4  && pushNotificationSupported ? (
+        <Button
+          icon={<BellOutlined />}
+          type={"default"}
+          disabled={subscribed}
+          loading={loadingPush}
+          onClick={requestNotification}
+          style={{ marginBottom: "20px" }}
+        >
+          {subscribed ? "Notification turned on" : "Turn on notification"}
+        </Button>
+      ) : (
+        <></>
+      )}
+
+      <h2>
+        code: <i>{requestNumber}</i>
+      </h2>
+
+      <Steps current={resultSet.status} status="wait">
+        <Step title="Make request" description="" />
+        <Step title="Waiting in queue" description="" />
+        <Step title="Processing" description="" />
+        <Step
+          title="Done"
+          description={
+            resultSet.status === 4 ? "Results will be stored for one week." : ""
+          }
+        />
+      </Steps>
+
       {resultSet.status == 5 ? (
         <Alert
-          message="Error"
+          message="Server error"
           showIcon
-          description="Error"
+          description={resultSet.error_message}
           type="error"
           style={{ margin: "20px" }}
         />
       ) : (
         <></>
       )}
-      <Steps current={resultSet.status} status="wait">
-        <Step title="Make request" description="" />
-        <Step title="Waiting in queue" description="" />
-        <Step title="Processing" description="" />
-        <Step title="Done" description="" />
-      </Steps>
-
-      {loading || resultSet.status < 4 || resultSet.status == 5 ? (
+      {loadingResult || resultSet.status < 4 || resultSet.status == 5 ? (
         <>
-          {loading ? (
+          {loadingResult ? (
             <div
               style={{ height: "400px", margin: "20px" }}
               className={"horizontal-center"}
@@ -104,7 +214,7 @@ export const Result = () => {
               </h2>
             </>
           ) : (
-            <Tabs defaultActiveKey="0" type="card" tabPosition={"top"} >
+            <Tabs defaultActiveKey="0" type="card" tabPosition={"top"}>
               {[...Array.from(resultSet.helice, (z, i) => z)].map((z, i) => (
                 <TabPane tab={`Helice ${i + 1}`} key={i}>
                   <Tabs defaultActiveKey="0" type="card" tabPosition={"top"}>
@@ -114,14 +224,14 @@ export const Result = () => {
                         (v, j) => v
                       ),
                     ].map((v, j) => (
-                      <TabPane  tab={`Quadruplex ${j + 1}`} key={j}>
+                      <TabPane tab={`Quadruplex ${j + 1}`} key={j}>
                         <Descriptions
                           title="Analytics result"
                           bordered
                           layout="horizontal"
                           labelStyle={{ fontWeight: "bold", textAlign: "left" }}
-                          contentStyle={{whiteSpace:'nowrap' }}
-                          style={{width:'100%'}}
+                          contentStyle={{ whiteSpace: "nowrap" }}
+                          style={{ width: "100%" }}
                         >
                           {resultSet.idcode != "" ? (
                             <Descriptions.Item label="PDB ID:">
@@ -146,10 +256,10 @@ export const Result = () => {
                             <></>
                           )}
                           <Descriptions.Item label="Type (by no. of strands):">
-                            {v.type=='UNI'?'unimolecular':''}
-                            {v.type=='BI'?'bimolecular':''}
-                            {v.type=='TETRA'?'tetramolecular':''}
-                            {v.type=='OTHER'?'other':''}
+                            {v.type == "UNI" ? "unimolecular" : ""}
+                            {v.type == "BI" ? "bimolecular" : ""}
+                            {v.type == "TETRA" ? "tetramolecular" : ""}
+                            {v.type == "OTHER" ? "other" : ""}
                           </Descriptions.Item>
                           <Descriptions.Item label="No. of tetrads:">
                             {v.tetrads_no}
@@ -197,26 +307,27 @@ export const Result = () => {
                         </p>
                         {StructureVisualisation(v, resultSet)}
                         <Divider />
-                        {TetradTable(v.tetrad, resultSet.g4_limited,isDesktop)}
+                        {TetradTable(v.tetrad, resultSet.g4_limited, isDesktop)}
                         <Divider />
-                        {LoopTable(v.loop,isDesktop)}
+                        {LoopTable(v.loop, isDesktop)}
                         <Divider />
-                        {ChiAngleTable(v.chi_angle_value,isDesktop)}
+                        {ChiAngleTable(v.chi_angle_value, isDesktop)}
                       </TabPane>
                     ))}
                   </Tabs>
                   <Divider />
-                  {TetradPairTable(z.tetrad_pair,isDesktop)}
+                  {TetradPairTable(z.tetrad_pair, isDesktop)}
                   <Divider />
                 </TabPane>
               ))}
             </Tabs>
           )}
-          {BasePairTable(resultSet.base_pair,isDesktop)}
+          {BasePairTable(resultSet.base_pair, isDesktop)}
           <Divider />
-          {NucleotideTable(resultSet.nucleotide,isDesktop)}
+          {NucleotideTable(resultSet.nucleotide, isDesktop)}
         </>
       )}
     </>
   );
 };
+

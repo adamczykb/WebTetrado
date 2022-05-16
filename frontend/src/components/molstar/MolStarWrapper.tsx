@@ -16,7 +16,7 @@ import {ParamDefinition as PD} from "molstar/lib/mol-util/param-definition";
 import {tetrad} from "../../types/RestultSet";
 import {ONZ_COLORS} from "../../assets/data/onzClassColor";
 import {Color} from "molstar/lib/mol-util/color";
-import {MolScriptBuilder as MS} from "molstar/lib/mol-script/language/builder";
+import { MolScriptBuilder as MS } from "molstar/lib/mol-script/language/builder";
 import {StateObjectRef} from "molstar/lib/mol-state";
 import {PluginStateObject as SO} from "molstar/lib/mol-plugin-state/objects";
 

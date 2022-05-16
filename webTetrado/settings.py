@@ -12,15 +12,20 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 
 from pathlib import Path
 import os
+import environ
+
+env = environ.Env()
+# reading .env file
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+environ.Env.read_env(os.path.join(BASE_DIR, 'db_env.env'))
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-)264wld6f3%_a^kz%*q(n0d$38b-4-bm&*t^dm+xqf*!k8_+2n'
+SECRET_KEY = env("SECRET_KEY",default="django-insecure-)264wld6f3%_a^kz%*q(n0d$9df-4-bm&*t^dm+udn*!k3_+3d")
 ENCRYPT_KEY = b'WkdGMFlWOHhSRFU1Q2lNZ0NsOWxiblJ5ZVM1cFpDQWc='
 SALT=b'\xec\xc4\xf2\xd1\x13\xdf5\xb0n\x12\x9b\xdb\xd5@G!'
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -41,10 +46,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_celery_beat',
-    # 'corsheaders',
     "django_rq",
     'backend',
-    'frontend'
+    'frontend',
 ]
 
 MIDDLEWARE = [
@@ -96,9 +100,9 @@ else:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': 'webtetrado',
-            'USER': 'webtetrado',
-            'PASSWORD': 'pylSnieguZajaczek8<',
+            'NAME': env('POSTGRES_DB'),
+            'USER': env('POSTGRES_USER'),
+            'PASSWORD': env('POSTGRES_PASSWORD'),
             'HOST': 'db',
             'PORT': '',
         }
@@ -212,9 +216,16 @@ if DEBUG:
     STATIC_ROOT = os.path.join(BASE_DIR, 'static')
     STATICFILES_DIRS = [
         os.path.join(REACT_APP_DIR, 'build', 'static'),
+        os.path.join(REACT_APP_DIR, 'build'),
     ]
 else:
     STATIC_ROOT = os.path.join(BASE_DIR, 'static')
     STATICFILES_DIRS = [
         os.path.join(REACT_APP_DIR, 'build', 'static'),
     ]
+
+WEBPUSH_SETTINGS = {
+   "VAPID_PUBLIC_KEY": env('VAPID_PUBLIC_KEY'),
+   "VAPID_PRIVATE_KEY": env('VAPID_PRIVATE_KEY'),
+   "VAPID_ADMIN_EMAIL": env('VAPID_EMAIL')
+}
