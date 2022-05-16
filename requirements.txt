@@ -11,3 +11,4 @@ requests==2.22.0
 cryptography==36.0.2 
 django-environ==0.8.1
 pywebpush==1.14.0
+uvicorn==0.17.6

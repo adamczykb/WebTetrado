@@ -15,6 +15,7 @@ RUN apt-get install supervisor
 COPY build/celery_worker_docker.conf /etc/supervisor/conf.d/
 COPY build/celery_beat_docker.conf /etc/supervisor/conf.d/
 COPY build/worker_supervisor.conf /etc/supervisor/conf.d/
+COPY build/ws_supervisor.conf /etc/supervisor/conf.d/
 # COPY server/celery_beat_docker.conf /etc/supervisor/conf.d/
 RUN pip3 install -r requirements.txt
 
