@@ -287,6 +287,8 @@ def add_to_queue(db_id):
                     user_request.dot_bracket_sequence = result['dotBracket']['sequence']
 
                     user_request.status = 4
+                    user_request.save()
+
                     user_request.cached_result=compose(user_request.id)
                     user_request.save()
                     payload = {

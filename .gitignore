@@ -182,3 +182,6 @@ sketch
 **/molstar.css
 # End of https://www.toptal.com/developers/gitignore/api/react,node,visualstudiocode
 !frontend/src/assets/css/molstar.css
+/nginx/conf/*
+/.vscode
+/.mypy_cache

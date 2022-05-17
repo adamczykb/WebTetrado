@@ -26,6 +26,9 @@ import backend.urls
 def service_worker(response):
     return FileResponse(staticfiles_storage.open('service-worker.js'))
 
+admin.site.site_header = 'WebTetrado: online tool for identification and classification of tetrads and quadruplexes'
+admin.site.site_title = 'WebTetrado'
+
 urlpatterns = [
     re_path(r'^favicon.ico$', RedirectView.as_view(url=staticfiles_storage.url('favicon.ico'))),
     re_path(r'^logo192.png$', RedirectView.as_view(url=staticfiles_storage.url('logo192.png'))),

@@ -4,7 +4,7 @@ const { Step } = Steps;
 const { TabPane } = Tabs;
 import { Divider } from "../layout/common/Divider";
 import { useEffect, useState } from "react";
-import { result_values, dot_bracket_values } from "../../types/RestultSet";
+import { result_values } from "../../types/RestultSet";
 import { StructureVisualisation } from "./StructureVisualisation";
 import { TetradTable } from "./TetradTable";
 import { LoopTable } from "./LoopTable";
@@ -14,7 +14,7 @@ import { BasePairTable } from "./BasePairTable";
 import { NucleotideTable } from "./NucleotideTable";
 import { processingResponse } from "../../utils/adapters/ProcessingResponse";
 import { useMediaQuery } from "react-responsive";
-import { Button } from 'antd';
+import { Button } from "antd";
 import { BellOutlined } from "@ant-design/icons";
 
 import usePushNotifications from "../../hooks/usePushNotifications";
@@ -58,42 +58,52 @@ export const Result = () => {
   let [subscribed, setSubscribe] = useState(false);
   let [resultSet, setResultSet] = useState(result);
 
-  const requestNotification = async () => {
-    await onClickAskUserPermission();
+  const sendRequestNotification = () => {
     if (!isConsentGranted) {
       return;
     }
     if (!requestNumber || requestNumber.length === 0) {
       return;
     }
-    onClickSusbribeToPushNotification();
-    onClickSendSubscriptionToPushServer()
-      .then((response) => {
-        return response.json();
-      })
-      .then((response) => {
-        return response.id;
-      })
-      .then(async function (subscriptionId) {
-        setSubscribe(true);
-        nofificationRequest(requestNumber, subscriptionId).then(function(value){
-          if(value){
-            let pushMessages = localStorage.getItem("pushMessages");
-            if (pushMessages === null) {
-              localStorage.setItem("pushMessages", requestNumber);
-            } else {
-              let temp = pushMessages.split(",");
-              if (!temp.includes(requestNumber)) {
-                temp.push(requestNumber);
-                localStorage.setItem("pushMessages", temp.join(","));
-              }
-            }
-            message.success("Notification turned on");
-          }          
+    onClickSusbribeToPushNotification().then(function () {
+      onClickSendSubscriptionToPushServer()
+        .then((response) => {
+          return response.json();
         })
-       
+        .then((response) => {
+          return response.id;
+        })
+        .then(async function (subscriptionId) {
+          setSubscribe(true);
+          nofificationRequest(requestNumber, subscriptionId).then(function (
+            value
+          ) {
+            if (value) {
+              let pushMessages = localStorage.getItem("pushMessages");
+              if (pushMessages === null) {
+                localStorage.setItem("pushMessages", requestNumber);
+              } else {
+                let temp = pushMessages.split(",");
+                if (!temp.includes(requestNumber)) {
+                  temp.push(requestNumber);
+                  localStorage.setItem("pushMessages", temp.join(","));
+                }
+              }
+              message.success("Notification turned on");
+            }
+          });
+        });
+    });
+  };
+
+  const requestNotification = async () => {
+    if (userConsent === "granted") {
+      sendRequestNotification();
+    } else {
+      await onClickAskUserPermission().then(() => {
+        sendRequestNotification();
       });
-    
+    }
   };
 
   useEffect(() => {
@@ -128,7 +138,9 @@ export const Result = () => {
   return (
     <>
       <h1 style={{ marginTop: "20px" }}>Request</h1>
-      {resultSet.status > 0 && resultSet.status < 4  && pushNotificationSupported ? (
+      {resultSet.status > 0 &&
+      resultSet.status < 4 &&
+      pushNotificationSupported ? (
         <Button
           icon={<BellOutlined />}
           type={"default"}
@@ -330,4 +342,3 @@ export const Result = () => {
     </>
   );
 };
-

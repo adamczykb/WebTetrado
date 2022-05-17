@@ -9,4 +9,5 @@ RUN mkdir -p /var/letsencrypt
 # RUN certbot certonly --webroot --webroot-path=/var/letsencrypt --email bartosz.adamczyk@student.put.poznan.pl --agree-tos --no-eff-email -d webtetrado.cs.put.poznan.pl
 # RUN certbot --nginx --email bartosz.adamczyk@student.put.poznan.pl -d webtetrado.cs.put.poznan.pl
 USER root
-EXPOSE 8080
+# EXPOSE 8080
+

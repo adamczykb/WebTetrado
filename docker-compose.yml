@@ -31,15 +31,14 @@ services:
       - workdir:/mnt/workdir
     networks:
       - processor_network
-    expose:
-      - "8080"
+    # expose:
+    #   - "8080"
 
   nginx:
       build:
         context: ./nginx
       ports:
         - 80:8080
-        - 8020:8020
         - 443:443
       depends_on:
         - web
@@ -51,6 +50,9 @@ services:
      # entrypoint: bash ./nginx/docker-entrypoint.sh
       networks:
         - web_network
+      expose:
+        - "80"
+      
   db:
     image: postgres:latest
     restart: always

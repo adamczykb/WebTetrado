@@ -69,30 +69,10 @@ export default function usePushNotifications() {
    * define a click handler that creates a push notification subscription.
    * Once the subscription is created, it uses the setUserSubscription hook
    */
-  const onClickSusbribeToPushNotification = () => {
+  const onClickSusbribeToPushNotification = async () => {
     setLoadingPush(true);
     setError(false);
-    createNotificationSubscription()
-      .then(function (subscription) {
-        setUserSubscription(subscription);
-        setLoadingPush(false);
-      })
-      .catch((err) => {
-        console.error(
-          "Couldn't create the notification subscription",
-          err,
-          "name:",
-          err.name,
-          "message:",
-          err.message,
-          "code:",
-          err.code
-        );
-        setError(err);
-        setLoadingPush(false);
-      });
-      setLoadingPush(false);
-
+    return await createNotificationSubscription();
   };
 
   /**

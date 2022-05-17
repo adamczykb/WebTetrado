@@ -14,6 +14,7 @@ from backend.models import PushInformation, TetradoRequest
 from asgiref.sync import sync_to_async
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
+from django.shortcuts import render
 import os
 import logging
 import json
@@ -65,14 +66,7 @@ async def websocket_view(socket):
         pass
 
 
-@ensure_csrf_cookie
-def index(request):
-    try:
-        with open(os.path.join(settings.STATIC_ROOT, 'index.html')) as f:
-            return HttpResponse(f.read())
-    except FileNotFoundError:
-        logging.exception('Production build of app not found')
-        return HttpResponse(status=501, content="The frontend is currently under deploy")
+
 
 
 def link_notification(request):
@@ -133,3 +127,13 @@ def process_subscription_data(post_data):
     subscription_data["browser"] = post_data.pop("browser")
     # subscription_data["user_agent"] = post_data.pop("user_agent")
     return subscription_data
+
+
+@ensure_csrf_cookie
+def index(request):
+    try:
+        with open(os.path.join(settings.STATIC_ROOT, 'index.html')) as f:
+            return HttpResponse(f.read())
+    except FileNotFoundError:
+        return render(request, 'server_starting.html')
+        # return HttpResponse(status=501, content="The frontend is currently under deploy")
