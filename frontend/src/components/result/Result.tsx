@@ -46,10 +46,8 @@ export const Result = () => {
     onClickSusbribeToPushNotification,
     onClickSendSubscriptionToPushServer,
     pushServerSubscriptionId,
-    error,
     loadingPush,
   } = usePushNotifications();
-  const isConsentGranted = userConsent === "granted";
 
   let isDesktop = useMediaQuery({ query: "(min-width: 900px)" });
 
@@ -59,51 +57,47 @@ export const Result = () => {
   let [resultSet, setResultSet] = useState(result);
 
   const sendRequestNotification = () => {
-    if (!isConsentGranted) {
+    if (!userConsent) {
       return;
     }
     if (!requestNumber || requestNumber.length === 0) {
       return;
     }
-    onClickSusbribeToPushNotification().then(function () {
+    onClickSusbribeToPushNotification().then((val)=>{
       onClickSendSubscriptionToPushServer()
-        .then((response) => {
-          return response.json();
-        })
-        .then((response) => {
-          return response.id;
-        })
         .then(async function (subscriptionId) {
-          setSubscribe(true);
-          nofificationRequest(requestNumber, subscriptionId).then(function (
-            value
-          ) {
-            if (value) {
-              let pushMessages = localStorage.getItem("pushMessages");
-              if (pushMessages === null) {
-                localStorage.setItem("pushMessages", requestNumber);
-              } else {
-                let temp = pushMessages.split(",");
-                if (!temp.includes(requestNumber)) {
-                  temp.push(requestNumber);
-                  localStorage.setItem("pushMessages", temp.join(","));
+          if(subscriptionId){
+            setSubscribe(true);
+            nofificationRequest(requestNumber, subscriptionId).then(function (
+              value
+            ) {
+              if (value) {
+                let pushMessages = localStorage.getItem("pushMessages");
+                if (pushMessages === null) {
+                  localStorage.setItem("pushMessages", requestNumber);
+                } else {
+                  let temp = pushMessages.split(",");
+                  if (!temp.includes(requestNumber)) {
+                    temp.push(requestNumber);
+                    localStorage.setItem("pushMessages", temp.join(","));
+                  }
                 }
+                message.success("Notification turned on");
               }
-              message.success("Notification turned on");
-            }
-          });
+            });
+          }
         });
+      
     });
+    
   };
 
   const requestNotification = async () => {
-    if (userConsent === "granted") {
-      sendRequestNotification();
-    } else {
-      await onClickAskUserPermission().then(() => {
+    onClickAskUserPermission().then((result)=>{
+      if (result === "granted") {
         sendRequestNotification();
-      });
-    }
+      } 
+    })
   };
 
   useEffect(() => {
@@ -135,6 +129,8 @@ export const Result = () => {
       }
     }
   }, []);
+
+
   return (
     <>
       <h1 style={{ marginTop: "20px" }}>Request</h1>

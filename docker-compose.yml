@@ -31,8 +31,6 @@ services:
       - workdir:/mnt/workdir
     networks:
       - processor_network
-    # expose:
-    #   - "8080"
 
   nginx:
       build:
