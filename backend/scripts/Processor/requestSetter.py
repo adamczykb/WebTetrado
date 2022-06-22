@@ -3,10 +3,11 @@ from django.core.files.temp import NamedTemporaryFile
 from django.http import HttpResponse
 from backend.models import TemporaryFile, TetradoRequest
 from backend.scripts.Processor.processorResultGetter import add_to_queue
-import django_rq, redis, json, requests
+import django_rq, redis, json, requests,os
+from backend.scripts.Processor.structureProcessor import cif_filter_model,pdb_filter_model
+import traceback
 
-
-def set_request_action(request):    
+def set_request_action(request):
     body_unicode = request.body.decode('utf-8')
     body = json.loads(body_unicode)
     entity = TetradoRequest()
@@ -16,14 +17,24 @@ def set_request_action(request):
     entity.strict=body['settings']['strict']
     entity.stacking_mismatch=body['settings']['stackingMatch']
     entity.g4_limited=body['settings']['g4Limited']
+    entity.model=body['settings']['model']
     entity.status=1
 
     if 'fileId' in body and len(body['fileId'])>0:
         entity.source=2
-        temp_file=TemporaryFile.objects.get(id=body['fileId'])
-        entity.structure_body.save(name= temp_file.file.name.split('/')[-1],content=temp_file.file.open('rb'))
-        entity.file_extension=temp_file.file_extension
-        TemporaryFile.objects.get(id=body['fileId']).delete()
+        if body['fileId'].split('_')[0]=='rdy':
+            file_name = body['fileId'].split('_')
+            try:
+                temp_file=open(os.path.join(settings.BASE_DIR, 'exampleFiles/'+file_name[1]+'.'+file_name[2]),'rb')
+                entity.structure_body.save(name= temp_file.name.split('/')[-1],content=temp_file)
+                entity.file_extension=file_name[2]
+            except FileNotFoundError:
+                return HttpResponse(status=400)
+        else:
+            temp_file=TemporaryFile.objects.get(id=body['fileId'])
+            entity.structure_body.save(name= temp_file.file.name.split('/')[-1],content=temp_file.file.open('rb'))
+            entity.file_extension=temp_file.file_extension
+            TemporaryFile.objects.get(id=body['fileId']).delete()
     elif 'rscbPdbId' in body and len(body['rscbPdbId'])>0:
         url = 'http://files.rcsb.org/download/' + body['rscbPdbId'] + '.cif'
         r = requests.get(url, allow_redirects=True)
@@ -36,7 +47,7 @@ def set_request_action(request):
         else:
             return HttpResponse(status=404)
     else:
-            return HttpResponse(status=500)
+            return HttpResponse(status=400)
 
     entity.save()
     if settings.DEBUG:
@@ -48,4 +59,14 @@ def set_request_action(request):
     queue.enqueue(add_to_queue, entity.id)
     entity.status=2
     entity.save()
+    try:
+            if entity.file_extension=='cif':
+                cif_filter_model(entity.structure_body.path,entity.model)
+            elif entity.file_extension=='pdb':
+                pdb_filter_model(entity.structure_body.path,entity.model)
+    except Exception:
+        entity.status=5
+        entity.error_message='Model does not exist'
+        entity.save()
+        return HttpResponse(status=400)
     return HttpResponse(content='{"orderId":"'+ str(entity.hash_id)+'"}', content_type='application/json')

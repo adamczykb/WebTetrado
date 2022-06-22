@@ -51,7 +51,6 @@ export const MobileNavHeader = () => {
           <a href={configData.SERVER_URL}>Home</a>
           <a href={configData.SERVER_URL + "/help"}>Help</a>
           <a href={configData.SERVER_URL + "/citeus"}>Cite us</a>
-          <a href={configData.SERVER_URL + "/examples"}>Examples</a>
           <a href={configData.SERVER_URL + "/about"}>About</a>
         </nav>
       </div>

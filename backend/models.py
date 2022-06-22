@@ -116,11 +116,11 @@ class TemporaryFile(models.Model):
     file_extension = models.CharField(max_length=20)
     timestamp = models.DateTimeField(auto_now=True)
 
-
 @receiver(pre_delete, sender=TemporaryFile)
 def remove_file(**kwargs):
     instance = kwargs.get('instance')
     instance.file.delete(save=False)
+
 
 
 class PushInformation(models.Model):
@@ -143,7 +143,7 @@ class TetradoRequest(models.Model):
         DONE = 4, 'DONE'
         ERROR = 5, 'ERROR'
 
-    
+
     id = models.AutoField(primary_key=True)
     hash_id = models.UUIDField(default=uuid.uuid1, editable=False)
     cookie_user_id = models.CharField(max_length=50)
@@ -159,6 +159,7 @@ class TetradoRequest(models.Model):
     stacking_mismatch = models.IntegerField()
     strict = models.BooleanField()
     g4_limited = models.BooleanField()
+    model = models.IntegerField(default=1)
 
     name = models.CharField(max_length=200)
     structure_method = models.CharField(max_length=200)
@@ -174,7 +175,7 @@ class TetradoRequest(models.Model):
         upload_to='files/results/layers/', blank=True)
 
     cached_result= models.TextField(blank=True)
-    
+
     push_notification = models.ManyToManyField(PushInformation,blank=True)
 
     error=models.TextField(default='',blank=True)

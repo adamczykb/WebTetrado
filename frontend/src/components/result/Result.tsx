@@ -1,4 +1,4 @@
-import { Descriptions, Steps, Tabs, Alert, Spin, message } from "antd";
+import { Descriptions, Steps, Tabs, Alert, Spin, message, Tooltip } from "antd";
 import { useParams } from "react-router-dom";
 const { Step } = Steps;
 const { TabPane } = Tabs;
@@ -16,7 +16,10 @@ import { processingResponse } from "../../utils/adapters/ProcessingResponse";
 import { useMediaQuery } from "react-responsive";
 import { Button } from "antd";
 import { BellOutlined } from "@ant-design/icons";
-
+import {
+  ONZ_COLORS_STRING,
+  STRING_ONZ_COLORS,
+} from "../../assets/data/onzClassColor";
 import usePushNotifications from "../../hooks/usePushNotifications";
 import { nofificationRequest } from "../../utils/adapters/NotificationRequest";
 
@@ -30,12 +33,14 @@ export const Result = () => {
     structure_file: "",
     varna: "",
     r_chie: "",
+    model: 1,
     draw_tetrado: "",
     idcode: "",
     g4_limited: false,
     base_pair: [],
     helice: [],
     nucleotide: [],
+    remove_date: "",
   };
 
   const {
@@ -50,12 +55,13 @@ export const Result = () => {
   } = usePushNotifications();
 
   let isDesktop = useMediaQuery({ query: "(min-width: 900px)" });
+  let temp_array = new Map<number, string>();
 
   const { requestNumber } = useParams();
   let [loadingResult, setLoadingResult] = useState(true);
   let [subscribed, setSubscribe] = useState(false);
   let [resultSet, setResultSet] = useState(result);
-
+  let [bracketArray, setBracketArray] = useState<Map<number, string>>();
   const sendRequestNotification = () => {
     if (!userConsent) {
       return;
@@ -63,41 +69,40 @@ export const Result = () => {
     if (!requestNumber || requestNumber.length === 0) {
       return;
     }
-    onClickSusbribeToPushNotification().then((val)=>{
-      onClickSendSubscriptionToPushServer()
-        .then(async function (subscriptionId) {
-          if(subscriptionId){
-            setSubscribe(true);
-            nofificationRequest(requestNumber, subscriptionId).then(function (
-              value
-            ) {
-              if (value) {
-                let pushMessages = localStorage.getItem("pushMessages");
-                if (pushMessages === null) {
-                  localStorage.setItem("pushMessages", requestNumber);
-                } else {
-                  let temp = pushMessages.split(",");
-                  if (!temp.includes(requestNumber)) {
-                    temp.push(requestNumber);
-                    localStorage.setItem("pushMessages", temp.join(","));
-                  }
+    onClickSusbribeToPushNotification().then((val) => {
+      onClickSendSubscriptionToPushServer().then(async function (
+        subscriptionId
+      ) {
+        if (subscriptionId) {
+          setSubscribe(true);
+          nofificationRequest(requestNumber, subscriptionId).then(function (
+            value
+          ) {
+            if (value) {
+              let pushMessages = localStorage.getItem("pushMessages");
+              if (pushMessages === null) {
+                localStorage.setItem("pushMessages", requestNumber);
+              } else {
+                let temp = pushMessages.split(",");
+                if (!temp.includes(requestNumber)) {
+                  temp.push(requestNumber);
+                  localStorage.setItem("pushMessages", temp.join(","));
                 }
-                message.success("Notification turned on");
               }
-            });
-          }
-        });
-      
+              message.success("Notification turned on");
+            }
+          });
+        }
+      });
     });
-    
   };
 
   const requestNotification = async () => {
-    onClickAskUserPermission().then((result)=>{
+    onClickAskUserPermission().then((result) => {
       if (result === "granted") {
         sendRequestNotification();
-      } 
-    })
+      }
+    });
   };
 
   useEffect(() => {
@@ -107,6 +112,8 @@ export const Result = () => {
       resultSet,
       setLoadingResult
     );
+    setBracketArray(temp_array);
+
     if (
       localStorage.getItem("pushMessages") &&
       requestNumber &&
@@ -130,7 +137,26 @@ export const Result = () => {
     }
   }, []);
 
-
+  useEffect(() => {
+    let temp_map = new Map<number, string>();
+    resultSet.helice.forEach((helice, h_index) => {
+      helice.quadruplex.forEach((quadruplex, q_index) => {
+        quadruplex.tetrad.forEach((tetrad, t_index) => {
+          tetrad.name.split("-").forEach((nucleotide, n_index) => {
+            temp_map.set(
+              resultSet.nucleotide[
+                resultSet.nucleotide.findIndex((value, index, obj) => {
+                  return value.name == nucleotide;
+                })
+              ].number,
+              ONZ_COLORS_STRING[tetrad.onz_class]
+            );
+          });
+        });
+      });
+    });
+    setBracketArray(temp_map);
+  }, [resultSet]);
   return (
     <>
       <h1 style={{ marginTop: "20px" }}>Request</h1>
@@ -162,7 +188,9 @@ export const Result = () => {
         <Step
           title="Done"
           description={
-            resultSet.status === 4 ? "Results will be stored for one week." : ""
+            resultSet.status === 4
+              ? "Results will be stored untill " + resultSet.remove_date + "."
+              : ""
           }
         />
       </Steps>
@@ -306,11 +334,186 @@ export const Result = () => {
                             fontFamily: "'PT Mono', monospace",
                           }}
                         >
-                          {resultSet.dot_bracket.sequence}
+                          {resultSet.dot_bracket.sequence
+                            .split("")
+                            .map((sequence, index) =>
+                              sequence == "-" ? (
+                                <span
+                                  style={{ fontFamily: '"PT Mono", monospace' }}
+                                >
+                                  {sequence}
+                                </span>
+                              ) : bracketArray?.has(
+                                  index +
+                                    1 -
+                                    (
+                                      resultSet.dot_bracket.sequence
+                                        .slice(0, index)
+                                        .match(/-/g) || []
+                                    ).length
+                                ) ? (
+                                <Tooltip
+                                  placement="top"
+                                  title={
+                                    STRING_ONZ_COLORS[
+                                      bracketArray?.get(
+                                        index +
+                                          1 -
+                                          (
+                                            resultSet.dot_bracket.sequence
+                                              .slice(0, index)
+                                              .match(/-/g) || []
+                                          ).length
+                                      ) || ""
+                                    ]
+                                  }
+                                >
+                                  <span
+                                    style={{
+                                      fontFamily: '"PT Mono", monospace',
+                                      backgroundColor: bracketArray?.get(
+                                        index +
+                                          1 -
+                                          (
+                                            resultSet.dot_bracket.sequence
+                                              .slice(0, index)
+                                              .match(/-/g) || []
+                                          ).length
+                                      ),
+                                    }}
+                                  >
+                                    {sequence}
+                                  </span>
+                                </Tooltip>
+                              ) : (
+                                <span
+                                  style={{ fontFamily: '"PT Mono", monospace' }}
+                                >
+                                  {sequence}
+                                </span>
+                              )
+                            )}
                           <br />
-                          {resultSet.dot_bracket.line1}
+                          {resultSet.dot_bracket.line1
+                            .split("")
+                            .map((sequence, index) =>
+                              sequence == "-" ? (
+                                <span
+                                  style={{ fontFamily: '"PT Mono", monospace' }}
+                                >
+                                  {sequence}
+                                </span>
+                              ) : bracketArray?.has(
+                                  index +
+                                    1 -
+                                    (
+                                      resultSet.dot_bracket.sequence
+                                        .slice(0, index)
+                                        .match(/-/g) || []
+                                    ).length
+                                ) ? (
+                                <Tooltip
+                                  placement="top"
+                                  title={
+                                    STRING_ONZ_COLORS[
+                                      bracketArray?.get(
+                                        index +
+                                          1 -
+                                          (
+                                            resultSet.dot_bracket.sequence
+                                              .slice(0, index)
+                                              .match(/-/g) || []
+                                          ).length
+                                      ) || ""
+                                    ]
+                                  }
+                                >
+                                  <span
+                                    style={{
+                                      fontFamily: '"PT Mono", monospace',
+                                      backgroundColor: bracketArray?.get(
+                                        index +
+                                          1 -
+                                          (
+                                            resultSet.dot_bracket.sequence
+                                              .slice(0, index)
+                                              .match(/-/g) || []
+                                          ).length
+                                      ),
+                                    }}
+                                  >
+                                    {sequence}
+                                  </span>
+                                </Tooltip>
+                              ) : (
+                                <span
+                                  style={{ fontFamily: '"PT Mono", monospace' }}
+                                >
+                                  {sequence}
+                                </span>
+                              )
+                            )}
+
                           <br />
-                          {resultSet.dot_bracket.line2}
+                          {resultSet.dot_bracket.line2
+                            .split("")
+                            .map((sequence, index) =>
+                              sequence == "-" ? (
+                                <span
+                                  style={{ fontFamily: '"PT Mono", monospace' }}
+                                >
+                                  {sequence}
+                                </span>
+                              ) : bracketArray?.has(
+                                  index +
+                                    1 -
+                                    (
+                                      resultSet.dot_bracket.sequence
+                                        .slice(0, index)
+                                        .match(/-/g) || []
+                                    ).length
+                                ) ? (
+                                <Tooltip
+                                  placement="top"
+                                  title={
+                                    STRING_ONZ_COLORS[
+                                      bracketArray?.get(
+                                        index +
+                                          1 -
+                                          (
+                                            resultSet.dot_bracket.sequence
+                                              .slice(0, index)
+                                              .match(/-/g) || []
+                                          ).length
+                                      ) || ""
+                                    ]
+                                  }
+                                >
+                                  <span
+                                    style={{
+                                      fontFamily: '"PT Mono", monospace',
+                                      backgroundColor: bracketArray?.get(
+                                        index +
+                                          1 -
+                                          (
+                                            resultSet.dot_bracket.sequence
+                                              .slice(0, index)
+                                              .match(/-/g) || []
+                                          ).length
+                                      ),
+                                    }}
+                                  >
+                                    {sequence}
+                                  </span>
+                                </Tooltip>
+                              ) : (
+                                <span
+                                  style={{ fontFamily: '"PT Mono", monospace' }}
+                                >
+                                  {sequence}
+                                </span>
+                              )
+                            )}
                           <br />
                         </p>
                         {StructureVisualisation(v, resultSet)}
