@@ -1,7 +1,7 @@
 
 from re import T
 from backend.models import Nucleotide, TetradoRequest
-
+from datetime import timedelta
 import json
 
 
@@ -28,7 +28,7 @@ def compose(orderId):
     if tetrado_request.r_chie:
         result['r_chie']=tetrado_request.r_chie.url
     if tetrado_request.draw_tetrado:
-        result['draw_tetrado']=tetrado_request.draw_tetrado.url  
+        result['draw_tetrado']=tetrado_request.draw_tetrado.url
     result['base_pair']=[]
     counter=1
     for base_pair in tetrado_request.base_pair.all():
@@ -83,7 +83,7 @@ def compose(orderId):
                 chi_angle_value_tetrad_quadruplex_single['nt4']=tetrad.nt4.chi_angle+ '° / '+tetrad.nt4.glycosidicBond
                 quadruplex_single['chi_angle_value'].append(chi_angle_value_tetrad_quadruplex_single)
                 counter_tetrad+=1
-                
+
             counter_loop=1
             quadruplex_single['loop']=[]
             for loop in quadruplex.loop.all():
@@ -120,5 +120,6 @@ def compose(orderId):
         nucleotide_single['chi_angle']=nucleotide.chi_angle
         result['nucleotide'].append(nucleotide_single)
         counter+=1
-    
+    result['remove_date']=(tetrado_request.timestamp + timedelta(days=7)).strftime('%d %b %Y')
+    result['model']=tetrado_request.model
     return json.dumps(result)

@@ -4,7 +4,7 @@
   "description": "Frontend app for ElTetrado project",
   "main": "src/index.tsx",
   "scripts": {
-    "start": "concurrently --kill-others \"less-watch-compiler --config less-watcher.config.json\" \"react-app-rewired start\"",
+    "start": "HOST=localhost concurrently --kill-others \"less-watch-compiler --config less-watcher.config.json\" \"react-app-rewired start\"",
     "build": "./compile_less.sh && react-app-rewired build",
     "less": "less-watch-compiler --config less-watcher.config.json",
     "lessc": "./compile_less.sh",
@@ -26,6 +26,7 @@
     "react-responsive": "^9.0.0-beta.6",
     "react-router-dom": "^6.2.1",
     "react-scripts": "^5.0.1",
+    "testing-library": "^0.0.2",
     "typescript": "^4.5.5",
     "uuidv4": "^6.2.12",
     "web-vitals": "^2.1.4"

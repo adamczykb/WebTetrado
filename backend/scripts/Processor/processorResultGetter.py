@@ -98,7 +98,7 @@ def add_tetrads(quadruplexes, db_id, quadruplex_entity, file_data,user_request, 
 
             user_request.save()
             raise GetterException
-            
+
 
 
 def add_loops(loops, db_id, quadruplex_entity,user_request):
@@ -119,9 +119,9 @@ def add_loops(loops, db_id, quadruplex_entity,user_request):
                             info=str(db_id), traceback=traceback.format_exc()).save()
 
             user_request.error='Error during adding loops'
-            user_request.save()  
+            user_request.save()
             raise GetterException
-            
+
 
 
 def add_tetrad_pairs(tetradPairs, db_id, helice_entity,user_request):
@@ -143,7 +143,7 @@ def add_tetrad_pairs(tetradPairs, db_id, helice_entity,user_request):
                             info=str(db_id), traceback=traceback.format_exc()).save()
 
             user_request.error='Error during adding tetrad pairs'
-            user_request.save()  
+            user_request.save()
             break
 
 
@@ -180,7 +180,7 @@ def add_quadruplexes(quadruplexes, file_data, db_id, helice_entity,user_request,
                 chains_type = 'TETRA'
             else:
                 chains_type = 'OTHER'
-            
+
             quadruplex_entity_metadata.type = chains_type
             quadruplex_entity_metadata.save()
             quadruplex_entity.metadata = quadruplex_entity_metadata
@@ -194,16 +194,16 @@ def add_quadruplexes(quadruplexes, file_data, db_id, helice_entity,user_request,
                             info=str(db_id), traceback=traceback.format_exc()).save()
 
             user_request.error='Error during adding quadruplexes'
-            user_request.save()  
+            user_request.save()
             raise GetterException
-            
+
 
 def add_to_queue(db_id):
     user_request = TetradoRequest.objects.get(id=db_id)
     base64file = base64.b64encode(
         (open(user_request.structure_body.path, 'rb').read()))
     r = requests.post(PROCESSOR_URL+'/v1/structure', data=json.dumps({"pdb_mmcif_b64": str(base64file.decode('utf-8')), "strict": user_request.strict,
-                      "stackingMismatch": user_request.stacking_mismatch, "noReorder": user_request.no_reorder, "complete2D": user_request.complete_2d}), headers={"Content-Type": "application/json"})
+        "stackingMismatch": user_request.stacking_mismatch, "noReorder": user_request.no_reorder, "complete2D": user_request.complete_2d, 'model':user_request.model}), headers={"Content-Type": "application/json"})
     try:
         if r.status_code == 200:
             request_key = json.loads(r.content)['structureId']
@@ -295,7 +295,7 @@ def add_to_queue(db_id):
                         "image": "https://webtetrado.cs.put.poznan.pl/static/logo.svg",
                         "tag":'test',
                         "url": "https://webtetrado.cs.put.poznan.pl/result/"+str(user_request.hash_id),
-                        "title": "WebTetrado notification ", 
+                        "title": "WebTetrado notification ",
                         "text": "Your request "+str(user_request.hash_id)+" is completed",
                          }
                     # payload = {"head": "Hey", "body": "Hello World"}

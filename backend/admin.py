@@ -12,7 +12,7 @@ class TemporaryFiles(admin.ModelAdmin):
 @admin.register(TetradoRequest)
 class TetradoRequest(admin.ModelAdmin):
     list_display = ('id', 'source', 'status', 'cookie_user_id', 'timestamp', 'structure_body', 'varna','hash_id',
-                    'r_chie', 'draw_tetrado', 'complete_2d', 'no_reorder', 'stacking_mismatch', 'strict', 'elTetradoKey')
+                    'r_chie', 'draw_tetrado', 'complete_2d', 'no_reorder', 'stacking_mismatch', 'strict', 'model','elTetradoKey')
 
 
 @admin.register(Quadruplex)
