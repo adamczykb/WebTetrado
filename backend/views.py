@@ -28,7 +28,7 @@ def user_request_setup_endpoint(request):
 @csrf_exempt
 def file_handler_endpoint(request):
     if(request.FILES['structure']):
-        return HttpResponse(status=200, content='{\"id\": \"%s\"}' % (handle_uploaded_file(request.FILES['structure'])), content_type='application/json')
+        return HttpResponse(status=200, content='{\"id\": \"%s\", \"models\": %d,\"error\":\"%s\"}' % (handle_uploaded_file(request.FILES['structure'])), content_type='application/json')
     else:
         return HttpResponse(status=500)
 

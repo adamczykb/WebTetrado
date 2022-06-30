@@ -1,4 +1,4 @@
-import { message, Input, Button, Switch, Form, Collapse, Upload } from "antd";
+import { message, Input, Button, Switch, Form, Collapse, Slider } from "antd";
 import Dragger from "antd/lib/upload/Dragger";
 import { useEffect, useState } from "react";
 import { InboxOutlined } from "@ant-design/icons";
@@ -6,12 +6,13 @@ import config from "../../config.json";
 import { processingRequest } from "../../utils/adapters/ProcessingRequest";
 import { useMediaQuery } from "react-responsive";
 import { UploadFile, UploadProps } from "antd/lib/upload/interface";
+import { checkRcsbMaxModel } from "../../utils/adapters/CheckRcsbMaxModel";
 const { Panel } = Collapse;
 
 export const RequestForm = () => {
   let form_values = {
     fileId: "",
-    rscbPdbId: "",
+    rcsbPdbId: "",
     settings: {
       complete2d: false,
       noReorder: false,
@@ -21,23 +22,26 @@ export const RequestForm = () => {
       model: 1,
     },
   };
-  let mock: UploadFile[] = [];
   let isDesktop = useMediaQuery({ query: "(min-width: 900px)" });
   const [loading, setLoading] = useState(false);
+  const [maxModel, setMaxModel] = useState(0);
+  const [pdbError, setPDBError] = useState(false);
   const [formValues, setFormValues] = useState(form_values);
   const [fileListState, setFileList] = useState<UploadFile[] | undefined>(
     undefined
   );
-  const [mockFile, setMockFile] = useState(mock);
+
   let props: UploadProps = {
     name: "structure",
     multiple: false,
     action: config.SERVER_URL + "/api/upload/structure/",
     maxCount: 1,
-    defaultFileList: mockFile,
     beforeUpload: (file: File) => {
       let fileName = file.name.split(".");
       let fileNameLength = file.name.split(".").length;
+      setFileList(undefined);
+      setFormValues({ ...formValues, fileId: "" });
+      setMaxModel(0);
       const isCifOrPdb =
         file.type === "chemical/x-cif" ||
         file.type === "chemical/x-pdb" ||
@@ -56,32 +60,45 @@ export const RequestForm = () => {
     onRemove(info: any) {
       setFormValues({ ...formValues, fileId: "" });
       setFileList([] as UploadFile<File>[]);
+      setMaxModel(0);
     },
     onChange(event) {
       const { status } = event.file;
       if (status === "done") {
+        if (event.file.response.error.length > 0) {
+          message.error(`${event.file.name} is not a proper file.`);
+          setFileList([] as UploadFile<File>[]);
+          setFormValues({ ...formValues, fileId: "" });
+          return;
+        }
         message.success(`${event.file.name} file uploaded successfully.`);
         setFormValues({
           ...formValues,
-          rscbPdbId: "",
+          rcsbPdbId: "",
           fileId: event.file.response.id,
         });
+        setFormValues({
+          ...formValues,
+          settings: { ...formValues.settings, model: 1 },
+        });
+
+        setMaxModel(event.file.response.models);
         setFileList([event.file]);
       } else if (status === "error") {
         message.error(`${event.file.name} file upload failed.`);
         setFormValues({ ...formValues, fileId: "" });
         setFileList([] as UploadFile<File>[]);
-      } else {
-        setFileList(undefined);
-        setFormValues({ ...formValues, fileId: "" });
       }
     },
-    onDrop(e: any) {},
+    onDrop(e: any) {
+      setFileList(undefined);
+      setFormValues({ ...formValues, fileId: "" });
+    },
   };
   const submit = () => {
     if (
       (!fileListState || fileListState.length == 0) &&
-      formValues.rscbPdbId.length < 4
+      formValues.rcsbPdbId.length < 4
     ) {
       message.error("None of structure sources are provided 😱");
       return null;
@@ -100,6 +117,20 @@ export const RequestForm = () => {
     setLoading(true);
     processingRequest(formValues, setLoading);
   };
+  useEffect(() => {
+    if (formValues.rcsbPdbId.length === 4) {
+      checkRcsbMaxModel(setMaxModel, setPDBError, formValues.rcsbPdbId);
+      setFormValues({
+        ...formValues,
+        settings: { ...formValues.settings, model: 1 },
+      });
+    } else {
+      setMaxModel(0);
+    }
+  }, [formValues.rcsbPdbId]);
+  useEffect(() => {
+    setPDBError(false);
+  }, [formValues.rcsbPdbId]);
   return (
     <>
       <h2
@@ -111,11 +142,11 @@ export const RequestForm = () => {
       <div style={{ marginBottom: "40px", textAlign: "center" }}>
         <Button
           onClick={() => {
-            setFileList([{ name: "2HY9.cif", uid: "" }]);
+            setFileList([]);
             setFormValues({
               ...formValues,
-              fileId: "rdy_2hy9_cif",
-              rscbPdbId: "",
+              fileId: "",
+              rcsbPdbId: "2HY9",
             });
           }}
         >
@@ -127,7 +158,7 @@ export const RequestForm = () => {
             setFormValues({
               ...formValues,
               fileId: "",
-              rscbPdbId: "6RS3",
+              rcsbPdbId: "6RS3",
             });
           }}
         >
@@ -135,11 +166,11 @@ export const RequestForm = () => {
         </Button>
         <Button
           onClick={() => {
-            setFileList([{ name: "1JJP.cif", uid: "" }]);
+            setFileList([]);
             setFormValues({
               ...formValues,
-              fileId: "rdy_1jjp_cif",
-              rscbPdbId: "",
+              fileId: "",
+              rcsbPdbId: "1JJP",
             });
           }}
         >
@@ -151,7 +182,7 @@ export const RequestForm = () => {
             setFormValues({
               ...formValues,
               fileId: "",
-              rscbPdbId: "6FC9",
+              rcsbPdbId: "6FC9",
             });
           }}
         >
@@ -192,11 +223,12 @@ export const RequestForm = () => {
                 <Form.Item>
                   <Input
                     name="rcsbPdbId"
-                    value={formValues.rscbPdbId}
+                    value={formValues.rcsbPdbId}
+                    status={pdbError ? "error" : ""}
                     onChange={(e) =>
                       setFormValues({
                         ...formValues,
-                        rscbPdbId: e.target.value.toUpperCase(),
+                        rcsbPdbId: e.target.value.toUpperCase(),
                       })
                     }
                     disabled={formValues.fileId != ""}
@@ -245,11 +277,11 @@ export const RequestForm = () => {
             <Form.Item>
               <Input
                 name="rcsbPdbId"
-                value={formValues.rscbPdbId}
+                value={formValues.rcsbPdbId}
                 onChange={(e) =>
                   setFormValues({
                     ...formValues,
-                    rscbPdbId: e.target.value.toUpperCase(),
+                    rcsbPdbId: e.target.value.toUpperCase(),
                   })
                 }
                 disabled={formValues.fileId != ""}
@@ -379,33 +411,73 @@ export const RequestForm = () => {
                   />
                 </div>
               </Form.Item>
-              <Form.Item>
-                <div className="horizontal-item-center">
-                  <div
-                    className="item-label"
-                    style={isDesktop ? {} : { padding: "5px 0" }}
-                  >
-                    Model number:
-                  </div>
-                  <Input
-                    style={{ width: "calc(50% - 5px)", maxWidth: "100px" }}
-                    size={isDesktop ? "small" : "middle"}
-                    type={"number"}
-                    min="0"
-                    max="4"
-                    value={formValues.settings.model}
-                    onChange={(e) =>
-                      setFormValues({
-                        ...formValues,
-                        settings: {
-                          ...formValues.settings,
-                          model: e.target.valueAsNumber,
-                        },
-                      })
-                    }
-                  />
-                </div>
-              </Form.Item>
+              {maxModel > 0 ? (
+                <>
+                  <Form.Item>
+                    <div className="horizontal-item-center">
+                      <div
+                        className="item-label"
+                        style={isDesktop ? {} : { padding: "5px 0" }}
+                      >
+                        Model number:
+                      </div>
+                      <Slider
+                        min={1}
+                        max={maxModel}
+                        style={{ width: "200px" }}
+                        onChange={(value: number) =>
+                          setFormValues({
+                            ...formValues,
+                            settings: {
+                              ...formValues.settings,
+                              model: value,
+                            },
+                          })
+                        }
+                        value={formValues.settings.model}
+                        step={1}
+                      />
+                    </div>
+                  </Form.Item>
+                  <Form.Item>
+                    <div className="horizontal-item-center">
+                      <div
+                        className="item-label"
+                        style={isDesktop ? {} : { padding: "5px 0" }}
+                      ></div>
+                      <Input
+                        style={{ width: "calc(50% - 5px)", maxWidth: "100px" }}
+                        size={isDesktop ? "small" : "middle"}
+                        type={"number"}
+                        min="1"
+                        max={maxModel}
+                        value={formValues.settings.model}
+                        onChange={(e) => {
+                          if (e.target.valueAsNumber > maxModel) {
+                            setFormValues({
+                              ...formValues,
+                              settings: {
+                                ...formValues.settings,
+                                model: maxModel,
+                              },
+                            });
+                          } else {
+                            setFormValues({
+                              ...formValues,
+                              settings: {
+                                ...formValues.settings,
+                                model: e.target.valueAsNumber,
+                              },
+                            });
+                          }
+                        }}
+                      />
+                    </div>
+                  </Form.Item>
+                </>
+              ) : (
+                <></>
+              )}
             </Panel>
           </Collapse>
         </div>
@@ -415,8 +487,9 @@ export const RequestForm = () => {
               htmlType="submit"
               type="primary"
               disabled={
-                (!fileListState || fileListState.length == 0) &&
-                formValues.rscbPdbId.length < 4
+                ((!fileListState || fileListState.length == 0) &&
+                  formValues.rcsbPdbId.length < 4) ||
+                pdbError
               }
               loading={loading}
               onClick={submit}

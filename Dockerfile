@@ -15,15 +15,8 @@ COPY build/celery_beat_docker.conf /etc/supervisor/conf.d/
 COPY build/worker_supervisor.conf /etc/supervisor/conf.d/
 COPY build/ws_supervisor.conf /etc/supervisor/conf.d/
 COPY build/web_supervisor.conf /etc/supervisor/conf.d/
-# COPY server/celery_beat_docker.conf /etc/supervisor/conf.d/
 RUN pip3 install -r requirements.txt
 
-WORKDIR /home/badamczyk/webtetrado
-# EXPOSE 8000
-# EXPOSE 8020
-# RUN python3 manage.py collectstatic --no-input
 
 
 WORKDIR /home/badamczyk/webtetrado
-RUN mkdir -p /home/badamczyk/webtetrado/logs/celery/
-RUN supervisord

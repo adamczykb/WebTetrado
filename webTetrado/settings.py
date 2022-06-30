@@ -29,7 +29,7 @@ SECRET_KEY = env("SECRET_KEY",default="django-insecure-)264wld6f3%_a^kz%*q(n0d$9
 ENCRYPT_KEY = b'WkdGMFlWOHhSRFU1Q2lNZ0NsOWxiblJ5ZVM1cFpDQWc='
 SALT=b'\xec\xc4\xf2\xd1\x13\xdf5\xb0n\x12\x9b\xdb\xd5@G!'
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG =False
 ALLOWED_HOSTS = ['webtetrado.cs.put.poznan.pl','127.0.0.1']
 # CORS_ALLOW_ALL_ORIGINS = True # If this is used then `CORS_ALLOWED_ORIGINS` will not have any effect
 # CORS_ALLOW_CREDENTIALS = True # Application definition
@@ -60,7 +60,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'webTetrado.middleware.RestrictMediaFolders.RestrictMediaFolders' 
+    'webTetrado.middleware.RestrictMediaFolders.RestrictMediaFolders'
     ]
 
 ROOT_URLCONF = 'webTetrado.urls'
@@ -176,7 +176,7 @@ if DEBUG:
     REDIS_HOST = '127.0.0.1'
 else:
     REDIS_HOST = 'redis'
-    
+
 CELERY_BROKER_URL = 'redis://'+REDIS_HOST+':6379'
 CELERY_RESULT_BACKEND = 'redis://'+REDIS_HOST+':6379'
 CELERY_TASK_TRACK_STARTED = True

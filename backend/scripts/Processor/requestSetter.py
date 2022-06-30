@@ -35,19 +35,19 @@ def set_request_action(request):
             entity.structure_body.save(name= temp_file.file.name.split('/')[-1],content=temp_file.file.open('rb'))
             entity.file_extension=temp_file.file_extension
             TemporaryFile.objects.get(id=body['fileId']).delete()
-    elif 'rscbPdbId' in body and len(body['rscbPdbId'])>0:
-        url = 'http://files.rcsb.org/download/' + body['rscbPdbId'] + '.cif'
+    elif 'rcsbPdbId' in body and len(body['rcsbPdbId'])>0:
+        url = 'http://files.rcsb.org/download/' + body['rcsbPdbId'] + '.cif'
         r = requests.get(url, allow_redirects=True)
         if r.status_code == 200:
             data_file = NamedTemporaryFile()
             data_file.write(r.content)
             entity.source=1
             entity.file_extension='cif'
-            entity.structure_body.save(name= body['rscbPdbId']+'.cif',content=data_file)
+            entity.structure_body.save(name= body['rcsbPdbId']+'.cif',content=data_file)
         else:
             return HttpResponse(status=404)
     else:
-            return HttpResponse(status=400)
+            return HttpResponse(status=500)
 
     entity.save()
     if settings.DEBUG:

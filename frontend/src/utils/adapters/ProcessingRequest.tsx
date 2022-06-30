@@ -3,7 +3,7 @@ import { getCookie } from "../../components/csrf";
 import config from "../../config.json";
 type form_values = {
   fileId: string;
-  rscbPdbId: string;
+  rcsbPdbId: string;
   settings: {
     complete2d: boolean;
     noReorder: boolean;
@@ -29,6 +29,7 @@ export function processingRequest(data: form_values, setLoading: any) {
         message.error(
           "Requested structure is not present in the Protein Data Bank"
         );
+        setLoading(false);
         return "";
       } else {
         return response.json();
