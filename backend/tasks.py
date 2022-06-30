@@ -3,8 +3,8 @@ from backend.models import TetradoRequest,Nucleotide,TemporaryFile,Log
 from datetime import datetime as dt
 import datetime
 
-@app.task(bind=True)
-def remove_old_queries():
+@app.task()
+def remove_old_queries(args=None):
     try:
         TemporaryFile.objects.filter(timestamp__lte=dt.today() - datetime.timedelta(days=1), removable=True).delete()
         for request in TetradoRequest.objects.filter(timestamp__lte=dt.today() - datetime.timedelta(days=7)):
