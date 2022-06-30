@@ -48,7 +48,6 @@ INSTALLED_APPS = [
     'django_celery_beat',
     "django_rq",
     'backend',
-    'frontend',
 ]
 
 MIDDLEWARE = [
