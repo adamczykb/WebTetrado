@@ -7,6 +7,7 @@ import { processingRequest } from "../../utils/adapters/ProcessingRequest";
 import { useMediaQuery } from "react-responsive";
 import { UploadFile, UploadProps } from "antd/lib/upload/interface";
 import { checkRcsbMaxModel } from "../../utils/adapters/CheckRcsbMaxModel";
+import lang from "../../lang.json";
 const { Panel } = Collapse;
 
 export const RequestForm = () => {
@@ -40,7 +41,12 @@ export const RequestForm = () => {
       let fileName = file.name.split(".");
       let fileNameLength = file.name.split(".").length;
       setFileList(undefined);
-      setFormValues({ ...formValues, fileId: "" });
+      setFormValues({
+        ...formValues,
+        fileId: "",
+        rcsbPdbId: "",
+        settings: { ...formValues.settings, model: 1 },
+      });
       setMaxModel(0);
       const isCifOrPdb =
         file.type === "chemical/x-cif" ||
@@ -48,12 +54,12 @@ export const RequestForm = () => {
         fileName[fileNameLength - 1].toLowerCase() === "cif" ||
         fileName[fileNameLength - 1].toLowerCase() === "pdb";
       if (!isCifOrPdb) {
-        message.error(`${file.name} is not a proper file`);
+        message.error(`${file.name}` + lang.file_not_pdb_cif);
         setFormValues({ ...formValues, fileId: "" });
         setFileList([] as UploadFile<File>[]);
         return false;
       } else {
-        message.info("Uploading file in progress...");
+        message.info(lang.uploading_file);
       }
       return isCifOrPdb;
     },
@@ -66,26 +72,24 @@ export const RequestForm = () => {
       const { status } = event.file;
       if (status === "done") {
         if (event.file.response.error.length > 0) {
-          message.error(`${event.file.name} is not a proper file.`);
+          message.error(`${event.file.name}` + lang.file_not_pdb_cif);
           setFileList([] as UploadFile<File>[]);
           setFormValues({ ...formValues, fileId: "" });
           return;
         }
-        message.success(`${event.file.name} file uploaded successfully.`);
+        console.log(event.file);
+        message.success(`${event.file.name}` + lang.file_upload_success);
         setFormValues({
           ...formValues,
           rcsbPdbId: "",
           fileId: event.file.response.id,
-        });
-        setFormValues({
-          ...formValues,
           settings: { ...formValues.settings, model: 1 },
         });
 
         setMaxModel(event.file.response.models);
         setFileList([event.file]);
       } else if (status === "error") {
-        message.error(`${event.file.name} file upload failed.`);
+        message.error(`${event.file.name}` + lang.error_uploading);
         setFormValues({ ...formValues, fileId: "" });
         setFileList([] as UploadFile<File>[]);
       }
@@ -100,7 +104,7 @@ export const RequestForm = () => {
       (!fileListState || fileListState.length == 0) &&
       formValues.rcsbPdbId.length < 4
     ) {
-      message.error("None of structure sources are provided 😱");
+      message.error(lang.lack_of_source);
       return null;
     }
 
@@ -111,7 +115,7 @@ export const RequestForm = () => {
       formValues.settings.stackingMatch < 1 &&
       formValues.settings.stackingMatch > 2
     ) {
-      message.error("Wrong value in stacking match option");
+      message.error(lang.wrong_value + "stacking match.");
       return null;
     }
     setLoading(true);
@@ -126,11 +130,14 @@ export const RequestForm = () => {
       });
     } else {
       setMaxModel(0);
+      setPDBError(false);
     }
   }, [formValues.rcsbPdbId]);
-  useEffect(() => {
-    setPDBError(false);
-  }, [formValues.rcsbPdbId]);
+  //useEffect(() => {
+  //if (fileListState && fileListState.length > 0) {
+  //setFormValues({ ...formValues, rcsbPdbId: "" });
+  //}
+  //}, [fileListState]);
   return (
     <>
       <h2
@@ -399,15 +406,28 @@ export const RequestForm = () => {
                     min="0"
                     max="4"
                     value={formValues.settings.stackingMatch}
-                    onChange={(e) =>
-                      setFormValues({
-                        ...formValues,
-                        settings: {
-                          ...formValues.settings,
-                          stackingMatch: e.target.valueAsNumber,
-                        },
-                      })
-                    }
+                    onChange={(e) => {
+                      if (
+                        e.target.valueAsNumber > 4 ||
+                        e.target.valueAsNumber < 0
+                      ) {
+                        setFormValues({
+                          ...formValues,
+                          settings: {
+                            ...formValues.settings,
+                            stackingMatch: 1,
+                          },
+                        });
+                      } else {
+                        setFormValues({
+                          ...formValues,
+                          settings: {
+                            ...formValues.settings,
+                            stackingMatch: e.target.valueAsNumber,
+                          },
+                        });
+                      }
+                    }}
                   />
                 </div>
               </Form.Item>

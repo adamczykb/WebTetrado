@@ -1,5 +1,5 @@
 import { message } from "antd";
-
+import lang from "../../lang.json";
 export function checkRcsbMaxModel(
   setMaxModel: any,
   setPDBError: any,
@@ -19,7 +19,7 @@ export function checkRcsbMaxModel(
         setMaxModel(response.rcsb_entry_container_identifiers.model_ids.length);
       } else {
         setPDBError(true);
-        message.error("Protein Data Bank does not contain '" + pdbId + "'");
+        message.error(lang.rcsb_error_with_name + "'" + pdbId + "'");
       }
     });
 }

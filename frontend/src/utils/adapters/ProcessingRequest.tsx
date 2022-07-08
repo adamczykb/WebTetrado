@@ -1,6 +1,7 @@
 import { message } from "antd";
 import { getCookie } from "../../components/csrf";
 import config from "../../config.json";
+import lang from "../../lang.json";
 type form_values = {
   fileId: string;
   rcsbPdbId: string;
@@ -26,9 +27,7 @@ export function processingRequest(data: form_values, setLoading: any) {
   fetch(config.SERVER_URL + "/api/process/request/", requestOptions)
     .then((response) => {
       if (response.status == 404) {
-        message.error(
-          "Requested structure is not present in the Protein Data Bank"
-        );
+        message.error(lang.rcsb_error);
         setLoading(false);
         return "";
       } else {

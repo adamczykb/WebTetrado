@@ -22,7 +22,7 @@ import {
 } from "../../assets/data/onzClassColor";
 import usePushNotifications from "../../hooks/usePushNotifications";
 import { nofificationRequest } from "../../utils/adapters/NotificationRequest";
-
+import lang from "../../lang.json";
 export const Result = () => {
   let result: result_values = {
     name: "",
@@ -89,7 +89,7 @@ export const Result = () => {
                   localStorage.setItem("pushMessages", temp.join(","));
                 }
               }
-              message.success("Notification turned on");
+              message.success(lang.notification_turned_on);
             }
           });
         }
@@ -171,7 +171,7 @@ export const Result = () => {
           onClick={requestNotification}
           style={{ marginBottom: "20px" }}
         >
-          {subscribed ? "Notification turned on" : "Turn on notification"}
+          {subscribed ? lang.notification_turned_on : lang.turn_on_notification}
         </Button>
       ) : (
         <></>

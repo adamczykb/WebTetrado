@@ -1,6 +1,7 @@
 from django.core.files.temp import NamedTemporaryFile
 from backend.models import TemporaryFile
 from Bio.PDB import FastMMCIFParser
+from Bio.PDB.PDBParser import PDBParser
 def handle_uploaded_file(f):
     try:
         data_file = NamedTemporaryFile()
