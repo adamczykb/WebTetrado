@@ -38,13 +38,13 @@ class Nucleotide(models.Model):
 
 class BasePair(models.Model):
     id = models.AutoField(primary_key=True)
-    edge3 = models.CharField(max_length=20)
-    edge5 = models.CharField(max_length=20)
+    edge3 = models.CharField(max_length=50)
+    edge5 = models.CharField(max_length=50)
     nt1 = models.ForeignKey(
         to=Nucleotide, related_name='nucleotide_bp_1', on_delete=models.DO_NOTHING)
     nt2 = models.ForeignKey(
         to=Nucleotide, related_name='nucleotide_bp_2', on_delete=models.DO_NOTHING)
-    stericity = models.CharField(max_length=20)
+    stericity = models.CharField(max_length=50)
     inTetrad = models.BooleanField(default=False)
     canonical = models.BooleanField(default=False)
 

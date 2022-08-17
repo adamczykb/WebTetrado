@@ -11,7 +11,7 @@ from backend.scripts.Processor.tetradFileFilter import get_cetrain_tetrad_file
 from backend.scripts.webPush import send_to_subscription
 from webTetrado.settings import PROCESSOR_URL
 from backend.scripts.Processor.resultComposer import compose
-from enum import Enum
+from enum import Enum 
 from django.db import models
 
 class GetterException(Exception):
