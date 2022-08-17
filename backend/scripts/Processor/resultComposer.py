@@ -25,10 +25,38 @@ def compose(orderId):
     result['structure_file']=tetrado_request.structure_body.url
     if tetrado_request.varna:
         result['varna']=tetrado_request.varna.url
+    else:
+        result['varna']=''
+
+    if tetrado_request.varna_can:
+        result['varna_can']=tetrado_request.varna_can.url
+    else:
+        result['varna_can']=''
+
+    if tetrado_request.varna_non_can:
+        result['varna_non_can']=tetrado_request.varna_non_can.url
+    else:
+        result['varna_non_can']=''
+
+    if tetrado_request.varna_can_non_can:
+        result['varna_can_non_can']=tetrado_request.varna_can_non_can.url
+    else:
+        result['varna_can_non_can']=''
+
     if tetrado_request.r_chie:
         result['r_chie']=tetrado_request.r_chie.url
+    else:
+        result['r_chie']=''
+
+    if tetrado_request.r_chie_canonical:
+        result['r_chie_canonical']=tetrado_request.r_chie_canonical.url
+    else:
+        result['r_chie_canonical']=''
+
     if tetrado_request.draw_tetrado:
         result['draw_tetrado']=tetrado_request.draw_tetrado.url
+    else:
+        result['draw_tetrado']=''
     result['base_pair']=[]
     counter=1
     for base_pair in tetrado_request.base_pair.all():

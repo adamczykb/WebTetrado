@@ -45,6 +45,8 @@ class BasePair(models.Model):
     nt2 = models.ForeignKey(
         to=Nucleotide, related_name='nucleotide_bp_2', on_delete=models.DO_NOTHING)
     stericity = models.CharField(max_length=20)
+    inTetrad = models.BooleanField(default=False)
+    canonical = models.BooleanField(default=False)
 
     def __str__(self):
         return str(self.nt1.name)+'-'+str(self.nt2.name)
@@ -169,8 +171,15 @@ class TetradoRequest(models.Model):
     timestamp = models.DateTimeField(auto_now=True)
     elTetradoKey = models.CharField(max_length=100)
     base_pair = models.ManyToManyField(BasePair,blank=True)
-    varna = models.FileField(upload_to='files/results/varna/', blank=True)
+
     r_chie = models.FileField(upload_to='files/results/r_chie/', blank=True)
+    r_chie_canonical = models.FileField(upload_to='files/results/r_chie-canonical/', blank=True)
+
+    varna = models.FileField(upload_to='files/results/varna/', blank=True)
+    varna_can = models.FileField(upload_to='files/results/varna-can/', blank=True)
+    varna_non_can = models.FileField(upload_to='files/results/varna-non-can/', blank=True)
+    varna_can_non_can = models.FileField(upload_to='files/results/varna-can_non-can/', blank=True)
+
     draw_tetrado = models.FileField(
         upload_to='files/results/layers/', blank=True)
 
@@ -187,7 +196,11 @@ class TetradoRequest(models.Model):
 def remove_file(**kwargs):
     instance = kwargs.get('instance')
     instance.varna.delete(save=False)
+    instance.varna_can.delete(save=False)
+    instance.varna_non_can.delete(save=False)
+    instance.varna_can_non_can.delete(save=False)
     instance.r_chie.delete(save=False)
+    instance.r_chie_canonical.delete(save=False)
     instance.draw_tetrado.delete(save=False)
     for base_pair in instance.base_pair.all():
         base_pair.delete()

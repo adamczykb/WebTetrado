@@ -1,12 +1,12 @@
 {
-  "file_not_pdb_cif": " is not a proper file.",
-  "uploading_file": "Uploading file in progress...",
-  "file_upload_success": " file uploaded successfully.",
-  "error_uploading": " file upload failed.",
-  "lack_of_source": "None of structure sources are provided.",
-  "wrong_value": "Unproper value in ",
-  "notification_turned_on": "Notification is turned on.",
-  "rcsb_error_with_name": "Protein Data Bank does not contain ",
-  "rcsb_error": "Requested structure is not present in Protein Data Bank.",
-  "turn_on_notification": "Turn on notification"
+  "file_not_pdb_cif": "Improper file format: ",
+  "uploading_file": "File upload in progress: ",
+  "file_upload_success": "Successfully uploaded: ",
+  "error_uploading": "Failed to upload ",
+  "lack_of_source": "Select file to upload.",
+  "wrong_value": "Improper data in ",
+  "notification_turned_on": "Notification turned on.",
+  "rcsb_error_with_name": "Invalid data or PDB ID: ",
+  "rcsb_error": "Non-existent structure.",
+  "turn_on_notification": "Turn notification on"
 }

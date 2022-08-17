@@ -75,7 +75,11 @@ export type result_values = {
   g4_limited: boolean;
   idcode: string;
   varna: string;
+  varna_can: string;
+  varna_non_can: string;
+  varna_can_non_can: string;
   r_chie: string;
+  r_chie_canonical: string;
   draw_tetrado: string;
   base_pair: base_pair[];
   helice: helice[];
@@ -88,3 +92,8 @@ export type dot_bracket_values = {
   line2: string;
   sequence: string;
 };
+export type visualsation_switch_result={
+   varna_non_can:boolean,
+   varna_can:boolean,
+   r_chie_canonical:boolean
+}

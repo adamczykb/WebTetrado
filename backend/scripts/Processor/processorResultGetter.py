@@ -11,9 +11,18 @@ from backend.scripts.Processor.tetradFileFilter import get_cetrain_tetrad_file
 from backend.scripts.webPush import send_to_subscription
 from webTetrado.settings import PROCESSOR_URL
 from backend.scripts.Processor.resultComposer import compose
+from enum import Enum
+from django.db import models
 
 class GetterException(Exception):
     pass
+
+class LwParser(Enum):
+    c = 'cis'
+    t = 'trans'
+    W = 'Watson-Crick-Franklin'
+    H = 'Hoogsteen'
+    S = 'Sugar'
 
 def add_base_pairs(base_pairs, db_id, user_request):
     base_pair_tetrad = set([])
@@ -27,9 +36,11 @@ def add_base_pairs(base_pairs, db_id, user_request):
                     query_id=db_id, name=base_pair['nt1'])
                 base_pair_entity.nt2 = Nucleotide.objects.get(
                     query_id=db_id, name=base_pair['nt2'])
-                base_pair_entity.edge3 = base_pair['edge3']
-                base_pair_entity.edge5 = base_pair['edge5']
-                base_pair_entity.stericity = base_pair['stericity']
+                base_pair_entity.edge3 = LwParser[base_pair['lw'][2]].value
+                base_pair_entity.edge5 = LwParser[base_pair['lw'][1]].value
+                base_pair_entity.stericity = LwParser[base_pair['lw'][0]].value
+                base_pair_entity.canonical=base_pair['canonical']
+                base_pair_entity.inTetrad=base_pair['inTetrad']
                 base_pair_entity.save()
                 user_request.base_pair.add(base_pair_entity)
         except Exception:
@@ -154,8 +165,8 @@ def add_quadruplexes(quadruplexes, file_data, db_id, helice_entity,user_request,
             quadruplex_entity_metadata = Metadata()
             quadruplex_entity_metadata.tetrad_combination = ", ".join(
                 str(x) for x in quadruplex['gbaClassification'])
-            quadruplex_entity_metadata.onz_class = quadruplex['onzm']
-            quadruplex_entity_metadata.loopClassification = quadruplex['loopClassification']
+            quadruplex_entity_metadata.onz_class = quadruplex['onzm'] if 'onzm' in quadruplex else '-'
+            quadruplex_entity_metadata.loopClassification = ' '.join(quadruplex['loopClassification'].values()) if 'loopClassification' in quadruplex else '-'
             quadruplex_entity_metadata.molecule = file_data.header['head'].upper()
 
             quadruplex_entity_metadata.save()
@@ -197,6 +208,17 @@ def add_quadruplexes(quadruplexes, file_data, db_id, helice_entity,user_request,
             user_request.save()
             raise GetterException
 
+def file_downloader(request_key:str,url:str,file_destination:models.FileField):
+    while(True):
+        data_file = NamedTemporaryFile()
+        r = requests.get(PROCESSOR_URL+url)
+        data_file.write(r.content)
+        file_destination.save(name=request_key+'.svg', content=data_file)
+        data_file.close()
+        if r.status_code == 200:
+            break
+        time.sleep(1)
+
 
 def add_to_queue(db_id):
     user_request = TetradoRequest.objects.get(id=db_id)
@@ -234,42 +256,8 @@ def add_to_queue(db_id):
                 r = requests.get(PROCESSOR_URL+'/v1/result/'+request_key)
                 if r.status_code == 200:
                     result = json.loads(r.content)
+                    Log.objects.create(type='Log ', info=str(), traceback=str(result)).save()
 
-                    while(True):
-                        data_file = NamedTemporaryFile()
-                        r = requests.get(
-                            PROCESSOR_URL+'/v1/varna/'+request_key)
-                        data_file.write(r.content)
-                        user_request.varna.save(
-                            name=request_key+'.svg', content=data_file)
-                        data_file.close()
-                        if r.status_code == 200:
-                            break
-                        time.sleep(1)
-
-                    while(True):
-                        data_file = NamedTemporaryFile()
-                        r = requests.get(
-                            PROCESSOR_URL+'/v1/r-chie/'+request_key)
-                        data_file.write(r.content)
-                        user_request.r_chie.save(
-                            name=request_key+'.svg', content=data_file)
-                        data_file.close()
-                        if r.status_code == 200:
-                            break
-                        time.sleep(1)
-
-                    while(True):
-                        data_file = NamedTemporaryFile()
-                        r = requests.get(
-                            PROCESSOR_URL+'/v1/draw-tetrado/'+request_key)
-                        data_file.write(r.content)
-                        user_request.draw_tetrado.save(
-                            name=request_key+'.svg', content=data_file)
-                        data_file.close()
-                        if r.status_code == 200:
-                            break
-                        time.sleep(1)
 
                     add_nucleodities(result['nucleotides'], db_id,user_request)
 
@@ -285,6 +273,29 @@ def add_to_queue(db_id):
                     user_request.dot_bracket_line1 = result['dotBracket']['line1']
                     user_request.dot_bracket_line2 = result['dotBracket']['line2']
                     user_request.dot_bracket_sequence = result['dotBracket']['sequence']
+                    canonical=False
+                    non_canonical=False
+
+                    for base_pair in user_request.base_pair.all():
+                        if not base_pair.inTetrad and base_pair.canonical:
+                            canonical=True
+                        if not base_pair.inTetrad and not base_pair.canonical:
+                            non_canonical=True
+                        if canonical and non_canonical:
+                            break
+
+                    file_downloader(request_key,'/v1/varna/'+request_key+"?canonical=false&non-canonical=false",user_request.varna)
+                    if canonical:
+                        file_downloader(request_key,'/v1/varna/'+request_key+"?canonical=true&non-canonical=false",user_request.varna_can)
+                    if non_canonical:
+                        file_downloader(request_key,'/v1/varna/'+request_key+"?canonical=false&non-canonical=true",user_request.varna_non_can)
+                    if canonical and non_canonical:
+                        file_downloader(request_key,'/v1/varna/'+request_key+"?canonical=true&non-canonical=true",user_request.varna_can_non_can)
+
+                    file_downloader(request_key,'/v1/r-chie/'+request_key+"?canonical=false",user_request.r_chie)
+                    if canonical:
+                        file_downloader(request_key,'/v1/r-chie/'+request_key+"?canonical=true",user_request.r_chie_canonical)
+                    file_downloader(request_key,'/v1/draw-tetrado/'+request_key,user_request.draw_tetrado)
 
                     user_request.status = 4
                     user_request.save()
@@ -293,7 +304,7 @@ def add_to_queue(db_id):
                     user_request.save()
                     payload = {
                         "image": "https://webtetrado.cs.put.poznan.pl/static/logo.svg",
-                        "tag":'test',
+                        "tag":'Complete',
                         "url": "https://webtetrado.cs.put.poznan.pl/result/"+str(user_request.hash_id),
                         "title": "WebTetrado notification ",
                         "text": "Your request "+str(user_request.hash_id)+" is completed",

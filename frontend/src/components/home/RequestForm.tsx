@@ -54,12 +54,12 @@ export const RequestForm = () => {
         fileName[fileNameLength - 1].toLowerCase() === "cif" ||
         fileName[fileNameLength - 1].toLowerCase() === "pdb";
       if (!isCifOrPdb) {
-        message.error(`${file.name}` + lang.file_not_pdb_cif);
+        message.error(lang.file_not_pdb_cif + `${file.name}` );
         setFormValues({ ...formValues, fileId: "" });
         setFileList([] as UploadFile<File>[]);
         return false;
       } else {
-        message.info(lang.uploading_file);
+        message.info(lang.uploading_file +`${file.name}` );
       }
       return isCifOrPdb;
     },
@@ -78,7 +78,7 @@ export const RequestForm = () => {
           return;
         }
         console.log(event.file);
-        message.success(`${event.file.name}` + lang.file_upload_success);
+        message.success(lang.file_upload_success+`${event.file.name}` );
         setFormValues({
           ...formValues,
           rcsbPdbId: "",
@@ -89,7 +89,7 @@ export const RequestForm = () => {
         setMaxModel(event.file.response.models);
         setFileList([event.file]);
       } else if (status === "error") {
-        message.error(`${event.file.name}` + lang.error_uploading);
+        message.error(lang.error_uploading+ `${event.file.name}` );
         setFormValues({ ...formValues, fileId: "" });
         setFileList([] as UploadFile<File>[]);
       }
@@ -195,7 +195,18 @@ export const RequestForm = () => {
         >
           6FC9
         </Button>
-      </div>
+        <Button
+          onClick={() => {
+            setFileList([{name:"q-ugg-5k-salt_4…00ns_frame1065.pdb",uid:""}]);
+            setFormValues({
+              ...formValues,
+              fileId: "rdy_q-ugg-5k-salt-0-00ns-0rame1065_pdb",
+              rcsbPdbId: "",
+            });
+              setMaxModel(1); 
+          }}
+      >RNA G-Quadruplex in solution
+        </Button>      </div>
       <Form labelCol={{ span: 16 }} wrapperCol={{ span: 32 }}>
         {isDesktop ? (
           <div className={"horizontal-center"} style={{ height: 250 }}>

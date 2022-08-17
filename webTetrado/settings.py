@@ -20,12 +20,12 @@ env = environ.Env()
 BASE_DIR = Path(__file__).resolve().parent.parent
 environ.Env.read_env(os.path.join(BASE_DIR, 'db_env.env'))
 
-
+get_env = os.environ.get
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env("SECRET_KEY",default="django-insecure-)264wld6f3%_a^kz%*q(n0d$9df-4-bm&*t^dm+udn*!k3_+3d")
+SECRET_KEY = env("SECRET_KEY",default="")
 ENCRYPT_KEY = b'WkdGMFlWOHhSRFU1Q2lNZ0NsOWxiblJ5ZVM1cFpDQWc='
 SALT=b'\xec\xc4\xf2\xd1\x13\xdf5\xb0n\x12\x9b\xdb\xd5@G!'
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -173,13 +173,17 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 if DEBUG:
     REDIS_HOST = '127.0.0.1'
+    CELERY_BROKER_URL = 'redis://'+REDIS_HOST+':6379'
+    CELERY_RESULT_BACKEND = 'redis://'+REDIS_HOST+':6379'
+    CELERY_TASK_TRACK_STARTED = True
+    CELERY_CACHE_BACKEND = 'default'
 else:
     REDIS_HOST = 'redis'
+    CELERY_BROKER_URL = 'redis://'+REDIS_HOST
+    CELERY_RESULT_BACKEND = 'redis://'+REDIS_HOST
+    CELERY_TASK_TRACK_STARTED = True
+    CELERY_CACHE_BACKEND = 'default'
 
-CELERY_BROKER_URL = 'redis://'+REDIS_HOST+':6379'
-CELERY_RESULT_BACKEND = 'redis://'+REDIS_HOST+':6379'
-CELERY_TASK_TRACK_STARTED = True
-CELERY_CACHE_BACKEND = 'default'
 
 CACHES = {
     'default': {

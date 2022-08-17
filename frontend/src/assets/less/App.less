@@ -12,6 +12,7 @@
 @descriptions-bg: #f7f7f7;
 @form-item-margin-bottom: 0px;
 
+
 body {
     font-family: 'Ubuntu';
     // background-color: $background-color;
@@ -91,4 +92,8 @@ body {
 }
 .item-label{
   width:50%; float:left; text-align: right; margin-right:5px;
+}
+
+.onz-dot-bracket span{
+    color: if(lightness( @background ) < 50,#000000,#ffffff)
 }

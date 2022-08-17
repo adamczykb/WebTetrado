@@ -25,7 +25,7 @@ services:
     image: webtetrado
     environment:
       - WORKDIR=/mnt/workdir
-      - QBASE_JAR=/qbase-backend-1.0-SNAPSHOT-jar-with-dependencies.jar
+      - QBASE_JAR=/qbase-backend.jar
       - LOGLEVEL=INFO
     volumes:
       - workdir:/mnt/workdir

@@ -21,5 +21,5 @@ def remove_old_queries(args=None):
     except Exception:
         Log.objects.create(type='Error [requrence_task] ',
                             info=str(), traceback=traceback.format_exc()).save()
-
+        return None
 

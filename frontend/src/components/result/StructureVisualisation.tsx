@@ -1,10 +1,10 @@
-import { Button, Image} from "antd";
+import { Button, Image,Switch, Tooltip} from "antd";
 import config from "../../config.json";
 import { DownloadOutlined } from "@ant-design/icons";
 import { quadruplex, result_values } from "../../types/RestultSet";
 import { MolStarWrapper } from "../molstar/MolStarWrapper";
 import { VisualisationLegend } from "./Legend";
-
+import { visualsation_switch_result } from "../../types/RestultSet";
 
 function downloadFile(type: any, url: any) {
   const requestOptions = {
@@ -24,7 +24,30 @@ function downloadFile(type: any, url: any) {
     })
     .catch((error) => console.log(error));
 }
-export const StructureVisualisation = (data: quadruplex, resultSet: result_values) => {
+function varna_url(resultSet:result_values,visualisationSwitchOptions:visualsation_switch_result){
+    
+    if(visualisationSwitchOptions.varna_can){
+        if(visualisationSwitchOptions.varna_non_can){
+            return config.SERVER_URL + resultSet.varna_can_non_can;
+        }else{
+            return config.SERVER_URL + resultSet.varna_can;
+        }
+    }else{
+        if(visualisationSwitchOptions.varna_non_can){
+            return config.SERVER_URL +  resultSet.varna_non_can
+        }else{
+            return config.SERVER_URL + resultSet.varna;
+        }
+    }
+}
+function r_chie_url(resultSet:result_values,visualisationSwitchOptions:visualsation_switch_result){
+    if(visualisationSwitchOptions.r_chie_canonical){
+        return config.SERVER_URL + resultSet.r_chie_canonical;
+    }else{
+        return config.SERVER_URL + resultSet.r_chie;
+    }
+}
+export const StructureVisualisation = (data: quadruplex, resultSet: result_values,visualisationSwitchOptions:visualsation_switch_result, setSwitchOptions:any) => {
   const extension = resultSet.structure_file.split(".").splice(-1)[0];
   return (
     <div id={"result-visualization"}>
@@ -40,10 +63,26 @@ export const StructureVisualisation = (data: quadruplex, resultSet: result_value
           <div
             style={{ padding: "20px", flexDirection: "column" }}
             className={"vertical-center"}
-          >
+        >
+            <Tooltip title={resultSet.varna_can==''?'The analyzed quadruplex does not have any canonical base pairs outside of tetrads':''}>
+                <p>Show canonical base pairs outside tetrads: <Switch checked={visualisationSwitchOptions.varna_can} checkedChildren="Yes" unCheckedChildren="No" disabled={resultSet.varna_can==''} onChange={() =>
+                      setSwitchOptions({
+                          ...visualisationSwitchOptions,
+                          varna_can:!visualisationSwitchOptions.varna_can
+                      })}
+                  /></p>
+      </Tooltip>
+      <Tooltip title={resultSet.varna_non_can==''?'The analyzed quadruplex does not have any non-canonical base pairs outside of tetrads':''}>
+            <p>Show non-canonical base pairs outside tetrads: <Switch checked={visualisationSwitchOptions.varna_non_can}  checkedChildren="Yes" unCheckedChildren="No" disabled={resultSet.varna_non_can==''} onChange={() =>
+                      setSwitchOptions({
+                          ...visualisationSwitchOptions,
+                          varna_non_can:!visualisationSwitchOptions.varna_non_can
+                      })}
+                  /></p>
+      </Tooltip>
             <Image
               className="two-d-image"
-              src={config.SERVER_URL + resultSet.varna}
+              src={varna_url(resultSet, visualisationSwitchOptions)}
             />
             <br />
             <Button
@@ -52,8 +91,20 @@ export const StructureVisualisation = (data: quadruplex, resultSet: result_value
               icon={<DownloadOutlined />}
               style={{ marginTop: "15px" }}
               size={"large"}
-              onClick={() =>
-                downloadFile("varna.svg", config.SERVER_URL + resultSet.varna)
+              onClick={() =>{
+                  if(visualisationSwitchOptions.varna_non_can && visualisationSwitchOptions.varna_can){
+                    downloadFile("varna_canonical_and_non_canonical.svg", varna_url(resultSet, visualisationSwitchOptions))
+                  }  
+                  if(!visualisationSwitchOptions.varna_non_can && visualisationSwitchOptions.varna_can){
+                    downloadFile("varna_canonical.svg",varna_url(resultSet, visualisationSwitchOptions) )
+                  }
+                  if(visualisationSwitchOptions.varna_non_can && !visualisationSwitchOptions.varna_can){
+                    downloadFile("varna_non_canonical.svg",varna_url(resultSet, visualisationSwitchOptions))
+}
+                  if(!visualisationSwitchOptions.varna_non_can && !visualisationSwitchOptions.varna_can){
+                    downloadFile("varna.svg", varna_url(resultSet, visualisationSwitchOptions))
+                  } 
+              }
               }
             >
               Download
@@ -65,11 +116,24 @@ export const StructureVisualisation = (data: quadruplex, resultSet: result_value
           <div
             style={{ padding: "20px", flexDirection: "column" }}
             className={"vertical-center"}
-          >
+        > 
+      <Tooltip title={resultSet.r_chie_canonical==''?'The analyzed quadruplex does not have any canonical base pairs outside of tetrads':''}>
+        <p>Show canonical base pairs outside tetrads: <Switch checked={visualisationSwitchOptions.r_chie_canonical} checkedChildren="Yes" unCheckedChildren="No" disabled={resultSet.r_chie_canonical==''}
+      onChange={() =>
+                      setSwitchOptions({
+                          ...visualisationSwitchOptions,
+                          r_chie_canonical:!visualisationSwitchOptions.r_chie_canonical
+                      })}
+                  /></p>
+      </Tooltip>
+            <div 
+                style={{marginTop:'38px'}}>
+
+            </div>
             <Image
               className="two-d-image"
-              src={config.SERVER_URL + resultSet.r_chie}
-            />
+              src={r_chie_url(resultSet, visualisationSwitchOptions)}            
+          />
             <br />
             <Button
               type="primary"
@@ -77,8 +141,15 @@ export const StructureVisualisation = (data: quadruplex, resultSet: result_value
               icon={<DownloadOutlined />}
               style={{ marginTop: "15px" }}
               size={"large"}
-              onClick={() =>
+              onClick={() =>{
                 downloadFile("r_chie.svg", config.SERVER_URL + resultSet.r_chie)
+                if(!visualisationSwitchOptions.r_chie_canonical){
+                    downloadFile("r_chie.svg", r_chie_url(resultSet, visualisationSwitchOptions))
+                }
+                if(visualisationSwitchOptions.r_chie_canonical){
+                    downloadFile("r_chie_canonical.svg", r_chie_url(resultSet, visualisationSwitchOptions))
+                }  
+              }
               }
             >
               Download
@@ -90,9 +161,11 @@ export const StructureVisualisation = (data: quadruplex, resultSet: result_value
           <div
             style={{ padding: "20px", flexDirection: "column" }}
             className={"vertical-center"}
-          >
+        >
+            <div
+                style={{marginTop:'76px'}}></div>
             <Image
-              className="two-d-image"
+                className="two-d-image"
               src={config.SERVER_URL + resultSet.draw_tetrado}
             />
             <br />

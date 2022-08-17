@@ -25,3 +25,13 @@ export const STRING_ONZ_COLORS: Record<string, string> = {
   "#fdbf6f": "Z-",
   default: "",
 };
+export const ONZ_TEXTS_COLOR_STRING: Record<string, string> = {
+  "O+": "#ffffff",
+  "O-": "#000000",
+  "N+": "#ffffff",
+  "N-": "#000000",
+  "Z+": "#ffffff",
+  "Z-": "#000000",
+  default: "#000000"
+};
+

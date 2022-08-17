@@ -43,5 +43,5 @@ export function processingRequest(data: form_values, setLoading: any) {
         setLoading(false);
       }
     })
-    .catch((error) => message.error("Processing error: " + error.message));
+    .catch((error) => message.error("Request error: \n" + error.message));
 }

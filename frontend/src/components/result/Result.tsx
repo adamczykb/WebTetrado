@@ -4,7 +4,7 @@ const { Step } = Steps;
 const { TabPane } = Tabs;
 import { Divider } from "../layout/common/Divider";
 import { useEffect, useState } from "react";
-import { result_values } from "../../types/RestultSet";
+import { result_values,visualsation_switch_result } from "../../types/RestultSet";
 import { StructureVisualisation } from "./StructureVisualisation";
 import { TetradTable } from "./TetradTable";
 import { LoopTable } from "./LoopTable";
@@ -18,7 +18,8 @@ import { Button } from "antd";
 import { BellOutlined } from "@ant-design/icons";
 import {
   ONZ_COLORS_STRING,
-  STRING_ONZ_COLORS,
+    STRING_ONZ_COLORS,
+    ONZ_TEXTS_COLOR_STRING
 } from "../../assets/data/onzClassColor";
 import usePushNotifications from "../../hooks/usePushNotifications";
 import { nofificationRequest } from "../../utils/adapters/NotificationRequest";
@@ -32,7 +33,11 @@ export const Result = () => {
     structure_method: "",
     structure_file: "",
     varna: "",
+    varna_can: "",
+    varna_can_non_can: "",
+    varna_non_can: "",
     r_chie: "",
+    r_chie_canonical: "",
     model: 1,
     draw_tetrado: "",
     idcode: "",
@@ -42,6 +47,11 @@ export const Result = () => {
     nucleotide: [],
     remove_date: "",
   };
+    let visualisation_switch:visualsation_switch_result={
+        varna_non_can:false,
+        varna_can:false,
+        r_chie_canonical:false
+    };
 
   const {
     userConsent,
@@ -57,11 +67,13 @@ export const Result = () => {
   let isDesktop = useMediaQuery({ query: "(min-width: 900px)" });
   let temp_array = new Map<number, string>();
 
-  const { requestNumber } = useParams();
+const { requestNumber } = useParams();
+let [switchOptions,setSwitchOptions] =useState(visualisation_switch);
   let [loadingResult, setLoadingResult] = useState(true);
   let [subscribed, setSubscribe] = useState(false);
   let [resultSet, setResultSet] = useState(result);
   let [bracketArray, setBracketArray] = useState<Map<number, string>>();
+  let [bracketArrayTextColor, setBracketArrayTextColor] = useState<Map<number, string>>();
   const sendRequestNotification = () => {
     if (!userConsent) {
       return;
@@ -138,12 +150,12 @@ export const Result = () => {
   }, []);
 
   useEffect(() => {
-    let temp_map = new Map<number, string>();
+    let onz_bracket_map = new Map<number, string>();
     resultSet.helice.forEach((helice, h_index) => {
       helice.quadruplex.forEach((quadruplex, q_index) => {
         quadruplex.tetrad.forEach((tetrad, t_index) => {
           tetrad.name.split("-").forEach((nucleotide, n_index) => {
-            temp_map.set(
+            onz_bracket_map.set(
               resultSet.nucleotide[
                 resultSet.nucleotide.findIndex((value, index, obj) => {
                   return value.name == nucleotide;
@@ -155,7 +167,7 @@ export const Result = () => {
         });
       });
     });
-    setBracketArray(temp_map);
+      setBracketArray(onz_bracket_map);
   }, [resultSet]);
   return (
     <>
@@ -368,7 +380,7 @@ export const Result = () => {
                                     ]
                                   }
                                 >
-                                  <span
+                                    <span
                                     style={{
                                       fontFamily: '"PT Mono", monospace',
                                       backgroundColor: bracketArray?.get(
@@ -380,6 +392,15 @@ export const Result = () => {
                                               .match(/-/g) || []
                                           ).length
                                       ),
+                                    color: ONZ_TEXTS_COLOR_STRING[STRING_ONZ_COLORS[bracketArray?.get(
+                                        index +
+                                          1 -
+                                          (
+                                            resultSet.dot_bracket.sequence
+                                              .slice(0, index)
+                                              .match(/-/g) || []
+                                          ).length
+                                      )!]]
                                     }}
                                   >
                                     {sequence}
@@ -440,6 +461,16 @@ export const Result = () => {
                                               .match(/-/g) || []
                                           ).length
                                       ),
+                                    color: ONZ_TEXTS_COLOR_STRING[STRING_ONZ_COLORS[bracketArray?.get(
+                                        index +
+                                          1 -
+                                          (
+                                            resultSet.dot_bracket.sequence
+                                              .slice(0, index)
+                                              .match(/-/g) || []
+                                          ).length
+                                      )!]]
+
                                     }}
                                   >
                                     {sequence}
@@ -501,6 +532,15 @@ export const Result = () => {
                                               .match(/-/g) || []
                                           ).length
                                       ),
+                                      color: ONZ_TEXTS_COLOR_STRING[STRING_ONZ_COLORS[bracketArray?.get(
+                                        index +
+                                          1 -
+                                          (
+                                            resultSet.dot_bracket.sequence
+                                              .slice(0, index)
+                                              .match(/-/g) || []
+                                          ).length
+                                      )!]]
                                     }}
                                   >
                                     {sequence}
@@ -516,7 +556,7 @@ export const Result = () => {
                             )}
                           <br />
                         </p>
-                        {StructureVisualisation(v, resultSet)}
+                        {StructureVisualisation(v, resultSet,switchOptions,setSwitchOptions)}
                         <Divider />
                         {TetradTable(v.tetrad, resultSet.g4_limited, isDesktop)}
                         <Divider />
