@@ -3,7 +3,8 @@ import lang from "../../lang.json";
 export function checkRcsbMaxModel(
   setMaxModel: any,
   setPDBError: any,
-  pdbId: string
+    pdbId: string,
+    setMaxModelQuery:any
 ) {
   const requestOptions = {
     method: "GET",
@@ -21,5 +22,6 @@ export function checkRcsbMaxModel(
         setPDBError(true);
         message.error(lang.rcsb_error_with_name + "'" + pdbId + "'");
       }
+        setMaxModelQuery(false);
     });
 }

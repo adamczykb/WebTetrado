@@ -58,7 +58,7 @@ export const StructureVisualisation = (data: quadruplex, resultSet: result_value
           flexWrap: "wrap",
         }}
       >
-        <div className="result-visualization">
+        <div hidden={resultSet.varna==''} className="result-visualization">
           <h2>VARNA</h2>
           <div
             style={{ padding: "20px", flexDirection: "column" }}
@@ -111,7 +111,7 @@ export const StructureVisualisation = (data: quadruplex, resultSet: result_value
             </Button>
           </div>
         </div>
-        <div className="result-visualization">
+        <div hidden={resultSet.r_chie==''} className="result-visualization">
           <h2>R-chie</h2>
           <div
             style={{ padding: "20px", flexDirection: "column" }}
@@ -156,7 +156,7 @@ export const StructureVisualisation = (data: quadruplex, resultSet: result_value
             </Button>
           </div>
         </div>
-        <div className="result-visualization">
+        <div hidden={resultSet.draw_tetrado==''} className="result-visualization">
           <h2>DrawTetrado (2.5D structure)</h2>
           <div
             style={{ padding: "20px", flexDirection: "column" }}

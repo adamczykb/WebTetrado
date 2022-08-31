@@ -94,6 +94,22 @@ body {
   width:50%; float:left; text-align: right; margin-right:5px;
 }
 
-.onz-dot-bracket span{
-    color: if(lightness( @background ) < 50,#000000,#ffffff)
+a{
+    color: #1677ff;
 }
+#help-navigation li {
+  display: block
+}
+#help-navigation ol{
+counter-reset: item;
+}
+
+
+#help-navigation ol>li:before {
+  content: counters(item, ".") ". ";
+  counter-increment: item;
+  margin-left: -20px;
+
+}
+
+

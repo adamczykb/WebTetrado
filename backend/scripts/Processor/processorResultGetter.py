@@ -11,7 +11,7 @@ from backend.scripts.Processor.tetradFileFilter import get_cetrain_tetrad_file
 from backend.scripts.webPush import send_to_subscription
 from webTetrado.settings import PROCESSOR_URL
 from backend.scripts.Processor.resultComposer import compose
-from enum import Enum 
+from enum import Enum
 from django.db import models
 
 class GetterException(Exception):
@@ -216,6 +216,8 @@ def file_downloader(request_key:str,url:str,file_destination:models.FileField):
         file_destination.save(name=request_key+'.svg', content=data_file)
         data_file.close()
         if r.status_code == 200:
+            if str(r.content).count('svg') < 2 and (str(r.content).count('polyline')==0 or str(r.content).count('line')==0):
+                file_destination.delete()
             break
         time.sleep(1)
 

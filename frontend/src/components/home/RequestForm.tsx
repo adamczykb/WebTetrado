@@ -1,4 +1,4 @@
-import { message, Input, Button, Switch, Form, Collapse, Slider } from "antd";
+import { message, Input, Button, Switch, Form, Collapse, Slider, Spin } from "antd";
 import Dragger from "antd/lib/upload/Dragger";
 import { useEffect, useState } from "react";
 import { InboxOutlined } from "@ant-design/icons";
@@ -27,6 +27,7 @@ export const RequestForm = () => {
   const [loading, setLoading] = useState(false);
   const [maxModel, setMaxModel] = useState(0);
   const [pdbError, setPDBError] = useState(false);
+  const [maxModelQuery, setMaxModelQuery] = useState(false);
   const [formValues, setFormValues] = useState(form_values);
   const [fileListState, setFileList] = useState<UploadFile[] | undefined>(
     undefined
@@ -77,7 +78,6 @@ export const RequestForm = () => {
           setFormValues({ ...formValues, fileId: "" });
           return;
         }
-        console.log(event.file);
         message.success(lang.file_upload_success+`${event.file.name}` );
         setFormValues({
           ...formValues,
@@ -88,10 +88,10 @@ export const RequestForm = () => {
 
         setMaxModel(event.file.response.models);
         setFileList([event.file]);
-      } else if (status === "error") {
+      } else if (status === "error") {  
         message.error(lang.error_uploading+ `${event.file.name}` );
         setFormValues({ ...formValues, fileId: "" });
-        setFileList([] as UploadFile<File>[]);
+        setFileList(undefined);
       }
     },
     onDrop(e: any) {
@@ -121,15 +121,17 @@ export const RequestForm = () => {
     setLoading(true);
     processingRequest(formValues, setLoading);
   };
-  useEffect(() => {
-    if (formValues.rcsbPdbId.length === 4) {
-      checkRcsbMaxModel(setMaxModel, setPDBError, formValues.rcsbPdbId);
+    useEffect(() => {
+        setMaxModel(0);
+
+        if (formValues.rcsbPdbId.length === 4) {
+    setMaxModelQuery(true);
+      checkRcsbMaxModel(setMaxModel, setPDBError, formValues.rcsbPdbId, setMaxModelQuery);
       setFormValues({
         ...formValues,
         settings: { ...formValues.settings, model: 1 },
       });
     } else {
-      setMaxModel(0);
       setPDBError(false);
     }
   }, [formValues.rcsbPdbId]);
@@ -325,25 +327,26 @@ export const RequestForm = () => {
         >
           <Collapse defaultActiveKey={1} style={{ width: "70%" }}>
             <Panel header="Additional settings" key="1">
-              <Form.Item valuePropName="checked">
-                <div className="horizontal-item-center">
-                  <div className="item-label">Complete 2D: </div>
-                  <Switch
-                    size={isDesktop ? "small" : "default"}
-                    checkedChildren="Yes"
-                    unCheckedChildren="No"
-                    onChange={() =>
-                      setFormValues({
-                        ...formValues,
-                        settings: {
-                          ...formValues.settings,
-                          complete2d: !formValues.settings.complete2d,
-                        },
-                      })
-                    }
-                  />
-                </div>
-              </Form.Item>
+                {//<Form.Item valuePropName="checked">
+                //<div className="horizontal-item-center">
+                  //<div className="item-label">Complete 2D: </div>
+                  //<Switch
+                    //size={isDesktop ? "small" : "default"}
+                    //checkedChildren="Yes"
+                    //unCheckedChildren="No"
+                    //onChange={() =>
+                      //setFormValues({
+                        //...formValues,
+                        //settings: {
+                          //...formValues.settings,
+                          //complete2d: !formValues.settings.complete2d,
+                        //},
+                      //})
+                    //}
+                  ///>
+                //</div>
+                //</Form.Item>
+                }
               <Form.Item valuePropName="checked">
                 <div className="horizontal-item-center">
                   <div className="item-label">No reorder: </div>
@@ -506,9 +509,14 @@ export const RequestForm = () => {
                     </div>
                   </Form.Item>
                 </>
-              ) : (
-                <></>
-              )}
+            ) : maxModelQuery?
+            <Form.Item> 
+                        <p className="horizontal-center">Waiting for server response...</p>
+                        <Spin className="horizontal-center"/>
+            </Form.Item>
+            :
+            <></>
+            }
             </Panel>
           </Collapse>
         </div>
@@ -518,9 +526,9 @@ export const RequestForm = () => {
               htmlType="submit"
               type="primary"
               disabled={
-                ((!fileListState || fileListState.length == 0) &&
+                  (((!fileListState || fileListState.length == 0) &&
                   formValues.rcsbPdbId.length < 4) ||
-                pdbError
+                pdbError)||maxModel==0
               }
               loading={loading}
               onClick={submit}
