@@ -258,8 +258,6 @@ def add_to_queue(db_id):
                 r = requests.get(PROCESSOR_URL+'/v1/result/'+request_key)
                 if r.status_code == 200:
                     result = json.loads(r.content)
-                    Log.objects.create(type='Log ', info=str(), traceback=str(result)).save()
-
 
                     add_nucleodities(result['nucleotides'], db_id,user_request)
 

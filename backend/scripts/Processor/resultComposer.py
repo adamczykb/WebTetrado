@@ -94,6 +94,7 @@ def compose(orderId):
                 tetrad_quadruplex_single={}
                 tetrad_quadruplex_single['number']=counter_tetrad
                 tetrad_quadruplex_single['name']=tetrad.name
+                tetrad_quadruplex_single['gbaClassification']=tetrad.metadata.tetrad_combination
                 tetrad_quadruplex_single['nucleotities']=[tetrad.nt1.name,tetrad.nt2.name,tetrad.nt3.name,tetrad.nt4.name]
                 tetrad_quadruplex_single['sequence']=tetrad.nt1.symbol+tetrad.nt2.symbol+tetrad.nt3.symbol+tetrad.nt4.symbol
                 tetrad_quadruplex_single['onz_class']=tetrad.metadata.onz_class

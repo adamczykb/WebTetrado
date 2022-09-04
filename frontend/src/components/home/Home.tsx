@@ -3,11 +3,10 @@ import { Divider } from "../layout/common/Divider";
 import { RequestForm } from "./RequestForm";
 import { Results } from "./Results";
 import { useMediaQuery } from "react-responsive";
-import { Button } from "antd";
 
 export const Home = () => {
-  let isDesktop = useMediaQuery({ query: "(min-width: 900px)" });
-
+  
+    let isDesktop = useMediaQuery({ query: "(min-width: 900px)" });
   return (
     <>
       <div id="introduction" className={"horizontal-center"}>

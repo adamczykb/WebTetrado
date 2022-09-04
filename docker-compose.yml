@@ -63,8 +63,6 @@ services:
   redis:
     image: redis:alpine
     restart: always
-    cache:
-      - cache:/data
     networks:
       - redis_network
 

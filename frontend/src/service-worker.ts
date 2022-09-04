@@ -22,7 +22,6 @@ clientsClaim();
 precacheAndRoute(self.__WB_MANIFEST);
 
 function receivePushNotification(event:any) {
-  //console.log("[Service Worker] Push Received.");
 
   const { image, tag, url, title, text } = event.data.json();
 
@@ -40,7 +39,6 @@ function receivePushNotification(event:any) {
 }
 
 function openPushNotification(event: { notification: { data: string | URL; close: () => void; }; waitUntil: (arg0: Promise<WindowClient | null>) => void; }) {
-  //console.log("[Service Worker] Notification click Received.", event.notification.data);
   
   event.notification.close();
   event.waitUntil(self.clients.openWindow(event.notification.data));

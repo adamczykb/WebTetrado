@@ -1,4 +1,4 @@
-import { Descriptions, Steps, Tabs, Alert, Spin, message, Tooltip } from "antd";
+import { Descriptions, Steps, Tabs, Alert, Spin, message, Tooltip,Image } from "antd";
 import { useParams } from "react-router-dom";
 const { Step } = Steps;
 const { TabPane } = Tabs;
@@ -320,9 +320,12 @@ export const Result = () => {
                                     ) : (
                                         <></>
                                     )}
-                                    {v.loopClassification != "" ? (
+                                    {v.loopClassification.split(' ')[0] != "-" ? (
                                         <Descriptions.Item label="Loop topology:">
-                                            {v.loopClassification}
+                                            <Tooltip title={
+                                                    <Image src={require("../../assets/da-silva/"+v.loopClassification.split(' ')[0]+'.svg')}/>} color={'white'}>{v.loopClassification.split(' ')[0] } 
+                                                </Tooltip>
+                                        {' '+v.loopClassification.split(' ')[1]}
                                         </Descriptions.Item>
                                     ) : (
                                         <></>

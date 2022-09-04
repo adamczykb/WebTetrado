@@ -73,7 +73,7 @@ export const RequestForm = () => {
       const { status } = event.file;
       if (status === "done") {
         if (event.file.response.error.length > 0) {
-          message.error(`${event.file.name}` + lang.file_not_pdb_cif);
+          message.error(lang.file_not_pdb_cif+ `${event.file.name}`  );
           setFileList([] as UploadFile<File>[]);
           setFormValues({ ...formValues, fileId: "" });
           return;
