@@ -1,4 +1,3 @@
-import logo from "../../assets/images/logo_bordered.png";
 import { Divider } from "../layout/common/Divider";
 import { RequestForm } from "./RequestForm";
 import { Results } from "./Results";
