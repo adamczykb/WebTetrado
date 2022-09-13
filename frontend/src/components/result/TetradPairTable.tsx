@@ -1,7 +1,7 @@
 import { Table } from "antd";
-import {  tetrad_pair } from "../../types/RestultSet";
+import { tetrad_pair } from "../../types/RestultSet";
 
-export const TetradPairTable = (data: tetrad_pair[],isDesktop:Boolean) => {
+export const TetradPairTable = (data: tetrad_pair[], isDesktop: Boolean) => {
   const columns_tetrad_pairs = [
     {
       title: "Number",

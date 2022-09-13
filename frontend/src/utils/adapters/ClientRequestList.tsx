@@ -25,4 +25,3 @@ export function clientRequestList(
       setLoading(false);
     }); //.catch((error) => message.error('Processing error'));
 }
-

@@ -4,11 +4,11 @@
   "description": "Frontend app for ElTetrado project",
   "main": "src/index.tsx",
   "scripts": {
-    "start": "HOST=localhost concurrently --kill-others \"less-watch-compiler --config less-watcher.config.json\" \"react-app-rewired start\"",
+    "start": "concurrently --kill-others \"less-watch-compiler --config less-watcher.config.json\" \"react-app-rewired start\"",
     "build": "./compile_less.sh && react-app-rewired build",
     "less": "less-watch-compiler --config less-watcher.config.json",
     "lessc": "./compile_less.sh",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "react-app-rewired test"
   },
   "author": "Bartosz Adamczyk",
   "license": "ISC",

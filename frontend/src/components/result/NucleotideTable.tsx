@@ -1,7 +1,7 @@
 import { Table } from "antd";
-import {  nucleotide } from "../../types/RestultSet";
+import { nucleotide } from "../../types/RestultSet";
 
-export const NucleotideTable = (data: nucleotide[],isDesktop:Boolean) => {
+export const NucleotideTable = (data: nucleotide[], isDesktop: Boolean) => {
   const columns_nucleotides = [
     {
       title: "Number",

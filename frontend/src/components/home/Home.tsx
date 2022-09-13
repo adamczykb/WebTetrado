@@ -5,15 +5,11 @@ import { Results } from "./Results";
 import { useMediaQuery } from "react-responsive";
 
 export const Home = () => {
-  
-    let isDesktop = useMediaQuery({ query: "(min-width: 900px)" });
+  let isDesktop = useMediaQuery({ query: "(min-width: 900px)" });
   return (
     <>
-      <div id="introduction" className={"horizontal-center"}>
-        <img src={logo} style={{ marginTop: "40px", height: "200px" }} />
-      </div>
-      <br />
       <h3
+        id={"introduction"}
         style={
           isDesktop
             ? { padding: "40px", paddingBottom: "20px", textAlign: "justify" }
@@ -55,4 +51,3 @@ export const Home = () => {
     </>
   );
 };
-

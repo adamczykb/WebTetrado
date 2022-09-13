@@ -1,18 +1,17 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import  App  from './App';
-import './index.css';
-import reportWebVitals from './reportWebVitals';
-import * as serviceWorkerRegistration from './serviceWorkerRegistration';
+import React from "react";
+import ReactDOM from "react-dom";
+import App from "./App";
+import "./index.css";
+import reportWebVitals from "./reportWebVitals";
+import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
 import { CookiesProvider } from "react-cookie";
 ReactDOM.render(
-    <React.StrictMode>
-        <CookiesProvider>
-            <App />
-        </CookiesProvider>
-        
-    </React.StrictMode>,
-    document.getElementById('root')
+  <React.StrictMode>
+    <CookiesProvider>
+      <App />
+    </CookiesProvider>
+  </React.StrictMode>,
+  document.getElementById("root")
 );
 
 // If you want to start measuring performance in your app, pass a function

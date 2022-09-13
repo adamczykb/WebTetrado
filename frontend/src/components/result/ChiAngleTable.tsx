@@ -1,7 +1,7 @@
 import { Table } from "antd";
 import { chi_angle_value } from "../../types/RestultSet";
 
-export const ChiAngleTable = (data: chi_angle_value[],isDesktop:Boolean) => {
+export const ChiAngleTable = (data: chi_angle_value[], isDesktop: Boolean) => {
   const columns_chi = [
     {
       title: "Number",

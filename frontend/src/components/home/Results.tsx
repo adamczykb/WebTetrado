@@ -1,16 +1,8 @@
 import { Input, Button } from "antd";
-import {  useState } from "react";
-
-type result_fileds = {
-  orderId: number;
-  structure: string;
-  date: string;
-};
+import { useState } from "react";
 
 export const Results = () => {
-  let _data: result_fileds[] = [];
   let [inputValue, setInputValue] = useState("");
-
 
   return (
     <div className={"horizontal-center"}>

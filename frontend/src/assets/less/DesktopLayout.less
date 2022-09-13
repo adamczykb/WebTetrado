@@ -1,64 +1,88 @@
-
-@import './App.less';
-
+.site-layout {
+  padding: 0 0;
+  width: 100%;
+}
 .site-layout .site-layout-background {
-    background: #fff;
+  background: #fff;
+  margin: 0 auto;
+  max-width: 1200px;
+  padding: 24;
 }
-
-// .vertical-center {
-//     display: flex;
-//     align-items: center;
-// }
-
-.nav_slider {
-    display: none;
-
-    @media screen and (min-width: 1820px) {
-        display: block;
-    }
+#navigation-button {
+  background-color: #f4f5f6;
+  height: 40px;
+  margin-right: 30px;
 }
-
-
+.nav-slider {
+  display: none;
+  position: fixed;
+  width: 200px;
+  padding-top: 30px;
+  left: calc((100% - 1200px) / 2 - 200px);
+  padding-right: 13px;
+  @media screen and (min-width: 1620px) {
+    display: block;
+  }
+}
 
 .split-layout__divider {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 
-    @media screen and (min-width: 30em) {
-        flex-direction: column;
-    }
+  @media screen and (min-width: 30em) {
+    flex-direction: column;
+  }
 }
-
-
+#MenuOutlined-desktop {
+  font-size: 32px;
+  color: black;
+}
 .split-layout__label {
-    padding: 1em;
+  padding: 1em;
 }
 
 .split-layout__rule {
-    flex: 1;
-    border-style: solid;
-    border-color: #04afa4;
-    border-width: 2px 0 0 0;
+  flex: 1;
+  border-style: solid;
+  border-color: #04afa4;
+  border-width: 2px 0 0 0;
 
-    @media screen and (min-width: 30em) {
-        border-width: 0 1px 0 0;
-    }
+  @media screen and (min-width: 30em) {
+    border-width: 0 1px 0 0;
+  }
 }
 
-
-.ant-table-thead>tr>th {
-    text-align: center;
-    font-weight: bold;
+.ant-table-thead > tr > th {
+  text-align: center;
+  font-weight: bold;
 }
 
-.ant-table-tbody>tr>td {
-    text-align: center;
+.ant-table-tbody > tr > td {
+  text-align: center;
 }
 
 .colored-row {
-    background-color: @row-selection;
+  background-color: @row-selection;
 }
-.colored-row .ant-table-cell-row-hover{
-    background-color: @row-selection !important;
+.colored-row .ant-table-cell-row-hover {
+  background-color: @row-selection !important;
+}
+#webtetrado-banner-desktop {
+  background-image: linear-gradient(
+    90deg,
+    hsl(176deg 96% 35%) 0%,
+    hsl(179deg 87% 35%) 25%,
+    hsl(183deg 83% 36%) 50%,
+    hsl(187deg 80% 37%) 75%,
+    hsl(192deg 77% 38%) 100%
+  );
+  margin-bottom: 20px;
+  font-size: 32px;
+  padding: 10px 0;
+  text-decoration: none;
+  text-align: center;
+}
+#webtetrado-banner-desktop a {
+  color: white;
 }

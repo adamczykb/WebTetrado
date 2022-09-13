@@ -57,4 +57,3 @@ export function processingResponse(
     clearInterval(timer);
   };
 }
-

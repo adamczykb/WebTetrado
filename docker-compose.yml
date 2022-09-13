@@ -63,6 +63,9 @@ services:
   redis:
     image: redis:alpine
     restart: always
+    command: redis-server --include /usr/local/etc/redis/redis.conf
+    volumes:
+      - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
     networks:
       - redis_network
 

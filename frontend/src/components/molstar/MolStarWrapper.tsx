@@ -212,7 +212,8 @@ const createPlugin = async (
   url: string,
   tetrads: tetrad[]
 ) => {
-  const file_format: String = url.split(".")[url.split(".").length - 1] === "cif" ? "mmcif" : "pdb";
+  const file_format: String =
+    url.split(".")[url.split(".").length - 1] === "cif" ? "mmcif" : "pdb";
   const plugin = await createPluginUI(parent, MolStarPluginSpec);
   const data = await plugin.builders.data.download(
     { url: url },

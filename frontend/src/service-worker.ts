@@ -8,8 +8,8 @@
 // You can also remove this file if you'd prefer not to use a
 // service worker, and the Workbox build step will be skipped.
 
-import { clientsClaim } from 'workbox-core';
-import { precacheAndRoute, createHandlerBoundToURL } from 'workbox-precaching';
+import { clientsClaim } from "workbox-core";
+import { precacheAndRoute, createHandlerBoundToURL } from "workbox-precaching";
 
 declare const self: ServiceWorkerGlobalScope;
 
@@ -21,8 +21,7 @@ clientsClaim();
 // even if you decide not to use precaching. See https://cra.link/PWA
 precacheAndRoute(self.__WB_MANIFEST);
 
-function receivePushNotification(event:any) {
-
+function receivePushNotification(event: any) {
   const { image, tag, url, title, text } = event.data.json();
 
   const options = {
@@ -33,20 +32,18 @@ function receivePushNotification(event:any) {
     tag: tag,
     image: image,
     badge: "https://webtetrado.cs.put.poznan.pl/static/favicon.ico",
-    actions: [{ action: "Detail", title: "View", icon: url }]
+    actions: [{ action: "Detail", title: "View", icon: url }],
   };
   event.waitUntil(self.registration.showNotification(title, options));
 }
 
-function openPushNotification(event: { notification: { data: string | URL; close: () => void; }; waitUntil: (arg0: Promise<WindowClient | null>) => void; }) {
-  
+function openPushNotification(event: {
+  notification: { data: string | URL; close: () => void };
+  waitUntil: (arg0: Promise<WindowClient | null>) => void;
+}) {
   event.notification.close();
   event.waitUntil(self.clients.openWindow(event.notification.data));
 }
 
 self.addEventListener("push", receivePushNotification);
 self.addEventListener("notificationclick", openPushNotification);
-
-
-
-

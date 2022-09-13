@@ -7,7 +7,7 @@ type form_values = {
   rcsbPdbId: string;
   settings: {
     complete2d: boolean;
-    noReorder: boolean;
+    reorder: boolean;
     stackingMatch: number;
     strict: boolean;
     model: number;

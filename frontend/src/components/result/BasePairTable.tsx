@@ -1,7 +1,7 @@
 import { Table } from "antd";
 import { base_pair } from "../../types/RestultSet";
 
-export const BasePairTable = (data: base_pair[],isDesktop:Boolean) => {
+export const BasePairTable = (data: base_pair[], isDesktop: Boolean) => {
   const columns_base_pairs = [
     {
       title: "Number",
@@ -37,14 +37,14 @@ export const BasePairTable = (data: base_pair[],isDesktop:Boolean) => {
   return (
     <>
       <h2 id="base-pairs" style={{ marginTop: "40px" }}>
-            Base pairs
-          </h2>
-          <Table
-            style={{ textAlign: "center" }}
-            dataSource={data}
-            columns={columns_base_pairs}
-            scroll={isDesktop ? { x: "auto" } : { x: "100%" }}
-          />
+        Base pairs
+      </h2>
+      <Table
+        style={{ textAlign: "center" }}
+        dataSource={data}
+        columns={columns_base_pairs}
+        scroll={isDesktop ? { x: "auto" } : { x: "100%" }}
+      />
     </>
   );
 };

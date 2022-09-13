@@ -1,18 +1,17 @@
-import React, { useEffect, useState } from "react";
-import { Anchor, Layout, Menu } from "antd";
+import { useEffect, useState } from "react";
+import { Anchor, Layout, Button } from "antd";
 import IndexRouter from "../../../routes/router";
 import AnchorRouter from "../../../routes/anchorRouter";
 import logo from "../../../assets/images/logo_simple.png";
+import { MenuOutlined } from "@ant-design/icons";
+const { Content, Footer } = Layout;
 
-const { Header, Content, Footer } = Layout;
-
-import "../../../assets/css/DesktopLayout.css";
 import pp_img from "../../../assets/images/PP-PUT_logo_jasne.png";
 import ichb_img from "../../../assets/images/ICHB_PAN_EN_kolor.png";
 import rna_polis_img from "../../../assets/images/RNApolis-logo.png";
-import { useMediaQuery } from "react-responsive";
+import { Menu } from "../common/Menu";
 
-const ContentList: React.FC = () => {
+const ContentList = (setMenuExpanded: any) => {
   const [targetOffset, setTargetOffset] = useState<number | undefined>(
     undefined
   );
@@ -20,190 +19,101 @@ const ContentList: React.FC = () => {
     setTargetOffset(window.innerHeight / 4);
   }, []);
   return (
-    <div
-      className="nav_slider"
-      style={{
-        position: "fixed",
-        top: "100px",
-        width: "200px",
-        left: "calc((100% - 1400px) / 2 - 200px )",
-        paddingRight: "13px"
-      }}
-    >
-      <Anchor style={{
-        marginBottom: "50px"
-      }} targetOffset={targetOffset}>
-        <AnchorRouter />
-      </Anchor>
-      <div >
+    <>
+      <div className="nav-slider">
         <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            width: "90%",
-          }}
+          className="vertical-center"
+          style={{ justifyContent: "space-between" }}
         >
-          <a
-            target="_blank"
-            rel="noreferrer"
-            href={"https://www.put.poznan.pl/index.php/en"}
+          <a href="/">
+            <img height={"64px"} src={logo} />
+          </a>
+          <Button
+            type="text"
+            id={"navigation-button"}
+            onClick={() => {
+              setMenuExpanded(true);
+            }}
           >
-            <img alt={"PP logo"} style={{ width: "80px" }} src={pp_img} />
-          </a>
-          <a
-            target="_blank"
-            rel="noreferrer"
-            href={"https://www.ibch.poznan.pl/en.html"}
-          >
-            <img alt={"IBCH logo"} style={{ width: "80px" }} src={ichb_img} />
-          </a>
+            <MenuOutlined id="MenuOutlined-desktop" />
+          </Button>
         </div>
-        <div style={{ width: "90%", marginTop: "30px" }}>
-          <a target="_blank" rel="noreferrer" href={"https://www.rnapolis.pl/"}>
-            <img
-              alt={"RNApolis"}
-              style={{ width: "100%" }}
-              src={rna_polis_img}
-            />
-          </a>
-        </div>
-      </div>
-    </div>
-  );
-};
-const LogoInFooter: React.FC = () => {
-  
-  return useMediaQuery({ query: "(max-width: 1800px)" }) ? (
-    <div>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <a
-          target="_blank"
-          rel="noreferrer"
-          href={"https://www.put.poznan.pl/index.php/en"}
-        >
-          <img
-            alt={"PP logo"}
-            style={{ width: "80px", marginRight: "20px" }}
-            src={pp_img}
-          />
-        </a>
-        <a
-          target="_blank"
-          rel="noreferrer"
-          href={"https://www.ibch.poznan.pl/en.html"}
-        >
-          <img
-            alt={"IBCH logo"}
-            style={{ width: "80px", marginLeft: "20px" }}
-            src={ichb_img}
-          />
-        </a>
-      </div>
-      <div style={{ margin: "30px 0" }}>
-        <a target="_blank" rel="noreferrer" href={"https://www.rnapolis.pl/"}>
-          <img
-            alt={"RNApolis"}
-            style={{ width: "200px" }}
-            src={rna_polis_img}
-          />
-        </a>
-      </div>
-    </div>
-  ) : (
-    <></>
-  );
-};
-export class DesktopLayout extends React.Component {
-  render(): React.ReactNode {
-    return (
-      <Layout>
-        <Header
-          className={"horizontal-center"}
+
+        <Anchor
           style={{
-            position: "fixed",
-            zIndex: 1,
-            width: "100%",
-            userSelect: "none",
+            margin: "50px 0",
           }}
+          targetOffset={targetOffset}
         >
-          <div style={{ width: "1400px" }}>
-            <a href="/" rel="noreferrer">
-              <div
-                className={"vertical-center"}
-                style={{
-                  float: "left",
-                  fontSize: "24px",
-                  paddingLeft: "10px",
-                  color: "white",
-                }}
-              >
-                <img
-                  src={logo}
-                  style={{ height: "42px", paddingRight: "10px" }}
-                />
-                WebTetrado
-              </div>
-            </a>
-            <Menu
-              theme="dark"
-              mode="horizontal"
-              style={{ float: "left", paddingLeft: "10px" }}
+          <AnchorRouter />
+        </Anchor>
+        <div style={{ marginLeft: "5px" }}>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              width: "90%",
+            }}
+          >
+            <a
+              target="_blank"
+              rel="noreferrer"
+              href={"https://www.put.poznan.pl/index.php/en"}
             >
-              <Menu.Item key="1">
-                <a href="/">Home</a>
-              </Menu.Item>
-
-              <Menu.Item key="2">
-                <a href="/help">Help</a>
-              </Menu.Item>
-
-              <Menu.Item key="3">
-                <a href="/citeus">Cite us</a>
-              </Menu.Item>
-
-              <Menu.Item key="4">
-                <a href="/about">About</a>
-              </Menu.Item>
-            </Menu>
+              <img alt={"PP logo"} style={{ width: "80px" }} src={pp_img} />
+            </a>
+            <a
+              target="_blank"
+              rel="noreferrer"
+              href={"https://www.ibch.poznan.pl/en.html"}
+            >
+              <img alt={"IBCH logo"} style={{ width: "80px" }} src={ichb_img} />
+            </a>
           </div>
-        </Header>
-        <ContentList />
-        <Content
-          className="site-layout"
-          style={{
-            padding: "0 0",
-            marginTop: 64,
-            maxWidth: "1400px",
-            width: "100%",
-            marginLeft: "auto",
-            marginRight: "auto",
-            float: "left",
-          }}
-        >
-          <div className="site-layout-background" style={{ padding: 24 }}>
+          <div style={{ width: "90%", marginTop: "30px" }}>
+            <a
+              target="_blank"
+              rel="noreferrer"
+              href={"https://www.rnapolis.pl/"}
+            >
+              <img
+                alt={"RNApolis"}
+                style={{ width: "100%" }}
+                src={rna_polis_img}
+              />
+            </a>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+};
+
+export const DesktopLayout = () => {
+  const [isMenuExpanded, setMenuExpanded] = useState<Boolean>(false);
+  return (
+    <>
+      {Menu(isMenuExpanded, setMenuExpanded)}
+      <Layout>
+        <Content className="site-layout">
+          {ContentList(setMenuExpanded)}
+          <div className="site-layout-background">
+            <div id="webtetrado-banner-desktop">
+              <a href="/" rel="noreferrer">
+                WebTetrado
+              </a>
+            </div>
             <IndexRouter />
           </div>
         </Content>
-        <Footer style={{ textAlign: "center" }}>
-          <LogoInFooter/>
-            
+        <Footer>
           WebTetrado 2022 |{" "}
-          <a
-            href="https://github.com/adamczykb"
-            rel="noreferrer"
-            style={{ textDecoration: "none", color: "rgba(0, 0, 0, 0.85)" }}
-          >
+          <a href="https://github.com/adamczykb" rel="noreferrer">
             Bartosz Adamczyk
           </a>
         </Footer>
       </Layout>
-    );
-  }
-}
+    </>
+  );
+};

@@ -1,4 +1,4 @@
-import bottom_arrow from '../../../assets/images/divider_arrow.png'
+import bottom_arrow from "../../../assets/images/divider_arrow.png";
 
 export const Divider = () => {
   return (
@@ -11,4 +11,5 @@ export const Divider = () => {
       </div>
     </>
   );
-}
+};
+

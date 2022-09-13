@@ -1,7 +1,9 @@
-@import url('https://fonts.googleapis.com/css2?family=Ubuntu&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Ubuntu&display=swap");
 @import "antd/lib/style/themes/default.less";
-@import 'antd/dist/antd.less';
-@import url('https://fonts.googleapis.com/css2?family=PT+Mono&display=swap');
+@import "antd/dist/antd.less";
+@import url("https://fonts.googleapis.com/css2?family=PT+Mono&display=swap");
+@import "./MobileLayout.less";
+@import "./DesktopLayout.less";
 @layout-header-background: #00a498;
 @primary-color: #04afa4;
 @row-selection: #a9d2e744;
@@ -11,36 +13,41 @@
 @anchor-border-color: #bdbdbd;
 @descriptions-bg: #f7f7f7;
 @form-item-margin-bottom: 0px;
-
-
 body {
-    font-family: 'Ubuntu';
-    // background-color: $background-color;
+  font-family: "Ubuntu";
+  background-color: #f3f5f6;
 }
-
+u {
+  text-decoration: underline;
+  text-decoration-style: dotted;
+}
 .ant-anchor-link-title {
-    white-space: pre-wrap;
+  white-space: pre-wrap;
 }
 
 .two-d-image {
-    width: 300px;
-    height: 300px;
-    object-fit: contain;
+  width: 300px;
+  height: 300px;
+  object-fit: contain;
 }
 
 .two-d-description-item {
-    text-align: center;
-    font-size: 20px;
-    width:100vw;
+  text-align: center;
+  font-size: 20px;
+  width: 100vw;
 }
 
 .blure {
-    color: transparent;
-    text-shadow: 0 0 8px #000;
-    filter: blur(8px);
-    -webkit-filter: blur(8px);
-} 
-
+  color: transparent;
+  text-shadow: 0 0 8px #000;
+  filter: blur(8px);
+  -webkit-filter: blur(8px);
+}
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .horizontal-center {
   display: flex;
   justify-content: center;
@@ -53,29 +60,57 @@ body {
   display: flex;
   align-items: center;
 }
-.logo-img {
-    height: 100%;
-}
- .result-visualization {
-  width: 450px;
+.result-visualization {
+  width: 384px;
   display: flex;
   justify-content: center;
   flex-direction: column;
-  border:1px solid #f0f0f0;
-
- } 
+  border: 1px solid #f0f0f0;
+}
 .site-layout-content {
   min-height: 280px;
   padding: 24px;
   background: #fff;
 }
+.site-layout-background {
+  padding: 24px !important;
+}
+.da-silva-loop-row {
+  text-align: center;
+  margin-top: 10px;
+  width: 150px;
+}
 
-#result-visualization h2{
-  text-align:center;
-  background-color:#f7f7f7;
-  margin:0;
-  padding:10px;
-  border:1px solid #f0f0f0;
+.da-silva-loop-column {
+  padding: 20px;
+  width: 150px;
+  height: 100px;
+}
+.da-silva-chi-row {
+  text-align: center;
+  margin-top: 10px;
+  width: 150px;
+}
+.da-silva-chi-column {
+  padding: 20px;
+  width: 150px;
+  height: 150px;
+}
+#MenuOutlined {
+  font-size: 32px;
+}
+Footer {
+  margin-top: 10px;
+  text-align: center;
+  text-decoration: none;
+  color: rgba(0, 0, 0, 0.85);
+}
+#result-visualization h2 {
+  text-align: center;
+  background-color: #f7f7f7;
+  margin: 0;
+  padding: 10px;
+  border: 1px solid #f0f0f0;
 }
 
 #components-layout-demo-top .logo {
@@ -90,26 +125,75 @@ body {
   float: right;
   margin: 16px 0 16px 24px;
 }
-.item-label{
-  width:50%; float:left; text-align: right; margin-right:5px;
+.item-label {
+  width: 50%;
+  float: left;
+  text-align: right;
+  margin-right: 5px;
 }
 
-a{
-    color: #1677ff;
+a {
+  color: #1f78b4;
 }
 #help-navigation li {
-  display: block
+  display: block;
 }
-#help-navigation ol{
-counter-reset: item;
+#help-navigation ol {
+  counter-reset: item;
 }
 
-
-#help-navigation ol>li:before {
+#help-navigation ol > li:before {
   content: counters(item, ".") ". ";
   counter-increment: item;
   margin-left: -20px;
-
 }
 
+#pseudoknot-table td,
+#visualization-symbol-table td {
+  padding: 4px;
+}
+#pseudoknot-table,
+#visualization-symbol-table {
+  //, #pseudoknot-table tr>td:first-child{
+  border: 1px gray solid;
+}
 
+#visualization-symbol-table tr:not(:last-child) > td {
+  border-bottom: 1px lightgrey solid;
+}
+#pseudoknot-table tr > td:not(:first-child),
+#visualization-symbol-table tr > td:not(:first-child) {
+  text-align: center;
+}
+
+#menu {
+  position: fixed;
+  z-index: 4;
+  height: 100%;
+  width: 100%;
+  background-image: linear-gradient(
+    110deg,
+    hsl(176deg 96% 35%) 0%,
+    hsl(184deg 88% 37%) 33%,
+    hsl(192deg 81% 38%) 67%,
+    hsl(201deg 73% 40%) 100%
+  );
+  transition: left 0.8s;
+  display: flex;
+  justify-items: center;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 40px;
+  user-select: none;
+  top: 0;
+  bottom: 0;
+}
+#menu div {
+  transition: border 0.5s;
+  color: white;
+}
+#menu div:hover {
+  border-bottom: 2px #227ab5 solid;
+  border-top: 2px #227ab5 solid;
+}

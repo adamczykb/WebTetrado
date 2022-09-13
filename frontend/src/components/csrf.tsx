@@ -1,4 +1,4 @@
-import { Form, Input} from "antd";
+import { Form, Input } from "antd";
 
 export const getCookie = () => {
   let cookieValue = null;
@@ -23,16 +23,13 @@ export const getCookie = () => {
   return String(cookieValue);
 };
 
-
 const CSRFTOKEN = () => {
-    return (
-        <Form.Item
-            name="csrfmiddlewaretoken"
-            style={{display:'none'}}
-        >
-            <Input type="hidden" value={getCookie()}/>
-        </Form.Item>
-    );
+  return (
+    <Form.Item name="csrfmiddlewaretoken" style={{ display: "none" }}>
+      <Input type="hidden" value={getCookie()} />
+    </Form.Item>
+  );
 };
 
 export default CSRFTOKEN;
+

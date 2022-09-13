@@ -1,13 +1,23 @@
-import { message, Input, Button, Switch, Form, Collapse, Slider, Spin } from "antd";
-import Dragger from "antd/lib/upload/Dragger";
-import { useEffect, useState } from "react";
 import { InboxOutlined } from "@ant-design/icons";
-import config from "../../config.json";
-import { processingRequest } from "../../utils/adapters/ProcessingRequest";
-import { useMediaQuery } from "react-responsive";
+import {
+  Button,
+  Collapse,
+  Form,
+  Input,
+  message,
+  Slider,
+  Spin,
+  Switch,
+  Tooltip,
+} from "antd";
+import Dragger from "antd/lib/upload/Dragger";
 import { UploadFile, UploadProps } from "antd/lib/upload/interface";
-import { checkRcsbMaxModel } from "../../utils/adapters/CheckRcsbMaxModel";
+import { useEffect, useState } from "react";
+import { useMediaQuery } from "react-responsive";
+import config from "../../config.json";
 import lang from "../../lang.json";
+import { checkRcsbMaxModel } from "../../utils/adapters/CheckRcsbMaxModel";
+import { processingRequest } from "../../utils/adapters/ProcessingRequest";
 const { Panel } = Collapse;
 
 export const RequestForm = () => {
@@ -16,7 +26,7 @@ export const RequestForm = () => {
     rcsbPdbId: "",
     settings: {
       complete2d: false,
-      noReorder: false,
+      reorder: true,
       stackingMatch: 2,
       g4Limited: true,
       strict: false,
@@ -55,12 +65,12 @@ export const RequestForm = () => {
         fileName[fileNameLength - 1].toLowerCase() === "cif" ||
         fileName[fileNameLength - 1].toLowerCase() === "pdb";
       if (!isCifOrPdb) {
-        message.error(lang.file_not_pdb_cif + `${file.name}` );
+        message.error(lang.file_not_pdb_cif + `${file.name}`);
         setFormValues({ ...formValues, fileId: "" });
         setFileList([] as UploadFile<File>[]);
         return false;
       } else {
-        message.info(lang.uploading_file +`${file.name}` );
+        message.info(lang.uploading_file + `${file.name}`);
       }
       return isCifOrPdb;
     },
@@ -73,12 +83,12 @@ export const RequestForm = () => {
       const { status } = event.file;
       if (status === "done") {
         if (event.file.response.error.length > 0) {
-          message.error(lang.file_not_pdb_cif+ `${event.file.name}`  );
+          message.error(lang.file_not_pdb_cif + `${event.file.name}`);
           setFileList([] as UploadFile<File>[]);
           setFormValues({ ...formValues, fileId: "" });
           return;
         }
-        message.success(lang.file_upload_success+`${event.file.name}` );
+        message.success(lang.file_upload_success + `${event.file.name}`);
         setFormValues({
           ...formValues,
           rcsbPdbId: "",
@@ -88,8 +98,8 @@ export const RequestForm = () => {
 
         setMaxModel(event.file.response.models);
         setFileList([event.file]);
-      } else if (status === "error") {  
-        message.error(lang.error_uploading+ `${event.file.name}` );
+      } else if (status === "error") {
+        message.error(lang.error_uploading + `${event.file.name}`);
         setFormValues({ ...formValues, fileId: "" });
         setFileList(undefined);
       }
@@ -121,12 +131,17 @@ export const RequestForm = () => {
     setLoading(true);
     processingRequest(formValues, setLoading);
   };
-    useEffect(() => {
-        setMaxModel(0);
+  useEffect(() => {
+    setMaxModel(0);
 
-        if (formValues.rcsbPdbId.length === 4) {
-    setMaxModelQuery(true);
-      checkRcsbMaxModel(setMaxModel, setPDBError, formValues.rcsbPdbId, setMaxModelQuery);
+    if (formValues.rcsbPdbId.length === 4) {
+      setMaxModelQuery(true);
+      checkRcsbMaxModel(
+        setMaxModel,
+        setPDBError,
+        formValues.rcsbPdbId,
+        setMaxModelQuery
+      );
       setFormValues({
         ...formValues,
         settings: { ...formValues.settings, model: 1 },
@@ -135,11 +150,6 @@ export const RequestForm = () => {
       setPDBError(false);
     }
   }, [formValues.rcsbPdbId]);
-  //useEffect(() => {
-  //if (fileListState && fileListState.length > 0) {
-  //setFormValues({ ...formValues, rcsbPdbId: "" });
-  //}
-  //}, [fileListState]);
   return (
     <>
       <h2
@@ -199,16 +209,20 @@ export const RequestForm = () => {
         </Button>
         <Button
           onClick={() => {
-            setFileList([{name:"q-ugg-5k-salt_4…00ns_frame1065.pdb",uid:""}]);
+            setFileList([
+              { name: "q-ugg-5k-salt_4…00ns_frame1065.pdb", uid: "" },
+            ]);
             setFormValues({
               ...formValues,
               fileId: "rdy_q-ugg-5k-salt-0-00ns-0rame1065_pdb",
               rcsbPdbId: "",
             });
-              setMaxModel(1); 
+            setMaxModel(1);
           }}
-      >RNA G-Quadruplex in solution
-        </Button>      </div>
+        >
+          RNA G-Quadruplex in solution
+        </Button>{" "}
+      </div>
       <Form labelCol={{ span: 16 }} wrapperCol={{ span: 32 }}>
         {isDesktop ? (
           <div className={"horizontal-center"} style={{ height: 250 }}>
@@ -234,7 +248,7 @@ export const RequestForm = () => {
             </div>
             <div className="split-layout__divider" style={{ width: "90px" }}>
               <div className="split-layout__rule"></div>
-              <div className="split-layout__label">Or</div>
+              <div className="split-layout__label">or</div>
               <div className="split-layout__rule"></div>
             </div>
             <div style={{ width: "400px" }} className={"vertical-center"}>
@@ -289,7 +303,7 @@ export const RequestForm = () => {
 
             <div className="split-layout__divider__row">
               <div className="split-layout__rule__row"></div>
-              <div className="split-layout__label__row">Or</div>
+              <div className="split-layout__label__row">or</div>
               <div className="split-layout__rule__row"></div>
             </div>
 
@@ -327,39 +341,51 @@ export const RequestForm = () => {
         >
           <Collapse defaultActiveKey={1} style={{ width: "70%" }}>
             <Panel header="Additional settings" key="1">
-                {//<Form.Item valuePropName="checked">
+              {
+                //<Form.Item valuePropName="checked">
                 //<div className="horizontal-item-center">
-                  //<div className="item-label">Complete 2D: </div>
-                  //<Switch
-                    //size={isDesktop ? "small" : "default"}
-                    //checkedChildren="Yes"
-                    //unCheckedChildren="No"
-                    //onChange={() =>
-                      //setFormValues({
-                        //...formValues,
-                        //settings: {
-                          //...formValues.settings,
-                          //complete2d: !formValues.settings.complete2d,
-                        //},
-                      //})
-                    //}
-                  ///>
+                //<div className="item-label">Complete 2D: </div>
+                //<Switch
+                //size={isDesktop ? "small" : "default"}
+                //checkedChildren="Yes"
+                //unCheckedChildren="No"
+                //onChange={() =>
+                //setFormValues({
+                //...formValues,
+                //settings: {
+                //...formValues.settings,
+                //complete2d: !formValues.settings.complete2d,
+                //},
+                //})
+                //}
+                ///>
                 //</div>
                 //</Form.Item>
-                }
+              }
               <Form.Item valuePropName="checked">
                 <div className="horizontal-item-center">
-                  <div className="item-label">No reorder: </div>
+                  <div className="item-label">
+                    <Tooltip
+                      title="Chains of bi- and tetramolecular quadruplexes should
+                        be reordered to be able to have them classified; when
+                        this is set, chains will be processed in original
+                        order, which for bi-/tetramolecular means that they
+                        will likely be misclassified"
+                    >
+                      Reorder chains to optimize ONZ:{" "}
+                    </Tooltip>
+                  </div>
                   <Switch
                     size={isDesktop ? "small" : "default"}
                     checkedChildren="Yes"
                     unCheckedChildren="No"
+                    defaultChecked
                     onChange={() =>
                       setFormValues({
                         ...formValues,
                         settings: {
                           ...formValues.settings,
-                          noReorder: !formValues.settings.noReorder,
+                          reorder: !formValues.settings.reorder,
                         },
                       })
                     }
@@ -388,7 +414,14 @@ export const RequestForm = () => {
               </Form.Item>
               <Form.Item valuePropName="checked">
                 <div className="horizontal-item-center">
-                  <div className="item-label">Strict: </div>
+                  <div className="item-label">
+                    <Tooltip
+                      title="Nucleotides in tetrad are found when linked only by
+                        cWH pairing"
+                    >
+                      Strict:{" "}
+                    </Tooltip>
+                  </div>
                   <Switch
                     size={isDesktop ? "small" : "default"}
                     checkedChildren="Yes"
@@ -411,7 +444,14 @@ export const RequestForm = () => {
                     className="item-label"
                     style={isDesktop ? {} : { padding: "5px 0" }}
                   >
-                    Stacking mismatch:
+                    <Tooltip
+                      title="A perfect tetrad stacking covers 4 nucleotides; this
+                        option can be used with value 1 or 2 to allow this
+                        number of nucleotides to be non-stacked with otherwise
+                        well aligned tetrad"
+                    >
+                      Stacking mismatch:
+                    </Tooltip>
                   </div>
                   <Input
                     style={{ width: "calc(50% - 5px)", maxWidth: "100px" }}
@@ -509,14 +549,16 @@ export const RequestForm = () => {
                     </div>
                   </Form.Item>
                 </>
-            ) : maxModelQuery?
-            <Form.Item> 
-                        <p className="horizontal-center">Waiting for server response...</p>
-                        <Spin className="horizontal-center"/>
-            </Form.Item>
-            :
-            <></>
-            }
+              ) : maxModelQuery ? (
+                <Form.Item>
+                  <p className="horizontal-center">
+                    Waiting for server response...
+                  </p>
+                  <Spin className="horizontal-center" />
+                </Form.Item>
+              ) : (
+                <></>
+              )}
             </Panel>
           </Collapse>
         </div>
@@ -526,9 +568,10 @@ export const RequestForm = () => {
               htmlType="submit"
               type="primary"
               disabled={
-                  (((!fileListState || fileListState.length == 0) &&
+                ((!fileListState || fileListState.length == 0) &&
                   formValues.rcsbPdbId.length < 4) ||
-                pdbError)||maxModel==0
+                pdbError ||
+                maxModel == 0
               }
               loading={loading}
               onClick={submit}
