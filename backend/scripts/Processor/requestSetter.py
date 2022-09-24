@@ -52,7 +52,7 @@ def set_request_action(request):
     entity.save()
     queue = django_rq.get_queue('default',is_async=True)
 
-    queue.enqueue(add_to_queue, entity.id)
+    queue.enqueue(add_to_queue, entity)
     entity.status=2
     entity.save()
     try:

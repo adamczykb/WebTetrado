@@ -38,7 +38,7 @@ class LwParser(Enum):
     S = "Sugar"
 
 
-def add_base_pairs(base_pairs, db_id, user_request):
+def add_base_pairs(base_pairs, user_request):
     base_pair_tetrad = set([])
     for base_pair in base_pairs:
         try:
@@ -51,10 +51,10 @@ def add_base_pairs(base_pairs, db_id, user_request):
                 )
                 base_pair_entity = BasePair()
                 base_pair_entity.nt1 = Nucleotide.objects.get(
-                    query_id=db_id, name=base_pair["nt1"]
+                    query_id=user_request.id, name=base_pair["nt1"]
                 )
                 base_pair_entity.nt2 = Nucleotide.objects.get(
-                    query_id=db_id, name=base_pair["nt2"]
+                    query_id=user_request.id, name=base_pair["nt2"]
                 )
                 base_pair_entity.edge3 = LwParser[base_pair["lw"][2]].value
                 base_pair_entity.edge5 = LwParser[base_pair["lw"][1]].value
@@ -67,7 +67,7 @@ def add_base_pairs(base_pairs, db_id, user_request):
             user_request.status = 5
             Log.objects.create(
                 type="Error [processing_add_base_pairs] ",
-                info=str(db_id),
+                info=str(user_request.id),
                 traceback=traceback.format_exc(),
             ).save()
             user_request.error = "Error during adding base pairs"
@@ -75,11 +75,11 @@ def add_base_pairs(base_pairs, db_id, user_request):
             raise GetterException
 
 
-def add_nucleodities(nucleodities, db_id, user_request):
+def add_nucleodities(nucleodities, user_request):
     for nucleodity in nucleodities:
         try:
             nucleodity_entity = Nucleotide()
-            nucleodity_entity.query_id = db_id
+            nucleodity_entity.query_id = user_request.id
             nucleodity_entity.number = nucleodity["number"]
             nucleodity_entity.symbol = nucleodity["shortName"]
             nucleodity_entity.symbol = nucleodity["shortName"]
@@ -95,7 +95,7 @@ def add_nucleodities(nucleodities, db_id, user_request):
             user_request.status = 5
             Log.objects.create(
                 type="Error [processing_add_nucleodities] ",
-                info=str(db_id),
+                info=str(user_request.id),
                 traceback=traceback.format_exc(),
             ).save()
             user_request.error = "Error during adding nucleodities"
@@ -104,7 +104,7 @@ def add_nucleodities(nucleodities, db_id, user_request):
 
 
 def add_tetrads(
-    quadruplexes, db_id, quadruplex_entity, file_data, user_request, cif=False
+    quadruplexes, quadruplex_entity, file_data, user_request, cif=False
 ):
     for tetrad in quadruplexes:
         try:
@@ -118,18 +118,18 @@ def add_tetrads(
             quadruplex_entity_tetrad_metadata.save()
             quadruplex_entity_tetrad.metadata = quadruplex_entity_tetrad_metadata
             quadruplex_entity_tetrad.name = tetrad["id"]
-            quadruplex_entity_tetrad.query_id = db_id
+            quadruplex_entity_tetrad.query_id = user_request.id
             quadruplex_entity_tetrad.nt1 = Nucleotide.objects.get(
-                query_id=db_id, name=tetrad["nt1"]
+                query_id=user_request.id, name=tetrad["nt1"]
             )
             quadruplex_entity_tetrad.nt2 = Nucleotide.objects.get(
-                query_id=db_id, name=tetrad["nt2"]
+                query_id=user_request.id, name=tetrad["nt2"]
             )
             quadruplex_entity_tetrad.nt3 = Nucleotide.objects.get(
-                query_id=db_id, name=tetrad["nt3"]
+                query_id=user_request.id, name=tetrad["nt3"]
             )
             quadruplex_entity_tetrad.nt4 = Nucleotide.objects.get(
-                query_id=db_id, name=tetrad["nt4"]
+                query_id=user_request.id, name=tetrad["nt4"]
             )
             quadruplex_entity_tetrad.save()
 
@@ -142,7 +142,7 @@ def add_tetrads(
                     quadruplex_entity_tetrad.nt4.name,
                 ],
                 quadruplex_entity_tetrad.tetrad_file,
-                db_id,
+                user_request.id,
                 cif,
             )
             quadruplex_entity_tetrad.save()
@@ -151,7 +151,7 @@ def add_tetrads(
             user_request.status = 5
             Log.objects.create(
                 type="Error [processing_add_tetrad] ",
-                info=str(db_id),
+                info=str(user_request.id),
                 traceback=traceback.format_exc(),
             ).save()
             user_request.error = "Error during adding tetrads"
@@ -160,7 +160,7 @@ def add_tetrads(
             raise GetterException
 
 
-def add_loops(loops, db_id, quadruplex_entity, user_request):
+def add_loops(loops, quadruplex_entity, user_request):
     for loop in loops:
         try:
             quadruplex_entity_loop = Loop()
@@ -169,7 +169,7 @@ def add_loops(loops, db_id, quadruplex_entity, user_request):
             quadruplex_entity_loop.save()
             for nucleotide in loop["nucleotides"]:
                 quadruplex_entity_loop.nucleotide.add(
-                    Nucleotide.objects.get(query_id=db_id, name=nucleotide)
+                    Nucleotide.objects.get(query_id=user_request.id, name=nucleotide)
                 )
             quadruplex_entity_loop.save()
             quadruplex_entity.loop.add(quadruplex_entity_loop)
@@ -177,7 +177,7 @@ def add_loops(loops, db_id, quadruplex_entity, user_request):
             user_request.status = 5
             Log.objects.create(
                 type="Error [processing_add_loops] ",
-                info=str(db_id),
+                info=str(user_request.id),
                 traceback=traceback.format_exc(),
             ).save()
 
@@ -186,15 +186,15 @@ def add_loops(loops, db_id, quadruplex_entity, user_request):
             raise GetterException
 
 
-def add_tetrad_pairs(tetradPairs, db_id, helice_entity, user_request):
+def add_tetrad_pairs(tetradPairs, helice_entity, user_request):
     for tetrad_pair in tetradPairs:
         try:
             tetrad_pair_entity = TetradPair()
             tetrad_pair_entity.tetrad1 = Tetrad.objects.get(
-                name=tetrad_pair["tetrad1"], query_id=db_id
+                name=tetrad_pair["tetrad1"], query_id=user_request.id
             )
             tetrad_pair_entity.tetrad2 = Tetrad.objects.get(
-                name=tetrad_pair["tetrad2"], query_id=db_id
+                name=tetrad_pair["tetrad2"], query_id=user_request.id
             )
             tetrad_pair_entity.rise = tetrad_pair["rise"]
             tetrad_pair_entity.twist = tetrad_pair["twist"]
@@ -205,7 +205,7 @@ def add_tetrad_pairs(tetradPairs, db_id, helice_entity, user_request):
             user_request.status = 5
             Log.objects.create(
                 type="Error [processing_add_tetrad_pairs] ",
-                info=str(db_id),
+                info=str(user_request.id),
                 traceback=traceback.format_exc(),
             ).save()
 
@@ -215,7 +215,7 @@ def add_tetrad_pairs(tetradPairs, db_id, helice_entity, user_request):
 
 
 def add_quadruplexes(
-    quadruplexes, file_data, db_id, helice_entity, user_request, cif=False
+    quadruplexes, file_data, helice_entity, user_request, cif=False
 ):
     for quadruplex in quadruplexes:
         try:
@@ -238,10 +238,9 @@ def add_quadruplexes(
             quadruplex_entity.metadata = quadruplex_entity_metadata
             quadruplex_entity.save()
 
-            add_loops(quadruplex["loops"], db_id, quadruplex_entity, user_request)
+            add_loops(quadruplex["loops"], quadruplex_entity, user_request)
             add_tetrads(
                 quadruplex["tetrads"],
-                db_id,
                 quadruplex_entity,
                 file_data,
                 user_request,
@@ -274,7 +273,7 @@ def add_quadruplexes(
             user_request.status = 5
             Log.objects.create(
                 type="Error [processing_add_quadruplexes] ",
-                info=str(db_id),
+                info=str(user_request.id),
                 traceback=traceback.format_exc(),
             ).save()
 
@@ -291,14 +290,14 @@ def file_downloader(request_key: str, url: str, file_destination: models.FileFie
         file_destination.save(name=request_key + ".svg", content=data_file)
         data_file.close()
         if r.status_code == 200:
-            if str(r.content).count("svg") < 2:
+            svg_count = str(r.content).count("svg")
+            if svg_count < 2 :
                 file_destination.delete()
             break
         time.sleep(1)
 
 
-def add_to_queue(db_id):
-    user_request = TetradoRequest.objects.get(id=db_id)
+def add_to_queue(user_request):
     base64file = base64.b64encode((open(user_request.structure_body.path, "rb").read()))
     r = requests.post(
         PROCESSOR_URL + "/v1/structure",
@@ -315,6 +314,14 @@ def add_to_queue(db_id):
         headers={"Content-Type": "application/json"},
     )
     try:
+        begin = time.time()
+
+        while r.status_code != 200:
+            if time.time()-begin > 60:
+                user_request = 5
+                return False
+            time.sleep(2)
+
         if r.status_code == 200:
             request_key = json.loads(r.content)["structureId"]
             user_request.elTetradoKey = request_key
@@ -342,7 +349,7 @@ def add_to_queue(db_id):
                 if r.status_code == 200:
                     result = json.loads(r.content)
 
-                    add_nucleodities(result["nucleotides"], db_id, user_request)
+                    add_nucleodities(result["nucleotides"], user_request)
 
                     for helice in result["helices"]:
                         helice_entity = Helice()
@@ -350,16 +357,15 @@ def add_to_queue(db_id):
                         add_quadruplexes(
                             helice["quadruplexes"],
                             data,
-                            db_id,
                             helice_entity,
                             user_request,
                             user_request.file_extension == "cif",
                         )
                         add_tetrad_pairs(
-                            helice["tetradPairs"], db_id, helice_entity, user_request
+                            helice["tetradPairs"], helice_entity, user_request
                         )
                         user_request.helice.add(helice_entity)
-                    add_base_pairs(result["basePairs"], db_id, user_request)
+                    add_base_pairs(result["basePairs"], user_request)
                     user_request.dot_bracket_line1 = result["dotBracket"]["line1"]
                     user_request.dot_bracket_line2 = result["dotBracket"]["line2"]
                     user_request.dot_bracket_sequence = result["dotBracket"]["sequence"]
@@ -456,7 +462,7 @@ def add_to_queue(db_id):
     except GetterException:
         Log.objects.create(
             type="Error [processing] ",
-            info=str(db_id),
+            info=str(user_request.id),
             traceback=traceback.format_exc(),
         ).save()
         user_request.save()
@@ -466,7 +472,7 @@ def add_to_queue(db_id):
 
         Log.objects.create(
             type="Error [processing] ",
-            info=str(db_id),
+            info=str(user_request.id),
             traceback=traceback.format_exc(),
         ).save()
         user_request.save()
