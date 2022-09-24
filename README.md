@@ -1,5 +1,5 @@
 # WebTetrado
-Web service uses eltetrado backend docker image. It's needed to running service.
+Web service uses eltetrado backend docker image. It's needed to run service.
 
 For frontend is needed to specify in src directory configuration file (config.json):
 ```json
