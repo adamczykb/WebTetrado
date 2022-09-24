@@ -8,9 +8,7 @@ services:
       - processor
     restart: always
     volumes:
-      - .:/home/badamczyk/webtetrado
-      - ./static:/home/badamczyk/webtetrado/static
-      - ./media:/home/badamczyk/webtetrado/media
+      - .:/opt/webtetrado
     entrypoint: bash ./docker-entrypoint.sh
     networks:
       - web_network
@@ -41,8 +39,8 @@ services:
       depends_on:
         - web
       volumes:
-        - ./static:/home/badamczyk/webtetrado/static
-        - ./media:/home/badamczyk/webtetrado/media
+        - ./static:/opt/webtetrado/static
+        - ./media:/opt/webtetrado/media
         - ./ssl:/etc/letsencrypt/
         - ./nginx/conf/:/etc/nginx/conf.d/
       networks:

@@ -1,0 +1,1 @@
+0 0 1 * * certbot nenew --force-renewal

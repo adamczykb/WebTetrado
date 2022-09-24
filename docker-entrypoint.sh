@@ -2,22 +2,22 @@
 python3 manage.py makemigrations;
 python3 manage.py migrate;
 
-cd /home/badamczyk/webtetrado/frontend;
+cd /opt/webtetrado/frontend;
 npm install;
-cd /home/badamczyk/webtetrado/build/;
+cd /opt/webtetrado/build/;
 supervisord;
 bash ./build_front.sh;
-cd /home/badamczyk/webtetrado/;
+cd /opt/webtetrado/;
 python3 manage.py collectstatic --no-input;
 
-if [[ ! -d /home/badamczyk/webtetrado/supervisor ]];
+if [[ ! -d /opt/webtetrado/supervisor ]];
 then
-    mkdir -p /home/badamczyk/webtetrado/supervisor
+    mkdir -p /opt/webtetrado/supervisor
 fi
 
-if [[ ! -d /home/badamczyk/webtetrado/logs/celery ]];
+if [[ ! -d /opt/webtetrado/logs/celery ]];
 then
-    mkdir -p /home/badamczyk/webtetrado/logs/celery
+    mkdir -p /opt/webtetrado/logs/celery
 fi
 echo "from django.contrib.auth import get_user_model; User = get_user_model(); User.objects.create_superuser('admin', 'admin@admin.com', 'admin') if User.objects.all().count()==0 else None" | python3 manage.py shell;
 

@@ -8,6 +8,9 @@ COPY nginx.conf /etc/nginx/conf.d
 RUN mkdir -p /var/letsencrypt
 # RUN certbot certonly --webroot --webroot-path=/var/letsencrypt --email bartosz.adamczyk@student.put.poznan.pl --agree-tos --no-eff-email -d webtetrado.cs.put.poznan.pl
 # RUN certbot --nginx --email bartosz.adamczyk@student.put.poznan.pl -d webtetrado.cs.put.poznan.pl
+
+COPY ./crontab-renew-certbot /etc/cron.d/crontab-renew-certbot
+RUN chmod 0644 /etc/cron.d/crontab-renew-certbot && crontab /etc/cron.d/crontab-renew-certbot
 USER root
 # EXPOSE 8080
 
