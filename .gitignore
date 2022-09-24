@@ -188,3 +188,4 @@ sketch
 /.mypy_cache
 /ssl
 ssl/
+frontend/src/config.json
