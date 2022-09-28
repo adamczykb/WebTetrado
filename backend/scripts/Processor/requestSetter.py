@@ -50,19 +50,21 @@ def set_request_action(request):
             return HttpResponse(status=500)
 
     entity.save()
-    queue = django_rq.get_queue('default',is_async=True)
 
-    queue.enqueue(add_to_queue, entity)
-    entity.status=2
-    entity.save()
     try:
-            if entity.file_extension=='cif':
-                cif_filter_model(entity.structure_body.path,entity.model)
-            elif entity.file_extension=='pdb':
-                pdb_filter_model(entity.structure_body.path,entity.model)
+        if entity.file_extension=='cif':
+            cif_filter_model(entity.structure_body.path,entity.model)
+        elif entity.file_extension=='pdb':
+            pdb_filter_model(entity.structure_body.path,entity.model)
     except Exception:
         entity.status=5
         entity.error_message='Model does not exist'
         entity.save()
         return HttpResponse(status=400)
+    
+    entity.status=2
+    entity.save()
+
+    queue = django_rq.get_queue('default',is_async=True)
+    queue.enqueue(add_to_queue, entity)
     return HttpResponse(content='{"orderId":"'+ str(entity.hash_id)+'"}', content_type='application/json')
