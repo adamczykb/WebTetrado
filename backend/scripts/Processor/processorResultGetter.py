@@ -346,9 +346,9 @@ def add_to_queue(user_request):
                 user_request.error = "Server failure, try again please."
                 return "File extension checker failed"
 
-            user_request.name = data.header["name"].upper()
-            user_request.structure_method = data.header["structure_method"].upper()
-            user_request.idcode = data.header["idcode"].upper()
+            user_request.name = data.header["name"].upper() if "name" in data.header else ""
+            user_request.structure_method = data.header["structure_method"].upper() if "structure_method" in data.header else ""
+            user_request.idcode = data.header["idcode"].upper() if "idcode" in data.header else ""
 
             user_request.save()
             while True:
@@ -473,7 +473,7 @@ def add_to_queue(user_request):
             traceback=traceback.format_exc(),
         ).save()
         user_request.save()
-    except Exception:
+    except:
         user_request.status = 5
         user_request.error = "Unknown server failure"
 
