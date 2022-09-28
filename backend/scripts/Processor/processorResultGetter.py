@@ -297,6 +297,7 @@ def file_downloader(request_key: str, url: str, file_destination: models.FileFie
         elif r.status_code == 202:
             time.sleep(1)
         else:
+            file_destination.delete()
             break
 
 
@@ -329,7 +330,8 @@ def add_to_queue(user_request):
             request_key = json.loads(r.content)["structureId"]
             user_request.elTetradoKey = request_key
             user_request.status = 3
-
+            user_request.save()
+            
             try:
                 if user_request.file_extension == "cif":
                     parser = MMCIFParser(QUIET=True)
@@ -340,7 +342,9 @@ def add_to_queue(user_request):
                 else:
                     return "File extension not recognized"
             except Exception:
-                return False
+                user_request.status = 5
+                user_request.error = "Server failure, try again please."
+                return "File extension checker failed"
 
             user_request.name = data.header["name"].upper()
             user_request.structure_method = data.header["structure_method"].upper()
@@ -461,7 +465,7 @@ def add_to_queue(user_request):
                 time.sleep(1)
             return True
         else:
-            return False
+            return "Failed to get eltetrado id" 
     except GetterException:
         Log.objects.create(
             type="Error [processing] ",
