@@ -330,25 +330,17 @@ def add_to_queue(user_request):
             request_key = json.loads(r.content)["structureId"]
             user_request.elTetradoKey = request_key
             user_request.status = 3
-            user_request.save()
             
-            try:
-                if user_request.file_extension == "cif":
+            if user_request.file_extension == "cif":
                     parser = MMCIFParser(QUIET=True)
                     data = parser.get_structure("str", user_request.structure_body.path)
-                elif user_request.file_extension == "pdb":
+            elif user_request.file_extension == "pdb":
                     parser = PDBParser(PERMISSIVE=True, QUIET=True)
                     data = parser.get_structure("str", user_request.structure_body.path)
-                else:
-                    return "File extension not recognized"
-            except Exception:
-                user_request.status = 5
-                user_request.error = "Server failure, try again please."
-                return "File extension checker failed"
-
-            user_request.name = data.header["name"].upper()
-            user_request.structure_method = data.header["structure_method"].upper()
-            user_request.idcode = data.header["idcode"].upper()
+            
+            user_request.name = data.header["name"].upper() if "name" in data.header else ""
+            user_request.structure_method = data.header["structure_method"].upper() if "structure_method" in data.header else ""
+            user_request.idcode = data.header["idcode"].upper() if "idcode" in data.header else ""
 
             user_request.save()
             while True:
@@ -473,7 +465,7 @@ def add_to_queue(user_request):
             traceback=traceback.format_exc(),
         ).save()
         user_request.save()
-    except Exception:
+    except:
         user_request.status = 5
         user_request.error = "Unknown server failure"
 
