@@ -71,6 +71,7 @@ def compose(orderId):
         base_pair_single["nt1"] = base_pair.nt1.name
         base_pair_single["nt2"] = base_pair.nt2.name
         base_pair_single["stericity"] = base_pair.stericity
+        base_pair_single["in_tetrad"]= base_pair.inTetrad
         result["base_pair"].append(base_pair_single)
         counter += 1
 
@@ -131,16 +132,16 @@ def compose(orderId):
                 chi_angle_value_tetrad_quadruplex_single = {}
                 chi_angle_value_tetrad_quadruplex_single["number"] = counter_tetrad
                 chi_angle_value_tetrad_quadruplex_single["nt1"] = (
-                    tetrad.nt1.chi_angle + "° / " + tetrad.nt1.glycosidicBond
+                    tetrad.nt1.name + ": " + tetrad.nt1.chi_angle + "° / " + tetrad.nt1.glycosidicBond
                 )
                 chi_angle_value_tetrad_quadruplex_single["nt2"] = (
-                    tetrad.nt2.chi_angle + "° / " + tetrad.nt2.glycosidicBond
+                    tetrad.nt2.name + ": " + tetrad.nt2.chi_angle + "° / " + tetrad.nt2.glycosidicBond
                 )
                 chi_angle_value_tetrad_quadruplex_single["nt3"] = (
-                    tetrad.nt3.chi_angle + "° / " + tetrad.nt3.glycosidicBond
+                    tetrad.nt3.name + ": " + tetrad.nt3.chi_angle + "° / " + tetrad.nt3.glycosidicBond
                 )
                 chi_angle_value_tetrad_quadruplex_single["nt4"] = (
-                    tetrad.nt4.chi_angle + "° / " + tetrad.nt4.glycosidicBond
+                    tetrad.nt4.name + ": " + tetrad.nt4.chi_angle + "° / " + tetrad.nt4.glycosidicBond
                 )
                 quadruplex_single["chi_angle_value"].append(
                     chi_angle_value_tetrad_quadruplex_single

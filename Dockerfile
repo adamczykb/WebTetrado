@@ -10,6 +10,7 @@ RUN mkdir -p /opt/webtetrado
 WORKDIR /opt/webtetrado/
 COPY . /opt/webtetrado/
 
+RUN chmod a+x frontend/compile_less.sh
 COPY build/celery_worker_docker.conf /etc/supervisor/conf.d/
 COPY build/celery_beat_docker.conf /etc/supervisor/conf.d/
 COPY build/worker_supervisor.conf /etc/supervisor/conf.d/

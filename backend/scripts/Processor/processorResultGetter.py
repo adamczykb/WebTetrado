@@ -294,7 +294,10 @@ def file_downloader(request_key: str, url: str, file_destination: models.FileFie
             if svg_count < 2 :
                 file_destination.delete()
             break
-        time.sleep(1)
+        elif r.status_code == 202:
+            time.sleep(1)
+        else:
+            break
 
 
 def add_to_queue(user_request):

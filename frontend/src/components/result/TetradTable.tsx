@@ -13,7 +13,7 @@ export const TetradTable = (
       key: "number",
     },
     {
-      title: "Indifier",
+      title: "Indentifier",
       dataIndex: "name",
       key: "name",
     },

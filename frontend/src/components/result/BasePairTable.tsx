@@ -7,14 +7,22 @@ export const BasePairTable = (data: base_pair[], isDesktop: Boolean) => {
       title: "Number",
       dataIndex: "number",
       key: "number",
+      sorter: (a: any, b: any) => {
+        return a.number - b.number;
+      },
     },
     {
-      title: "Edge 3",
+      title: "Stericity",
+      dataIndex: "stericity",
+      key: "stericity",
+    },
+    {
+      title: "Edge 3'",
       dataIndex: "edge3",
       key: "edge3",
     },
     {
-      title: "Edge 5",
+      title: "Edge 5'",
       dataIndex: "edge5",
       key: "edge5",
     },
@@ -29,9 +37,16 @@ export const BasePairTable = (data: base_pair[], isDesktop: Boolean) => {
       key: "nt2",
     },
     {
-      title: "Stericity",
-      dataIndex: "stericity",
-      key: "stericity",
+      title: "In tetrad",
+      dataIndex: "in_tetrad",
+      key: "in_tetrad",
+      sorter: (a: any, b: any) => {
+        if (a.in_tetrad == b.in_tetrad) return 0;
+        if (a.in_tetrad) return 1;
+        else return -1;
+      },
+      defaultSortOrder: "descend",
+      render: (be: boolean) => <>{be ? <u>✅</u> : ""}</>,
     },
   ];
   return (
