@@ -156,10 +156,11 @@ class TetradoRequest(models.Model):
 
     id = models.AutoField(primary_key=True)
     hash_id = models.UUIDField(default=uuid.uuid1, editable=False)
-    cookie_user_id = models.CharField(max_length=50)
+    cookie_user_id = models.CharField(max_length=50, blank=True)
     source = models.IntegerField(choices=Sources.choices)
     status = models.IntegerField(choices=Statuses.choices)
     structure_body = models.FileField(upload_to="files/structures/")
+    structure_body_original = models.FileField(upload_to="files/structures_original/", blank=True)
     dot_bracket_line1 = models.TextField(blank=True)
     dot_bracket_line2 = models.TextField(blank=True)
     dot_bracket_sequence = models.TextField(blank=True)
@@ -171,9 +172,9 @@ class TetradoRequest(models.Model):
     g4_limited = models.BooleanField()
     model = models.IntegerField(default=1)
 
-    name = models.CharField(max_length=200)
-    structure_method = models.CharField(max_length=200)
-    idcode = models.CharField(max_length=20)
+    name = models.CharField(max_length=200, blank=True)
+    structure_method = models.CharField(max_length=200, blank=True)
+    idcode = models.CharField(max_length=20, blank=True)
 
     helice = models.ManyToManyField(Helice, blank=True)
     timestamp = models.DateTimeField(auto_now=True)

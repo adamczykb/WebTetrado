@@ -27,12 +27,14 @@ def set_request_action(request):
             try:
                 temp_file=open(os.path.join(settings.BASE_DIR, 'exampleFiles/'+file_name[1]+'.'+file_name[2]),'rb')
                 entity.structure_body.save(name= temp_file.name.split('/')[-1],content=temp_file)
+                entity.structure_body_original.save(name= temp_file.name.split('/')[-1],content=temp_file)
                 entity.file_extension=file_name[2]
             except FileNotFoundError:
                 return HttpResponse(status=400)
         else:
             temp_file=TemporaryFile.objects.get(id=body['fileId'])
             entity.structure_body.save(name= temp_file.file.name.split('/')[-1],content=temp_file.file.open('rb'))
+            entity.structure_body_original.save(name= temp_file.file.name.split('/')[-1],content=temp_file.file.open('rb'))
             entity.file_extension=temp_file.file_extension
             TemporaryFile.objects.get(id=body['fileId']).delete()
     elif 'rcsbPdbId' in body and len(body['rcsbPdbId'])>0:
@@ -44,6 +46,7 @@ def set_request_action(request):
             entity.source=1
             entity.file_extension='cif'
             entity.structure_body.save(name= body['rcsbPdbId']+'.cif',content=data_file)
+            entity.structure_body_original.save(name= body['rcsbPdbId']+'.cif',content=data_file)
         else:
             return HttpResponse(status=404)
     else:

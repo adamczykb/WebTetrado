@@ -334,13 +334,15 @@ def add_to_queue(user_request):
             if user_request.file_extension == "cif":
                     parser = MMCIFParser(QUIET=True)
                     data = parser.get_structure("str", user_request.structure_body.path)
+                    data_header = parser.get_structure("str", user_request.structure_body_original.path)
             elif user_request.file_extension == "pdb":
                     parser = PDBParser(PERMISSIVE=True, QUIET=True)
                     data = parser.get_structure("str", user_request.structure_body.path)
+                    data_header = parser.get_structure("str", user_request.structure_body_original.path)
             
-            user_request.name = data.header["name"].upper() if "name" in data.header else ""
-            user_request.structure_method = data.header["structure_method"].upper() if "structure_method" in data.header else ""
-            user_request.idcode = data.header["idcode"].upper() if "idcode" in data.header else ""
+            user_request.name =  data_header.header["name"].upper() if "name" in data_header.header else ""
+            user_request.structure_method = data_header.header["structure_method"].upper() if "structure_method" in data_header.header and data_header.header['structure_method']!='unknown' else ""
+            user_request.idcode = data_header.header["idcode"].upper() if "idcode" in data_header.header else ""
 
             user_request.save()
             while True:
@@ -355,7 +357,7 @@ def add_to_queue(user_request):
                         helice_entity.save()
                         add_quadruplexes(
                             helice["quadruplexes"],
-                            data,
+                            data_header,
                             helice_entity,
                             user_request,
                             user_request.file_extension == "cif",
