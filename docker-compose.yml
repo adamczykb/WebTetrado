@@ -5,7 +5,7 @@ services:
     depends_on:
       - db
       - redis
-      - processor
+      - webtetrado_backend
     restart: always
     volumes:
       - .:/opt/webtetrado
@@ -14,12 +14,12 @@ services:
       - web_network
       - db_network
       - redis_network
-      - processor_network
+      - webtetrado_backend_network
     links:
       - redis
-      - processor
+      - webtetrado_backend
       
-  processor:
+  webtetrado_backend:
     image: webtetrado
     environment:
       - WORKDIR=/mnt/workdir
@@ -28,7 +28,7 @@ services:
     volumes:
       - workdir:/mnt/workdir
     networks:
-      - processor_network
+      - webtetrado_backend_network
 
   nginx:
       build:
@@ -78,5 +78,5 @@ networks:
     driver: bridge
   redis_network:
     driver: bridge
-  processor_network:
+  webtetrado_backend_network:
     driver: bridge
