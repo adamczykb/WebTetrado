@@ -18,16 +18,28 @@ from backend.models import (
 )
 from django.core.files.temp import NamedTemporaryFile
 from Bio.PDB import PDBParser, MMCIFParser
-from backend.scripts.Processor.tetradFileFilter import get_cetrain_tetrad_file
-from backend.scripts.webPush import send_to_subscription
-from webTetrado.settings import PROCESSOR_URL
-from backend.scripts.Processor.resultComposer import compose
+from backend.file_processor.structure_tetrad_filter import get_cetrain_tetrad_file
+from backend.web_push.notification_handler import send_notification_to_subscriber
+from WebTetrado.settings import WEBTETRADO_BACKEND_URL
+from backend.request_handler.result_composer import compose_json_result
 from enum import Enum
-from django.db import models
 
 
 class GetterException(Exception):
-    pass
+    """Exception raised for errors caused by insufficient result from webtetrado-backend.
+
+    Attributes:
+        operation -- name of processing function
+        message -- explanation of the error
+    """
+
+    def __init__(self, operation, message="Results are insufficient or improper "):
+        self.operation = operation
+        self.message = message
+        super().__init__(self.message)
+
+    def __str__(self):
+        return f'{self.operation} -> {self.message}'
 
 
 class LwParser(Enum):
@@ -38,7 +50,7 @@ class LwParser(Enum):
     S = "Sugar"
 
 
-def add_base_pairs(base_pairs, user_request):
+def add_base_pairs(base_pairs, tetrado_request):
     base_pair_tetrad = set([])
     for base_pair in base_pairs:
         try:
@@ -51,10 +63,10 @@ def add_base_pairs(base_pairs, user_request):
                 )
                 base_pair_entity = BasePair()
                 base_pair_entity.nt1 = Nucleotide.objects.get(
-                    query_id=user_request.id, name=base_pair["nt1"]
+                    query_id=tetrado_request.id, name=base_pair["nt1"]
                 )
                 base_pair_entity.nt2 = Nucleotide.objects.get(
-                    query_id=user_request.id, name=base_pair["nt2"]
+                    query_id=tetrado_request.id, name=base_pair["nt2"]
                 )
                 base_pair_entity.edge3 = LwParser[base_pair["lw"][2]].value
                 base_pair_entity.edge5 = LwParser[base_pair["lw"][1]].value
@@ -62,50 +74,48 @@ def add_base_pairs(base_pairs, user_request):
                 base_pair_entity.canonical = base_pair["canonical"]
                 base_pair_entity.inTetrad = base_pair["inTetrad"]
                 base_pair_entity.save()
-                user_request.base_pair.add(base_pair_entity)
+                tetrado_request.base_pair.add(base_pair_entity)
         except Exception:
-            user_request.status = 5
+            tetrado_request.status = 5
             Log.objects.create(
                 type="Error [processing_add_base_pairs] ",
-                info=str(user_request.id),
+                info=str(tetrado_request.id),
                 traceback=traceback.format_exc(),
             ).save()
-            user_request.error = "Error during adding base pairs"
-            user_request.save()
-            raise GetterException
+            tetrado_request.error = "Error during adding base pairs"
+            tetrado_request.save()
+            raise GetterException('Base pair parser',traceback.format_exc())
 
 
-def add_nucleodities(nucleodities, user_request):
-    for nucleodity in nucleodities:
+def add_nucleotides(nucleotides, tetrado_request):
+    for nucleotide in nucleotides:
         try:
-            nucleodity_entity = Nucleotide()
-            nucleodity_entity.query_id = user_request.id
-            nucleodity_entity.number = nucleodity["number"]
-            nucleodity_entity.symbol = nucleodity["shortName"]
-            nucleodity_entity.symbol = nucleodity["shortName"]
-            nucleodity_entity.chain = nucleodity["chain"]
-            nucleodity_entity.glycosidicBond = nucleodity["glycosidicBond"]
-            nucleodity_entity.name = nucleodity["fullName"]
-            nucleodity_entity.chi_angle = (
-                str(format("%.2f" % nucleodity["chi"])) if "chi" in nucleodity else "-"
+            nucleotides_entity = Nucleotide()
+            nucleotides_entity.query_id = tetrado_request.id
+            nucleotides_entity.number = nucleotide["number"]
+            nucleotides_entity.symbol = nucleotide["shortName"]
+            nucleotides_entity.symbol = nucleotide["shortName"]
+            nucleotides_entity.chain = nucleotide["chain"]
+            nucleotides_entity.glycosidicBond = nucleotide["glycosidicBond"]
+            nucleotides_entity.name = nucleotide["fullName"]
+            nucleotides_entity.chi_angle = (
+                str(format("%.2f" % nucleotide["chi"])) if "chi" in nucleotide else "-"
             )
-            nucleodity_entity.molecule = nucleodity["molecule"]
-            nucleodity_entity.save()
+            nucleotides_entity.molecule = nucleotide["molecule"]
+            nucleotides_entity.save()
         except Exception:
-            user_request.status = 5
+            tetrado_request.status = 5
             Log.objects.create(
                 type="Error [processing_add_nucleodities] ",
-                info=str(user_request.id),
+                info=str(tetrado_request.id),
                 traceback=traceback.format_exc(),
             ).save()
-            user_request.error = "Error during adding nucleodities"
-            user_request.save()
-            raise GetterException
+            tetrado_request.error = "Error during adding nucleodities"
+            tetrado_request.save()
+            raise GetterException('Nucleotides parser',traceback.format_exc())
 
 
-def add_tetrads(
-    quadruplexes, quadruplex_entity, file_data, user_request, cif=False
-):
+def add_tetrads(quadruplexes, quadruplex_entity, file_data, user_request, cif=False):
     for tetrad in quadruplexes:
         try:
             quadruplex_entity_tetrad = Tetrad()
@@ -157,7 +167,7 @@ def add_tetrads(
             user_request.error = "Error during adding tetrads"
 
             user_request.save()
-            raise GetterException
+            raise GetterException("Tetrad parser",traceback.format_exc())
 
 
 def add_loops(loops, quadruplex_entity, user_request):
@@ -183,7 +193,7 @@ def add_loops(loops, quadruplex_entity, user_request):
 
             user_request.error = "Error during adding loops"
             user_request.save()
-            raise GetterException
+            raise GetterException("Loop parser", traceback.format_exc())
 
 
 def add_tetrad_pairs(tetradPairs, helice_entity, user_request):
@@ -214,9 +224,7 @@ def add_tetrad_pairs(tetradPairs, helice_entity, user_request):
             break
 
 
-def add_quadruplexes(
-    quadruplexes, file_data, helice_entity, user_request, cif=False
-):
+def add_quadruplexes(quadruplexes, file_data, helice_entity, user_request, cif=False):
     for quadruplex in quadruplexes:
         try:
             quadruplex_entity = Quadruplex()
@@ -240,11 +248,7 @@ def add_quadruplexes(
 
             add_loops(quadruplex["loops"], quadruplex_entity, user_request)
             add_tetrads(
-                quadruplex["tetrads"],
-                quadruplex_entity,
-                file_data,
-                user_request,
-                cif,
+                quadruplex["tetrads"], quadruplex_entity, file_data, user_request, cif,
             )
             chains = []
             for tetrad in quadruplex_entity.tetrad.all():
@@ -267,8 +271,6 @@ def add_quadruplexes(
             quadruplex_entity.metadata = quadruplex_entity_metadata
             quadruplex_entity.save()
             helice_entity.quadruplex.add(quadruplex_entity)
-        except GetterException:
-            raise GetterException
         except Exception:
             user_request.status = 5
             Log.objects.create(
@@ -279,19 +281,19 @@ def add_quadruplexes(
 
             user_request.error = "Error during adding quadruplexes"
             user_request.save()
-            raise GetterException
+            raise GetterException("Quadruplex parser", traceback.format_exc())
 
 
-def file_downloader(request_key: str, url: str, file_destination: models.FileField):
+def file_downloader(request_key: str, url: str, file_destination):
     while True:
         data_file = NamedTemporaryFile()
-        r = requests.get(PROCESSOR_URL + url)
+        r = requests.get(WEBTETRADO_BACKEND_URL + url)
         data_file.write(r.content)
         file_destination.save(name=request_key + ".svg", content=data_file)
         data_file.close()
         if r.status_code == 200:
             svg_count = str(r.content).count("svg")
-            if svg_count < 2 :
+            if svg_count < 2:
                 file_destination.delete()
             break
         elif r.status_code == 202:
@@ -301,7 +303,7 @@ def file_downloader(request_key: str, url: str, file_destination: models.FileFie
             break
 
 
-def add_to_queue(user_request):
+def add_task_to_queue(user_request):
     base64file = base64.b64encode((open(user_request.structure_body.path, "rb").read()))
     r = requests.post(
         PROCESSOR_URL + "/v1/structure",
@@ -321,7 +323,7 @@ def add_to_queue(user_request):
         begin = time.time()
 
         while r.status_code != 200:
-            if time.time()-begin > 60:
+            if time.time() - begin > 60:
                 user_request = 5
                 return False
             time.sleep(2)
@@ -330,19 +332,38 @@ def add_to_queue(user_request):
             request_key = json.loads(r.content)["structureId"]
             user_request.elTetradoKey = request_key
             user_request.status = 3
-            
+
             if user_request.file_extension == "cif":
-                    parser = MMCIFParser(QUIET=True)
-                    data = parser.get_structure("str", user_request.structure_body.path)
-                    data_header = parser.get_structure("str", user_request.structure_body_original.path)
+                parser = MMCIFParser(QUIET=True)
+                # data = parser.get_structure("str", user_request.structure_body.path)
+                original_user_structure = parser.get_structure(
+                    "str", user_request.structure_body_original.path
+                )
             elif user_request.file_extension == "pdb":
-                    parser = PDBParser(PERMISSIVE=True, QUIET=True)
-                    data = parser.get_structure("str", user_request.structure_body.path)
-                    data_header = parser.get_structure("str", user_request.structure_body_original.path)
-            
-            user_request.name =  data_header.header["name"].upper() if "name" in data_header.header else ""
-            user_request.structure_method = data_header.header["structure_method"].upper() if "structure_method" in data_header.header and data_header.header['structure_method']!='unknown' else ""
-            user_request.idcode = data_header.header["idcode"].upper() if "idcode" in data_header.header else ""
+                parser = PDBParser(PERMISSIVE=True, QUIET=True)
+                # data = parser.get_structure("str", user_request.structure_body.path)
+                original_user_structure = parser.get_structure(
+                    "str", user_request.structure_body_original.path
+                )
+            else:
+                raise Exception
+
+            user_request.name = (
+                original_user_structure.header["name"].upper()
+                if "name" in original_user_structure.header
+                else ""
+            )
+            user_request.structure_method = (
+                original_user_structure.header["structure_method"].upper()
+                if "structure_method" in original_user_structure.header
+                and original_user_structure.header["structure_method"] != "unknown"
+                else ""
+            )
+            user_request.idcode = (
+                original_user_structure.header["idcode"].upper()
+                if "idcode" in original_user_structure.header
+                else ""
+            )
 
             user_request.save()
             while True:
@@ -350,14 +371,14 @@ def add_to_queue(user_request):
                 if r.status_code == 200:
                     result = json.loads(r.content)
 
-                    add_nucleodities(result["nucleotides"], user_request)
+                    add_nucleotides(result["nucleotides"], user_request)
 
                     for helice in result["helices"]:
                         helice_entity = Helice()
                         helice_entity.save()
                         add_quadruplexes(
                             helice["quadruplexes"],
-                            data_header,
+                            original_user_structure,
                             helice_entity,
                             user_request,
                             user_request.file_extension == "cif",
@@ -433,23 +454,22 @@ def add_to_queue(user_request):
                     user_request.status = 4
                     user_request.save()
 
-                    user_request.cached_result = compose(user_request.id)
+                    user_request.cached_result = compose_json_result(user_request.id)
                     user_request.save()
                     payload = {
                         "image": "https://webtetrado.cs.put.poznan.pl/static/logo.svg",
                         "tag": "Complete",
                         "url": "https://webtetrado.cs.put.poznan.pl/result/"
                         + str(user_request.hash_id),
-                        "title": "WebTetrado notification ",
-                        "text": "Your request "
+                        "title": "WebTetrado notification",
+                        "text": "Processing of "
                         + str(user_request.hash_id)
-                        + " is completed",
+                        + " has been completed",
                     }
-                    # payload = {"head": "Hey", "body": "Hello World"}
                     for subscriber in TetradoRequest.objects.get(
                         id=user_request.id
                     ).push_notification.all():
-                        send_to_subscription(subscriber, json.dumps(payload), ttl=3600)
+                        send_notification_to_subscriber(subscriber, json.dumps(payload), ttl=3600)
                     break
                 if r.status_code == 500:
                     user_request.status = 5
@@ -459,15 +479,8 @@ def add_to_queue(user_request):
                 time.sleep(1)
             return True
         else:
-            return "Failed to get eltetrado id" 
-    except GetterException:
-        Log.objects.create(
-            type="Error [processing] ",
-            info=str(user_request.id),
-            traceback=traceback.format_exc(),
-        ).save()
-        user_request.save()
-    except:
+            return "Failed to get eltetrado id"
+    except Exception:
         user_request.status = 5
         user_request.error = "Unknown server failure"
 

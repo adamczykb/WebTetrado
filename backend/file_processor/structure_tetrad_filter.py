@@ -1,14 +1,10 @@
+from typing import List
 import Bio
-
 from tempfile import NamedTemporaryFile
-from Bio.PDB import MMCIFParser
 from Bio.PDB.mmcifio import MMCIFIO
 from Bio.PDB import PDBIO
-from backend.scripts.Processor.structureProcessor import (
-    add_necessary_column_cif,
-    add_symetry_data_cif,
-    add_symetry_data_pdb,
-)
+
+from backend.file_processor.structure_columns_parser import add_necessary_columns_cif
 
 
 class TetradSelect(Bio.PDB.Select):
@@ -31,7 +27,7 @@ class TetradSelect(Bio.PDB.Select):
 
 
 def get_cetrain_tetrad_file(
-    file_data, tetrad_residue, tetrad_output_file, db_id, cif=True
+        data_file_absolute_path:str, tetrad_residue: List[str], tetrad_result_file, order_id, cif=True
 ):
     tetrad_file = NamedTemporaryFile()
     if cif:
@@ -40,17 +36,14 @@ def get_cetrain_tetrad_file(
     else:
         io = PDBIO()
         output_extension = ".pdb"
-    io.set_structure(file_data)
+    io.set_structure(data_file_absolute_path)
     io.save(tetrad_file.name, TetradSelect(tetrad_residue))
     if cif:
-        add_necessary_column_cif(tetrad_file.name)
-        # add_symetry_data_cif(tetrad_file.name, tetrad_file.name)
-    # else:
-    # add_symetry_data_pdb(tetrad_file.name, tetrad_file.name)
-    tetrad_output_file.save(
+        add_necessary_columns_cif(tetrad_file.name)
+    tetrad_result_file.save(
         "-".join(tetrad_residue).replace(".", "_")
         + "__"
-        + str(db_id)
+        + str(order_id)
         + output_extension,
         tetrad_file,
     )

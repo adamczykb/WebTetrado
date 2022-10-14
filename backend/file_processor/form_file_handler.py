@@ -1,18 +1,19 @@
 from django.core.files.temp import NamedTemporaryFile
-from backend.models import TemporaryFile
 from Bio.PDB import FastMMCIFParser
 from Bio.PDB.PDBParser import PDBParser
+from backend.models import TemporaryFile
 
-
-def handle_uploaded_file(f):
+def handle_uploaded_file(file):
     try:
         data_file = NamedTemporaryFile()
-        for chunk in f.chunks():
+        for chunk in file.chunks():
             data_file.write(chunk)
         n = TemporaryFile()
-        n.file.save(name=f.name, content=data_file)
-        n.file_extension = f.name.split(".")[-1].lower()
+        n.file.save(name=file.name, content=data_file)
+        n.file_extension = file.name.split(".")[-1].lower()
         n.save()
+
+        models_num=0
         if f.name.split(".")[-1].lower() == "pdb":
             models_num = len(
                 PDBParser(PERMISSIVE=1, QUIET=True).get_structure(
@@ -25,5 +26,5 @@ def handle_uploaded_file(f):
             )
         data_file.close()
     except Exception:
-        return "0", 0, f.name + " is not proper file."
+        return "0", 0, file.name + " is not proper file."
     return str(n.id), models_num, ""

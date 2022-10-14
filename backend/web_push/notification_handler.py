@@ -1,16 +1,12 @@
-
+from typing import Dict
 from django.conf import settings
 from django.forms.models import model_to_dict
 
 from pywebpush import WebPushException, webpush
 
 
-def send_to_subscription(subscription, payload, ttl=0):
-    return _send_notification(subscription, payload, ttl)
-
-
-def _send_notification(subscription, payload, ttl):
-    subscription_data = _process_subscription_info(subscription)
+def send_notification_to_subscriber(subscription, payload, ttl=0):
+    subscription_data = process_subscription_data(subscription)
     vapid_data = {}
 
     webpush_settings = getattr(settings, "WEBPUSH_SETTINGS", {})
@@ -39,7 +35,7 @@ def _send_notification(subscription, payload, ttl):
             raise e
 
 
-def _process_subscription_info(subscription):
+def process_subscription_data(subscription) -> Dict:
     subscription_data = model_to_dict(
         subscription, exclude=["browser", "id", "hash_id"]
     )
