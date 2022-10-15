@@ -1,5 +1,5 @@
 import { message } from "antd";
-import { getCookie } from "../../components/csrf";
+import { getCookie } from "../../components/CSRF";
 import config from "../../config.json";
 
 export function processingResponse(

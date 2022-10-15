@@ -7,8 +7,15 @@
 .site-layout .site-layout-background {
   background: #fff;
   margin: 0 auto;
+  width: 70%;
   max-width: 1200px;
   padding: 24;
+  @media screen and (min-width: 1501px) {
+    width: 70%;
+  }
+  @media screen and (max-width: 1500px) {
+    width: 100%;
+  }
 }
 #navigation-button {
   background-color: #f4f5f6;
@@ -20,10 +27,14 @@
   position: fixed;
   width: 200px;
   padding-top: 30px;
-  left: calc((100% - 1200px) / 2 - 200px);
   padding-right: 13px;
-  @media screen and (min-width: 1620px) {
+  @media screen and (min-width: 1501px) {
     display: block;
+    left: 30px;
+  }
+  @media screen and (min-width: 1701px) {
+    display: block;
+    left: calc((100% - 1190px) / 2 - 225.5px);
   }
 }
 

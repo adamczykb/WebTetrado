@@ -16,8 +16,8 @@ import { useEffect, useState } from "react";
 import { useMediaQuery } from "react-responsive";
 import config from "../../config.json";
 import lang from "../../lang.json";
-import { checkRcsbMaxModel } from "../../utils/adapters/CheckRcsbMaxModel";
-import { processingRequest } from "../../utils/adapters/ProcessingRequest";
+import { checkRcsbMaxModel } from "../../utils/adapters/checkRcsbMaxModel";
+import { processingRequest } from "../../utils/adapters/processingRequest";
 const { Panel } = Collapse;
 
 export const RequestForm = () => {

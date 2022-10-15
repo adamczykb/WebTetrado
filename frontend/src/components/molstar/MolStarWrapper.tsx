@@ -20,29 +20,6 @@ import { MolScriptBuilder as MS } from "molstar/lib/mol-script/language/builder"
 import { StateObjectRef } from "molstar/lib/mol-state";
 import { PluginStateObject as SO } from "molstar/lib/mol-plugin-state/objects";
 
-// const StripedResidues = CustomElementProperty.create<number>({
-//   label: "Show quadruplexes",
-//   name: "basic-wrapper",
-//   getData(model: Model) {
-//     const map = new Map<ElementIndex, number>();
-//     const residueIndex = model.atomicHierarchy.residueAtomSegments.index;
-//     for (let i = 0, _i = model.atomicHierarchy.atoms._rowCount; i < _i; i++) {
-//       map.set(i as ElementIndex, residueIndex[i] % 2);
-
-//     }
-//     return { value: map };
-//   },
-//   coloring: {
-//     getColor(e: any) {
-//       return e === 0 ? Color(0xff0011) : Color(0x1100ff);
-//     },
-//     defaultColor: Color(0x222222),
-//   },
-//   getLabel(e: any) {
-//     return "";
-//   },
-// });
-
 const MolStarPluginSpec: PluginUISpec = {
   ...DefaultPluginUISpec(),
   config: [
@@ -101,17 +78,15 @@ async function addTetradComponents(
   });
 
   // Create quadruplex structure
-  let quadruplexNumber = 1; // FIXME: should be unique for each quadruplex
   const quadruplexExpression = MS.core.logic.or(nucleotideTetradExpressions);
   const quadruplexComponent =
     await plugin.builders.structure.tryCreateComponentFromExpression(
       structure,
       MS.struct.generator.atomGroups({ "residue-test": quadruplexExpression }),
-      `quadruplex-component-${quadruplexNumber}`,
-      { label: `Quadruplex ${quadruplexNumber}` }
+      `quadruplex-component`,
+      { label: `Quadruplex` }
     );
   if (!quadruplexComponent) return;
-  quadruplexNumber++;
   // For each expression in nucleotides expression array, create tetrad component
   for (let i = 0; i < nucleotideTetradExpressions.length; i++) {
     const tetradExpression = MS.struct.generator.atomGroups({

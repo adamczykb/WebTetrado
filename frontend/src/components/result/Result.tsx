@@ -24,7 +24,7 @@ import { ChiAngleTable } from "./ChiAngleTable";
 import { TetradPairTable } from "./TetradPairTable";
 import { BasePairTable } from "./BasePairTable";
 import { NucleotideTable } from "./NucleotideTable";
-import { processingResponse } from "../../utils/adapters/ProcessingResponse";
+import { processingResponse } from "../../utils/adapters/processingResponse";
 import { useMediaQuery } from "react-responsive";
 import { Button } from "antd";
 import { BellOutlined } from "@ant-design/icons";
@@ -34,7 +34,7 @@ import {
   ONZ_TEXTS_COLOR_STRING,
 } from "../../assets/data/onzClassColor";
 import usePushNotifications from "../../hooks/usePushNotifications";
-import { nofificationRequest } from "../../utils/adapters/NotificationRequest";
+import { nofificationRequest } from "../../utils/adapters/notificationRequest";
 import lang from "../../lang.json";
 export const Result = () => {
   let result: result_values = {
@@ -85,8 +85,6 @@ export const Result = () => {
   let [subscribed, setSubscribe] = useState(false);
   let [resultSet, setResultSet] = useState(result);
   let [bracketArray, setBracketArray] = useState<Map<number, string>>();
-  let [bracketArrayTextColor, setBracketArrayTextColor] =
-    useState<Map<number, string>>();
   const sendRequestNotification = () => {
     if (!userConsent) {
       return;

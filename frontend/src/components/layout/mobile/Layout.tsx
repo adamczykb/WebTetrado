@@ -5,7 +5,7 @@ import IndexRouter from "../../../routes/router";
 import pp_img from "../../../assets/images/PP-PUT_logo_jasne.png";
 import ichb_img from "../../../assets/images/ICHB_PAN_EN_kolor.png";
 import rna_polis_img from "../../../assets/images/RNApolis-logo.png";
-import { MobileNavHeader } from "./nav";
+import { MobileNavHeader } from "./MobileNavHeader";
 
 export class MobileLayout extends React.Component {
   render(): React.ReactNode {

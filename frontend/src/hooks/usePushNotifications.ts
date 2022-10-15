@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 
 import config from "../config.json";
-import { getCookie } from "../components/csrf";
+import { getCookie } from "../components/CSRF";
 
 const pushServerPublicKey =
   "BHhtArJe7JRbUaHmVqGQnWNfOAwVnxgjeyJ9cT6WZLWmJLR4tV-T2yC53olPn_16xD9uQZRnA_xfBZ7PU6Senbs";
