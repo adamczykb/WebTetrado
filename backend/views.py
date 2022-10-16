@@ -31,7 +31,7 @@ def file_handler_endpoint(request):
     return HttpResponse(status=500)
 
 
-def user_request_result_endpoint(request, order_id: str):
+def user_request_result_endpoint(request, order_id):
     return HttpResponse(
         status=200,
         content=bytes(get_result_action(order_id), "UTF-8"),

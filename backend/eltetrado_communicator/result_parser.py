@@ -367,7 +367,7 @@ def add_task_to_queue(user_request):
 
             user_request.save()
             while True:
-                r = requests.get(PROCESSOR_URL + "/v1/result/" + request_key)
+                r = requests.get(WEBTETRADO_BACKEND_URL + "/v1/result/" + request_key)
                 if r.status_code == 200:
                     result = json.loads(r.content)
 

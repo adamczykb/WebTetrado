@@ -2,7 +2,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from backend.models import TetradoRequest
 from backend.request_handler.result_composer import compose_json_result
 
-def get_result_action(order_id:str) -> str:
+def get_result_action(order_id):
     try:
         request = TetradoRequest.objects.get(hash_id=order_id)
         if len(request.cached_result) == 0:
