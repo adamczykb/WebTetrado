@@ -13,14 +13,13 @@ import {
 import Dragger from "antd/lib/upload/Dragger";
 import { UploadFile, UploadProps } from "antd/lib/upload/interface";
 import { useEffect, useState } from "react";
-import { useMediaQuery } from "react-responsive";
 import config from "../../config.json";
 import lang from "../../lang.json";
 import { checkRcsbMaxModel } from "../../utils/adapters/checkRcsbMaxModel";
 import { processingRequest } from "../../utils/adapters/processingRequest";
 const { Panel } = Collapse;
 
-export const RequestForm = () => {
+export const RequestForm = (compressedView: any) => {
   let form_values = {
     fileId: "",
     rcsbPdbId: "",
@@ -33,7 +32,6 @@ export const RequestForm = () => {
       model: 1,
     },
   };
-  let isDesktop = useMediaQuery({ query: "(min-width: 900px)" });
   const [loading, setLoading] = useState(false);
   const [maxModel, setMaxModel] = useState(0);
   const [pdbError, setPDBError] = useState(false);
@@ -224,7 +222,7 @@ export const RequestForm = () => {
         </Button>{" "}
       </div>
       <Form labelCol={{ span: 16 }} wrapperCol={{ span: 32 }}>
-        {isDesktop ? (
+        {compressedView ? (
           <div className={"horizontal-center"} style={{ height: 250 }}>
             <div>
               <div style={{ width: "400px", height: "200px" }}>
@@ -257,6 +255,7 @@ export const RequestForm = () => {
                 <Form.Item>
                   <Input
                     name="rcsbPdbId"
+                    data-testid="rcsb-pdb-id-input"
                     value={formValues.rcsbPdbId}
                     status={pdbError ? "error" : ""}
                     onChange={(e) =>
@@ -310,6 +309,7 @@ export const RequestForm = () => {
             <h4 style={{ margin: "0" }}>From Protein Data Bank:</h4>
             <Form.Item>
               <Input
+                data-testid="rcsb-pdb-id-input"
                 name="rcsbPdbId"
                 value={formValues.rcsbPdbId}
                 onChange={(e) =>
@@ -346,7 +346,7 @@ export const RequestForm = () => {
                 //<div className="horizontal-item-center">
                 //<div className="item-label">Complete 2D: </div>
                 //<Switch
-                //size={isDesktop ? "small" : "default"}
+                //size={compressedView ? "small" : "default"}
                 //checkedChildren="Yes"
                 //unCheckedChildren="No"
                 //onChange={() =>
@@ -376,7 +376,7 @@ export const RequestForm = () => {
                     </Tooltip>
                   </div>
                   <Switch
-                    size={isDesktop ? "small" : "default"}
+                    size={compressedView ? "small" : "default"}
                     checkedChildren="Yes"
                     unCheckedChildren="No"
                     defaultChecked
@@ -396,7 +396,7 @@ export const RequestForm = () => {
                 <div className="horizontal-item-center">
                   <div className="item-label">G4-limited search: </div>
                   <Switch
-                    size={isDesktop ? "small" : "default"}
+                    size={compressedView ? "small" : "default"}
                     checkedChildren="Yes"
                     unCheckedChildren="No"
                     defaultChecked
@@ -423,7 +423,7 @@ export const RequestForm = () => {
                     </Tooltip>
                   </div>
                   <Switch
-                    size={isDesktop ? "small" : "default"}
+                    size={compressedView ? "small" : "default"}
                     checkedChildren="Yes"
                     unCheckedChildren="No"
                     onChange={() =>
@@ -442,7 +442,7 @@ export const RequestForm = () => {
                 <div className="horizontal-item-center">
                   <div
                     className="item-label"
-                    style={isDesktop ? {} : { padding: "5px 0" }}
+                    style={compressedView ? {} : { padding: "5px 0" }}
                   >
                     <Tooltip
                       title="A perfect tetrad stacking covers 4 nucleotides; this
@@ -455,7 +455,7 @@ export const RequestForm = () => {
                   </div>
                   <Input
                     style={{ width: "calc(50% - 5px)", maxWidth: "100px" }}
-                    size={isDesktop ? "small" : "middle"}
+                    size={compressedView ? "small" : "middle"}
                     type={"number"}
                     min="0"
                     max="4"
@@ -491,11 +491,12 @@ export const RequestForm = () => {
                     <div className="horizontal-item-center">
                       <div
                         className="item-label"
-                        style={isDesktop ? {} : { padding: "5px 0" }}
+                        style={compressedView ? {} : { padding: "5px 0" }}
                       >
                         Model number:
                       </div>
                       <Slider
+                        data-testid="model-selector-slider"
                         min={1}
                         max={maxModel}
                         style={{ width: "200px" }}
@@ -517,11 +518,11 @@ export const RequestForm = () => {
                     <div className="horizontal-item-center">
                       <div
                         className="item-label"
-                        style={isDesktop ? {} : { padding: "5px 0" }}
+                        style={compressedView ? {} : { padding: "5px 0" }}
                       ></div>
                       <Input
                         style={{ width: "calc(50% - 5px)", maxWidth: "100px" }}
-                        size={isDesktop ? "small" : "middle"}
+                        size={compressedView ? "small" : "middle"}
                         type={"number"}
                         min="1"
                         max={maxModel}
@@ -565,6 +566,7 @@ export const RequestForm = () => {
         <div className={"horizontal-center"} style={{ paddingTop: "30px" }}>
           <Form.Item>
             <Button
+              data-testid="send-request-button"
               htmlType="submit"
               type="primary"
               disabled={

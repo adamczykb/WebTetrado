@@ -38,7 +38,7 @@ export const Home = () => {
       >
         Upload DNA/RNA structure
       </h1>
-      <RequestForm />
+      <RequestForm compressedView={isDesktop} />
       <Divider />
       <h1
         id="check-your-result"

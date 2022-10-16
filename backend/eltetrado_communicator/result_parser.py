@@ -306,7 +306,7 @@ def file_downloader(request_key: str, url: str, file_destination):
 def add_task_to_queue(user_request):
     base64file = base64.b64encode((open(user_request.structure_body.path, "rb").read()))
     r = requests.post(
-        PROCESSOR_URL + "/v1/structure",
+        WEBTETRADO_BACKEND_URL + "/v1/structure",
         data=json.dumps(
             {
                 "pdb_mmcif_b64": str(base64file.decode("utf-8")),
