@@ -22,8 +22,27 @@
   margin-left: auto;
   margin-right: auto;
 }
-#footer-logos {
-  margin-top: 30px;
+#footer-logos-oneline {
+  @media screen and (min-width: 450px) {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-top: 30px;
+  }
+  @media screen and (max-width: 450px) {
+    display: none;
+  }
+}
+#footer-logos-splited {
+  @media screen and (max-width: 451px) {
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+  }
+  @media screen and (min-width: 451px) {
+    display: none;
+  }
 }
 .split-layout__divider__row {
   display: flex;
@@ -41,6 +60,8 @@
   border-width: 0 0 2px 0;
 }
 #MenuOutlined-mobile {
+  display: flex;
+  align-items: center;
   font-size: 32px;
   color: white;
 }
@@ -64,4 +85,8 @@
 }
 #webtetrado-banner-mobile a {
   color: white;
+}
+#introduction {
+  /*padding-bottom: 20px;*/
+  text-align: justify;
 }

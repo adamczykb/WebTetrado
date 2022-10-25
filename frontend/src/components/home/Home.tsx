@@ -1,20 +1,24 @@
 import { Divider } from "../layout/common/Divider";
-import { RequestForm } from "./RequestForm";
 import { Results } from "./Results";
 import { useMediaQuery } from "react-responsive";
+import { Spin } from "antd";
+import { lazy, Suspense } from "react";
 
+const RequestForm = lazy(() => import("./RequestForm"));
+const renderLoader = () => (
+  <div
+    style={{ height: "400px", margin: "20px" }}
+    className={"horizontal-center"}
+  >
+    <br />
+    <Spin size="large" />
+  </div>
+);
 export const Home = () => {
-  let isDesktop = useMediaQuery({ query: "(min-width: 900px)" });
+  let compressedView = useMediaQuery({ query: "(max-width: 900px)" });
   return (
     <>
-      <h3
-        id={"introduction"}
-        style={
-          isDesktop
-            ? { padding: "40px", paddingBottom: "20px", textAlign: "justify" }
-            : { paddingBottom: "20px", textAlign: "justify" }
-        }
-      >
+      <h3 id={"introduction"} style={compressedView ? {} : { padding: "40px" }}>
         Online implemetation of{" "}
         <i>
           <a href="https://github.com/tzok/eltetrado/" rel="noreferrer">
@@ -38,7 +42,10 @@ export const Home = () => {
       >
         Upload DNA/RNA structure
       </h1>
-      <RequestForm compressedView={isDesktop} />
+
+      <Suspense fallback={renderLoader()}>
+        <RequestForm />
+      </Suspense>
       <Divider />
       <h1
         id="check-your-result"

@@ -1,7 +1,12 @@
 import { Table } from "antd";
 import { tetrad_pair } from "../../types/RestultSet";
 
-export const TetradPairTable = (data: tetrad_pair[], isDesktop: Boolean) => {
+interface TetradPariTableArguments {
+  value: tetrad_pair[];
+  isDesktop: boolean;
+}
+
+export default function TetradPairTable(props: TetradPariTableArguments) {
   const columns_tetrad_pairs = [
     {
       title: "Number",
@@ -36,10 +41,10 @@ export const TetradPairTable = (data: tetrad_pair[], isDesktop: Boolean) => {
       </h2>
       <Table
         style={{ textAlign: "center" }}
-        dataSource={data}
-        scroll={isDesktop ? { x: "auto" } : { x: "100%" }}
+        dataSource={props.value}
+        scroll={props.isDesktop ? { x: "auto" } : { x: "100%" }}
         columns={columns_tetrad_pairs}
       />
     </>
   );
-};
+}

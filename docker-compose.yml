@@ -43,6 +43,7 @@ services:
         - ./media:/opt/webtetrado/media
         - ./ssl:/etc/letsencrypt/
         - ./nginx/conf/:/etc/nginx/conf.d/
+        - ./logs/nginx:/logs
       networks:
         - web_network
       expose:

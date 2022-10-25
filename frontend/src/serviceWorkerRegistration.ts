@@ -60,7 +60,7 @@ export function register(config?: Config) {
 function registerValidSW(swUrl: string, config?: Config) {
   navigator.serviceWorker
     .register(swUrl, { scope: "/" })
-    .then((registration) => {
+    .then((registration: any) => {
       registration.onupdatefound = () => {
         const installingWorker = registration.installing;
         if (installingWorker == null) {
@@ -92,7 +92,7 @@ function registerValidSW(swUrl: string, config?: Config) {
         };
       };
     })
-    .catch((error) => {
+    .catch((error: 95) => {
       console.error("Error during service worker registration:", error);
     });
 }
@@ -109,7 +109,7 @@ function checkValidServiceWorker(swUrl: string, config?: Config) {
       (contentType != null && contentType.indexOf("javascript") === -1)
     ) {
       // No service worker found. Probably a different app. Reload the page.
-      navigator.serviceWorker.ready.then((registration) => {
+      navigator.serviceWorker.ready.then((registration: any) => {
         registration.unregister().then(() => {
           window.location.reload();
         });
@@ -124,10 +124,10 @@ function checkValidServiceWorker(swUrl: string, config?: Config) {
 export function unregister() {
   if ("serviceWorker" in navigator) {
     navigator.serviceWorker.ready
-      .then((registration) => {
+      .then((registration: any) => {
         registration.unregister();
       })
-      .catch((error) => {
+      .catch((error: any) => {
         console.error(error.message);
       });
   }

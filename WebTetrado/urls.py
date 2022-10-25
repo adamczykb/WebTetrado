@@ -39,6 +39,7 @@ urlpatterns = [
     re_path('^admin/', admin.site.urls),
     re_path('^api/',include(backend.urls)),
     re_path("^ws/", views.websocket_endpoint),
+    re_path('^robots.txt',RedirectView.as_view(url=staticfiles_storage.url('robots.txt')))
     ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 urlpatterns.append(re_path('^', views.index))

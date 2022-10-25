@@ -13,13 +13,15 @@ import {
 import Dragger from "antd/lib/upload/Dragger";
 import { UploadFile, UploadProps } from "antd/lib/upload/interface";
 import { useEffect, useState } from "react";
+import { useMediaQuery } from "react-responsive";
 import config from "../../config.json";
 import lang from "../../lang.json";
 import { checkRcsbMaxModel } from "../../utils/adapters/checkRcsbMaxModel";
 import { processingRequest } from "../../utils/adapters/processingRequest";
 const { Panel } = Collapse;
 
-export const RequestForm = (compressedView: any) => {
+export default function RequestForm() {
+  let compressedView = useMediaQuery({ query: "(max-width: 900px)" });
   let form_values = {
     fileId: "",
     rcsbPdbId: "",
@@ -130,7 +132,7 @@ export const RequestForm = (compressedView: any) => {
     processingRequest(formValues, setLoading);
   };
   useEffect(() => {
-    setMaxModel(0);
+    if (formValues.fileId === "") setMaxModel(0);
 
     if (formValues.rcsbPdbId.length === 4) {
       setMaxModelQuery(true);
@@ -158,6 +160,7 @@ export const RequestForm = (compressedView: any) => {
       </h2>
       <div style={{ marginBottom: "40px", textAlign: "center" }}>
         <Button
+          size={compressedView ? "large" : "middle"}
           onClick={() => {
             setFileList([]);
             setFormValues({
@@ -170,6 +173,7 @@ export const RequestForm = (compressedView: any) => {
           2HY9
         </Button>
         <Button
+          size={compressedView ? "large" : "middle"}
           onClick={() => {
             setFileList([]);
             setFormValues({
@@ -182,6 +186,7 @@ export const RequestForm = (compressedView: any) => {
           6RS3
         </Button>
         <Button
+          size={compressedView ? "large" : "middle"}
           onClick={() => {
             setFileList([]);
             setFormValues({
@@ -194,6 +199,7 @@ export const RequestForm = (compressedView: any) => {
           1JJP
         </Button>
         <Button
+          size={compressedView ? "large" : "middle"}
           onClick={() => {
             setFileList([]);
             setFormValues({
@@ -206,6 +212,7 @@ export const RequestForm = (compressedView: any) => {
           6FC9
         </Button>
         <Button
+          size={compressedView ? "large" : "middle"}
           onClick={() => {
             setFileList([
               { name: "q-ugg-5k-salt_4…00ns_frame1065.pdb", uid: "" },
@@ -214,6 +221,7 @@ export const RequestForm = (compressedView: any) => {
               ...formValues,
               fileId: "rdy_q-ugg-5k-salt-0-00ns-0rame1065_pdb",
               rcsbPdbId: "",
+              settings: { ...formValues.settings, model: 1 },
             });
             setMaxModel(1);
           }}
@@ -222,7 +230,7 @@ export const RequestForm = (compressedView: any) => {
         </Button>{" "}
       </div>
       <Form labelCol={{ span: 16 }} wrapperCol={{ span: 32 }}>
-        {compressedView ? (
+        {!compressedView ? (
           <div className={"horizontal-center"} style={{ height: 250 }}>
             <div>
               <div style={{ width: "400px", height: "200px" }}>
@@ -341,27 +349,6 @@ export const RequestForm = (compressedView: any) => {
         >
           <Collapse defaultActiveKey={1} style={{ width: "70%" }}>
             <Panel header="Additional settings" key="1">
-              {
-                //<Form.Item valuePropName="checked">
-                //<div className="horizontal-item-center">
-                //<div className="item-label">Complete 2D: </div>
-                //<Switch
-                //size={compressedView ? "small" : "default"}
-                //checkedChildren="Yes"
-                //unCheckedChildren="No"
-                //onChange={() =>
-                //setFormValues({
-                //...formValues,
-                //settings: {
-                //...formValues.settings,
-                //complete2d: !formValues.settings.complete2d,
-                //},
-                //})
-                //}
-                ///>
-                //</div>
-                //</Form.Item>
-              }
               <Form.Item valuePropName="checked">
                 <div className="horizontal-item-center">
                   <div className="item-label">
@@ -376,7 +363,7 @@ export const RequestForm = (compressedView: any) => {
                     </Tooltip>
                   </div>
                   <Switch
-                    size={compressedView ? "small" : "default"}
+                    size={compressedView ? "default" : "small"}
                     checkedChildren="Yes"
                     unCheckedChildren="No"
                     defaultChecked
@@ -396,7 +383,7 @@ export const RequestForm = (compressedView: any) => {
                 <div className="horizontal-item-center">
                   <div className="item-label">G4-limited search: </div>
                   <Switch
-                    size={compressedView ? "small" : "default"}
+                    size={compressedView ? "default" : "small"}
                     checkedChildren="Yes"
                     unCheckedChildren="No"
                     defaultChecked
@@ -423,7 +410,7 @@ export const RequestForm = (compressedView: any) => {
                     </Tooltip>
                   </div>
                   <Switch
-                    size={compressedView ? "small" : "default"}
+                    size={compressedView ? "default" : "small"}
                     checkedChildren="Yes"
                     unCheckedChildren="No"
                     onChange={() =>
@@ -442,7 +429,7 @@ export const RequestForm = (compressedView: any) => {
                 <div className="horizontal-item-center">
                   <div
                     className="item-label"
-                    style={compressedView ? {} : { padding: "5px 0" }}
+                    style={compressedView ? { padding: "5px 0" } : {}}
                   >
                     <Tooltip
                       title="A perfect tetrad stacking covers 4 nucleotides; this
@@ -455,7 +442,7 @@ export const RequestForm = (compressedView: any) => {
                   </div>
                   <Input
                     style={{ width: "calc(50% - 5px)", maxWidth: "100px" }}
-                    size={compressedView ? "small" : "middle"}
+                    size={compressedView ? "middle" : "small"}
                     type={"number"}
                     min="0"
                     max="4"
@@ -491,12 +478,11 @@ export const RequestForm = (compressedView: any) => {
                     <div className="horizontal-item-center">
                       <div
                         className="item-label"
-                        style={compressedView ? {} : { padding: "5px 0" }}
+                        style={compressedView ? { padding: "5px 0" } : {}}
                       >
                         Model number:
                       </div>
                       <Slider
-                        data-testid="model-selector-slider"
                         min={1}
                         max={maxModel}
                         style={{ width: "200px" }}
@@ -518,14 +504,15 @@ export const RequestForm = (compressedView: any) => {
                     <div className="horizontal-item-center">
                       <div
                         className="item-label"
-                        style={compressedView ? {} : { padding: "5px 0" }}
+                        style={compressedView ? { padding: "5px 0" } : {}}
                       ></div>
                       <Input
                         style={{ width: "calc(50% - 5px)", maxWidth: "100px" }}
-                        size={compressedView ? "small" : "middle"}
+                        size={compressedView ? "middle" : "small"}
                         type={"number"}
                         min="1"
                         max={maxModel}
+                        data-testid="model-selector-slider"
                         value={formValues.settings.model}
                         onChange={(e) => {
                           if (e.target.valueAsNumber > maxModel) {
@@ -552,7 +539,10 @@ export const RequestForm = (compressedView: any) => {
                 </>
               ) : maxModelQuery ? (
                 <Form.Item>
-                  <p className="horizontal-center">
+                  <p
+                    className="horizontal-center"
+                    data-testid="waiting-for-server-p"
+                  >
                     Waiting for server response...
                   </p>
                   <Spin className="horizontal-center" />
@@ -585,4 +575,4 @@ export const RequestForm = (compressedView: any) => {
       </Form>
     </>
   );
-};
+}

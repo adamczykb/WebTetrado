@@ -23,7 +23,7 @@ export const ContentList = (setMenuExpanded: any) => {
           style={{ justifyContent: "space-between" }}
         >
           <a href="/">
-            <img height={"64px"} src={logo} />
+            <img alt="logo" height={"64px"} src={logo} />
           </a>
           <Button
             type="text"
@@ -50,7 +50,6 @@ export const ContentList = (setMenuExpanded: any) => {
               display: "flex",
               justifyContent: "space-between",
               alignItems: "center",
-              width: "90%",
             }}
           >
             <a
@@ -58,17 +57,21 @@ export const ContentList = (setMenuExpanded: any) => {
               rel="noreferrer"
               href={"https://www.put.poznan.pl/index.php/en"}
             >
-              <img alt={"PP logo"} style={{ width: "80px" }} src={pp_img} />
+              <img alt={"PP logo"} style={{ width: "80%" }} src={pp_img} />
             </a>
             <a
               target="_blank"
               rel="noreferrer"
               href={"https://www.ibch.poznan.pl/en.html"}
             >
-              <img alt={"IBCH logo"} style={{ width: "80px" }} src={ichb_img} />
+              <img
+                alt={"IBCH logo"}
+                style={{ width: "80%", float: "right" }}
+                src={ichb_img}
+              />
             </a>
           </div>
-          <div style={{ width: "90%", marginTop: "30px" }}>
+          <div style={{ marginTop: "30px" }}>
             <a
               target="_blank"
               rel="noreferrer"

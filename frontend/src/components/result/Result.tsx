@@ -12,18 +12,8 @@ import { useParams } from "react-router-dom";
 const { Step } = Steps;
 const { TabPane } = Tabs;
 import { Divider } from "../layout/common/Divider";
-import { useEffect, useState } from "react";
-import {
-  result_values,
-  visualsation_switch_result,
-} from "../../types/RestultSet";
-import { StructureVisualisation } from "./StructureVisualisation";
-import { TetradTable } from "./TetradTable";
-import { LoopTable } from "./LoopTable";
-import { ChiAngleTable } from "./ChiAngleTable";
-import { TetradPairTable } from "./TetradPairTable";
-import { BasePairTable } from "./BasePairTable";
-import { NucleotideTable } from "./NucleotideTable";
+import { lazy, Suspense, useEffect, useState } from "react";
+import { result_values } from "../../types/RestultSet";
 import { processingResponse } from "../../utils/adapters/processingResponse";
 import { useMediaQuery } from "react-responsive";
 import { Button } from "antd";
@@ -36,6 +26,25 @@ import {
 import usePushNotifications from "../../hooks/usePushNotifications";
 import { nofificationRequest } from "../../utils/adapters/notificationRequest";
 import lang from "../../lang.json";
+
+const TetradTable = lazy(() => import("./TetradTable"));
+const LoopTable = lazy(() => import("./LoopTable"));
+const ChiAngleTable = lazy(() => import("./ChiAngleTable"));
+const TetradPairTable = lazy(() => import("./TetradPairTable"));
+const BasePairTable = lazy(() => import("./BasePairTable"));
+const NucleotideTable = lazy(() => import("./NucleotideTable"));
+const StructureVisualisation = lazy(() => import("./StructureVisualisation"));
+
+const renderLoader = () => (
+  <div
+    style={{ height: "400px", margin: "20px" }}
+    className={"horizontal-center"}
+  >
+    <br />
+    <Spin size="large" />
+  </div>
+);
+
 export const Result = () => {
   let result: result_values = {
     name: "",
@@ -59,11 +68,11 @@ export const Result = () => {
     nucleotide: [],
     remove_date: "",
   };
-  let visualisation_switch: visualsation_switch_result = {
-    varna_non_can: false,
-    varna_can: false,
-    r_chie_canonical: false,
-  };
+  //let visualisation_switch: visualsation_switch_result = {
+  //varna_non_can: false,
+  //varna_can: false,
+  //r_chie_canonical: false,
+  //};
 
   const {
     userConsent,
@@ -80,7 +89,6 @@ export const Result = () => {
   let temp_array = new Map<number, string>();
 
   const { requestNumber } = useParams();
-  let [switchOptions, setSwitchOptions] = useState(visualisation_switch);
   let [loadingResult, setLoadingResult] = useState(true);
   let [subscribed, setSubscribe] = useState(false);
   let [resultSet, setResultSet] = useState(result);
@@ -204,7 +212,7 @@ export const Result = () => {
         code:{" "}
         <span
           onClick={() => {
-            navigator.clipboard.writeText(requestNumber!);
+            window.navigator["clipboard"].writeText(requestNumber!);
             message.success("Request code has been saved to clipboard.");
           }}
         >
@@ -346,6 +354,7 @@ export const Result = () => {
                               <Tooltip
                                 title={
                                   <Image
+                                    alt={v.loopClassification.split(" ")[0]}
                                     src={require("../../assets/da-silva/" +
                                       v.loopClassification.split(" ")[0] +
                                       ".svg")}
@@ -384,6 +393,7 @@ export const Result = () => {
                                             >
                                               <h3>{value}a</h3>
                                               <Image
+                                                alt={value}
                                                 src={require("../../assets/da-silva/" +
                                                   value +
                                                   "a.svg")}
@@ -398,6 +408,7 @@ export const Result = () => {
                                             >
                                               <h3>{value}b</h3>
                                               <Image
+                                                alt={value}
                                                 src={require("../../assets/da-silva/" +
                                                   value +
                                                   "b.svg")}
@@ -655,23 +666,42 @@ export const Result = () => {
                             )}
                           <br />
                         </p>
-                        {StructureVisualisation(
-                          v,
-                          resultSet,
-                          switchOptions,
-                          setSwitchOptions
-                        )}
+                        <Suspense fallback={renderLoader()}>
+                          <StructureVisualisation
+                            value={v}
+                            resultSet={resultSet}
+                          />
+                        </Suspense>
                         <Divider />
-                        {TetradTable(v.tetrad, resultSet.g4_limited, isDesktop)}
+                        <Suspense fallback={renderLoader()}>
+                          <TetradTable
+                            value={v.tetrad}
+                            g4Limited={resultSet.g4_limited}
+                            isDesktop={isDesktop}
+                          />
+                        </Suspense>
                         <Divider />
-                        {LoopTable(v.loop, isDesktop)}
+                        <Suspense fallback={renderLoader()}>
+                          <LoopTable value={v.loop} isDesktop={isDesktop} />
+                        </Suspense>
                         <Divider />
-                        {ChiAngleTable(v.chi_angle_value, isDesktop)}
+                        <Suspense fallback={renderLoader()}>
+                          <ChiAngleTable
+                            value={v.chi_angle_value}
+                            isDesktop={isDesktop}
+                          />
+                        </Suspense>
                       </TabPane>
                     ))}
                   </Tabs>
                   <Divider />
-                  {TetradPairTable(z.tetrad_pair, isDesktop)}
+                  <Suspense fallback={renderLoader()}>
+                    <TetradPairTable
+                      value={z.tetrad_pair}
+                      isDesktop={isDesktop}
+                    />
+                  </Suspense>
+
                   <Divider />
                 </TabPane>
               ))}
@@ -681,9 +711,20 @@ export const Result = () => {
             <></>
           ) : (
             <>
-              {BasePairTable(resultSet.base_pair, isDesktop)}
+              <Suspense fallback={renderLoader()}>
+                <BasePairTable
+                  value={resultSet.base_pair}
+                  isDesktop={isDesktop}
+                />
+              </Suspense>
+
               <Divider />
-              {NucleotideTable(resultSet.nucleotide, isDesktop)}
+              <Suspense fallback={renderLoader()}>
+                <NucleotideTable
+                  value={resultSet.nucleotide}
+                  isDesktop={isDesktop}
+                />
+              </Suspense>
             </>
           )}
         </>
