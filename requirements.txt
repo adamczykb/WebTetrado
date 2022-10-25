@@ -1,4 +1,4 @@
-Django==3.2.13
+Django==3.2.16
 biopython==1.79
 rq==1.10.1
 django-cors-headers==3.11.0
