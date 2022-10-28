@@ -13,7 +13,6 @@ from backend.file_processor.structure_model_filter import (
 
 def set_user_request_action(body: Dict):
     entity = TetradoRequest()
-    entity.cookie_user_id = ""
     entity.complete_2d = body["settings"]["complete2d"]
     entity.no_reorder = not body["settings"]["reorder"]
     entity.strict = body["settings"]["strict"]

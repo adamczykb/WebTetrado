@@ -10,10 +10,10 @@ def compose_json_result(id: int):
     try:
         tetrado_request = TetradoRequest.objects.get(id=id)
     except Exception:
-        return '{"status":0,"helice":[],"base_pair":[],"nucleotide":[]}'
+        return '{"status":0,"helices":[],"base_pairs":[],"nucleotides":[]}'
     if tetrado_request.status == 5:
         return (
-            '{"status":5,"helice":[],"base_pair":[],"nucleotide":[],"error_message":"'
+            '{"status":5,"helices":[],"base_pairs":[],"nucleotides":[],"error_message":"'
             + tetrado_request.error
             + '"}'
         )
@@ -61,7 +61,7 @@ def compose_json_result(id: int):
         result["draw_tetrado"] = tetrado_request.draw_tetrado.url
     else:
         result["draw_tetrado"] = ""
-    result["base_pair"] = []
+    result["base_pairs"] = []
     counter = 1
     for base_pair in tetrado_request.base_pair.all():
         base_pair_single = {}
@@ -72,31 +72,27 @@ def compose_json_result(id: int):
         base_pair_single["nt2"] = base_pair.nt2.name
         base_pair_single["stericity"] = base_pair.stericity
         base_pair_single["in_tetrad"] = base_pair.inTetrad
-        result["base_pair"].append(base_pair_single)
+        result["base_pairs"].append(base_pair_single)
         counter += 1
 
-    result["helice"] = []
+    result["helices"] = []
     for helice in tetrado_request.helice.all():
         counter = 1
         helice_result = {}
-        helice_result["quadruplex"] = []
-        helice_result["tetrad_pair"] = []
+        helice_result["quadruplexes"] = []
+        helice_result["tetrad_pairs"] = []
         for quadruplex in helice.quadruplex.all():
             quadruplex_single = {}
             quadruplex_single["number"] = counter
-            quadruplex_single["molecule"] = quadruplex.metadata.molecule
-            quadruplex_single["method"] = quadruplex.metadata.method
+            quadruplex_single["molecule"] = quadruplex.molecule
             quadruplex_single["onz_class"] = quadruplex.metadata.onz_class
-            quadruplex_single["type"] = quadruplex.metadata.type
+            quadruplex_single["type"] = quadruplex.type
             quadruplex_single[
                 "tetrad_combination"
             ] = quadruplex.metadata.tetrad_combination
             quadruplex_single[
                 "loopClassification"
-            ] = quadruplex.metadata.loopClassification
-            quadruplex_single[
-                "structure_dot_bracked"
-            ] = quadruplex.metadata.structure_dot_bracked
+            ] = quadruplex.loop_classification
             quadruplex_single["tetrads_no"] = quadruplex.tetrad.count()
             quadruplex_single["tetrad"] = []
             quadruplex_single["chi_angle_value"] = []
@@ -108,7 +104,7 @@ def compose_json_result(id: int):
                 tetrad_quadruplex_single[
                     "gbaClassification"
                 ] = tetrad.metadata.tetrad_combination
-                tetrad_quadruplex_single["nucleotities"] = [
+                tetrad_quadruplex_single["nucleotides"] = [
                     tetrad.nt1.name,
                     tetrad.nt2.name,
                     tetrad.nt3.name,
@@ -122,7 +118,7 @@ def compose_json_result(id: int):
                 )
                 tetrad_quadruplex_single["onz_class"] = tetrad.metadata.onz_class
                 tetrad_quadruplex_single["planarity"] = format(
-                    "%.2f" % tetrad.metadata.planarity
+                    "%.2f" % tetrad.planarity
                 )
                 if tetrad.tetrad_file:
                     tetrad_quadruplex_single["file"] = tetrad.tetrad_file.url
@@ -179,7 +175,7 @@ def compose_json_result(id: int):
                 loop_quadruplex_single["type"] = loop.type
                 quadruplex_single["loop"].append(loop_quadruplex_single)
                 counter_loop += 1
-            helice_result["quadruplex"].append(quadruplex_single)
+            helice_result["quadruplexes"].append(quadruplex_single)
             counter += 1
         counter = 1
         for tetrad_pair in helice.tetrad_pair.all():
@@ -191,11 +187,11 @@ def compose_json_result(id: int):
             tetrad_pair_single["rise"] = format("%.2f" % tetrad_pair.rise)
             tetrad_pair_single["twist"] = format("%.2f" % tetrad_pair.twist)
             tetrad_pair_single["strand_direction"] = tetrad_pair.strand_direction
-            helice_result["tetrad_pair"].append(tetrad_pair_single)
+            helice_result["tetrad_pairs"].append(tetrad_pair_single)
             counter += 1
-        result["helice"].append(helice_result)
+        result["helices"].append(helice_result)
 
-    result["nucleotide"] = []
+    result["nucleotides"] = []
     counter = 1
     for nucleotide in Nucleotide.objects.filter(query_id=id):
         nucleotide_single = {}
@@ -204,7 +200,7 @@ def compose_json_result(id: int):
         nucleotide_single["name"] = nucleotide.name
         nucleotide_single["glycosidicBond"] = nucleotide.glycosidicBond
         nucleotide_single["chi_angle"] = nucleotide.chi_angle
-        result["nucleotide"].append(nucleotide_single)
+        result["nucleotides"].append(nucleotide_single)
         counter += 1
     result["remove_date"] = (tetrado_request.timestamp + timedelta(days=7)).strftime(
         "%d %b %Y"

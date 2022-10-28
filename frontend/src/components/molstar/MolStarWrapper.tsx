@@ -150,7 +150,7 @@ function applyTetradOnzColorScheme(plugin: PluginUIContext, tetrads: tetrad[]) {
             .value(atom_data.residueAtomSegments.index[element])
             .toString();
         tetrads.forEach((x) => {
-          if (x.nucleotities.includes(residue)) {
+          if (x.nucleotides.includes(residue)) {
             outputColor = Color(ONZ_COLORS[x.onz_class]);
           }
         });

@@ -3,17 +3,10 @@ import { Results } from "./Results";
 import { useMediaQuery } from "react-responsive";
 import { Spin } from "antd";
 import { lazy, Suspense } from "react";
+import { RenderLoader } from "../result/RenderLoader";
 
 const RequestForm = lazy(() => import("./RequestForm"));
-const renderLoader = () => (
-  <div
-    style={{ height: "400px", margin: "20px" }}
-    className={"horizontal-center"}
-  >
-    <br />
-    <Spin size="large" />
-  </div>
-);
+
 export const Home = () => {
   let compressedView = useMediaQuery({ query: "(max-width: 900px)" });
   return (
@@ -43,7 +36,7 @@ export const Home = () => {
         Upload DNA/RNA structure
       </h1>
 
-      <Suspense fallback={renderLoader()}>
+      <Suspense fallback={<RenderLoader />}>
         <RequestForm />
       </Suspense>
       <Divider />

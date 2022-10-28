@@ -44,7 +44,7 @@ class TetradoRequest(admin.ModelAdmin):
 
 @admin.register(Quadruplex)
 class Quadruplex(admin.ModelAdmin):
-    list_display = ("id", "metadata")
+    list_display = ("id", "molecule", "type", "loop_classification", "metadata")
 
 
 @admin.register(Helice)
@@ -73,6 +73,7 @@ class Tetrad(admin.ModelAdmin):
         "id",
         "name",
         "query_id",
+        "planarity",
         "metadata",
         "nt1",
         "nt2",
@@ -91,13 +92,8 @@ class Nucleotide(admin.ModelAdmin):
 class Metadata(admin.ModelAdmin):
     list_display = (
         "id",
-        "molecule",
-        "method",
-        "planarity",
         "onz_class",
         "tetrad_combination",
-        "loopClassification",
-        "structure_dot_bracked",
     )
 
 
@@ -109,7 +105,9 @@ class PushInfoAdmin(admin.ModelAdmin):
     def send_test_message(self, request, queryset):
         payload = {"head": "Hey", "body": "Hello World"}
         for device in queryset:
-            notification = send_notification_to_subscriber(device, json.dumps(payload), 0)
+            notification = send_notification_to_subscriber(
+                device, json.dumps(payload), 0
+            )
             if notification:
                 self.message_user(request, "Test sent successfully")
             else:

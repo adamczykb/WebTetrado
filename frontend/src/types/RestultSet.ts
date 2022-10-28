@@ -19,7 +19,7 @@ export type tetrad = {
   number: number;
   name: string;
   sequence: string;
-  nucleotities: string[];
+  nucleotides: string[];
   onz_class: string;
   gbaClassification: string;
   planarity: number;
@@ -35,7 +35,6 @@ export type loop = {
 export type quadruplex = {
   number: number;
   molecule: string;
-  method: string;
   onz_class: string;
   tetrad_combination: string;
   loopClassification: string;
@@ -58,13 +57,13 @@ export type nucleotide = {
   number: number;
   symbol: string;
   name: string;
-  nucleotities: string[];
+  nucleotides: string[];
   glycosidicBond: string;
   chi_angle: string;
 };
 export type helice = {
-  quadruplex: quadruplex[];
-  tetrad_pair: tetrad_pair[];
+  quadruplexes: quadruplex[];
+  tetrad_pairs: tetrad_pair[];
 };
 export type result_values = {
   name: string;
@@ -82,9 +81,9 @@ export type result_values = {
   r_chie: string;
   r_chie_canonical: string;
   draw_tetrado: string;
-  base_pair: base_pair[];
-  helice: helice[];
-  nucleotide: nucleotide[];
+  base_pairs: base_pair[];
+  helices: helice[];
+  nucleotides: nucleotide[];
   remove_date: string;
   model: number;
 };

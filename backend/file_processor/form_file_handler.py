@@ -14,17 +14,17 @@ def handle_uploaded_file(file):
         n.save()
 
         models_num=0
-        if f.name.split(".")[-1].lower() == "pdb":
+        if file.name.split(".")[-1].lower() == "pdb":
             models_num = len(
                 PDBParser(PERMISSIVE=1, QUIET=True).get_structure(
                     "str", str(n.file.path)
                 )
             )
-        if f.name.split(".")[-1].lower() == "cif":
+        if file.name.split(".")[-1].lower() == "cif":
             models_num = len(
                 FastMMCIFParser(QUIET=True).get_structure("str", str(n.file.path))
             )
         data_file.close()
     except Exception:
-        return "0", 0, file.name + " is not proper file."
+        return '0', 0, file.name + " is not proper file."
     return str(n.id), models_num, ""

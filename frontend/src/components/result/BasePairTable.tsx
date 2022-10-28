@@ -49,7 +49,7 @@ export default function BasePairTable(props: BasePairTableArguents) {
         if (a.in_tetrad) return 1;
         else return -1;
       },
-      //defaultSortOrder: "descend",
+      defaultSortOrder: "descend" as const,
       render: (be: boolean) => <>{be ? <u>✅</u> : ""}</>,
     },
   ];

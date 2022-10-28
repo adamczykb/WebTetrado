@@ -4,11 +4,11 @@ const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const HtmlCriticalWebpackPlugin = require("html-critical-webpack-plugin");
-const Dotenv = require("dotenv-webpack");
+const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const isProduction = process.env.NODE_ENV == "production";
 
 const config = {
-  entry: "./src/index.tsx",
+  entry: ["./src/index.tsx", "./src/service-worker.ts"],
   output: {
     path: path.resolve(__dirname, "dist"),
     //publicPath: "/static/",
@@ -19,6 +19,7 @@ const config = {
     },
     compress: true,
     port: 3000,
+    historyApiFallback: true,
   },
   plugins: [
     new HtmlWebpackPlugin({
@@ -41,7 +42,19 @@ const config = {
       },
       cache: true,
     }),
-
+    new HtmlCriticalWebpackPlugin({
+      base: path.resolve(__dirname, "build"),
+      src: "index.html",
+      dest: "index.html",
+      inline: true,
+      minify: true,
+      extract: true,
+      width: 320,
+      height: 565,
+      penthouse: {
+        blockJSRequests: false,
+      },
+    }),
     new MiniCssExtractPlugin(),
 
     // Add your plugins here
@@ -69,13 +82,19 @@ const config = {
   resolve: {
     extensions: [".tsx", ".ts", ".jsx", ".js", "..."],
   },
+  optimization: {
+    minimizer: [
+      // For webpack@5 you can use the `...` syntax to extend existing minimizers (i.e. `terser-webpack-plugin`), uncomment the next line
+      `...`,
+      new CssMinimizerPlugin(),
+    ],
+  },
 };
 
 module.exports = () => {
   if (isProduction) {
     config.mode = "production";
-
-    devtool: false;
+    config.devtool = "source-map";
     //config.plugins.push(new WorkboxWebpackPlugin.GenerateSW());
     config.plugins.push(
       new webpack.DefinePlugin({
@@ -85,18 +104,9 @@ module.exports = () => {
       })
     );
     config.plugins.push(
-      new HtmlCriticalWebpackPlugin({
-        base: path.resolve(__dirname, "build"),
-        src: "index.html",
-        dest: "index.html",
-        inline: true,
-        minify: true,
-        extract: true,
-        width: 320,
-        height: 565,
-        penthouse: {
-          blockJSRequests: false,
-        },
+      new MiniCssExtractPlugin({
+        filename: "[name].css",
+        chunkFilename: "[id].css",
       })
     );
     config.output.publicPath = "/static/";

@@ -9,4 +9,4 @@ def get_result_action(order_id):
             return compose_json_result(request.id)
         return request.cached_result
     except ObjectDoesNotExist:
-        return '{"status":0,"helice":[],"base_pair":[],"nucleotide":[]}'
+        return '{"status":0,"helices":[],"base_pairs":[],"nucleotides":[]}'

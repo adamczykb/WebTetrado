@@ -24,8 +24,8 @@ def file_handler_endpoint(request):
     if request.FILES["structure"]:
         return HttpResponse(
             status=200,
-            content=b'{"id": "%s", "models": %d,"error":"%s"}'
-            % (handle_uploaded_file(request.FILES["structure"])),
+            content=bytes('{"id": "%s", "models": %d,"error":"%s"}'
+            % (handle_uploaded_file(request.FILES["structure"])),'UTF-8'),
             content_type="application/json",
         )
     return HttpResponse(status=500)

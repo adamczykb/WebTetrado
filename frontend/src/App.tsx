@@ -4,6 +4,9 @@ import { MobileLayout } from "./components/layout/mobile/Layout";
 import "./assets/css/App.css";
 export default function App() {
   let isDesktop: Boolean = useMediaQuery({ query: "(min-width: 1500px)" });
-
-  return <>{isDesktop ? <DesktopLayout /> : <MobileLayout />}</>;
+  if (isDesktop) {
+    return <DesktopLayout />;
+  } else {
+    return <MobileLayout />;
+  }
 }

@@ -123,10 +123,10 @@ def add_tetrads(quadruplexes, quadruplex_entity, file_data, user_request, cif=Fa
             quadruplex_entity_tetrad_metadata.tetrad_combination = tetrad[
                 "gbaClassification"
             ]
-            quadruplex_entity_tetrad_metadata.planarity = tetrad["planarityDeviation"]
             quadruplex_entity_tetrad_metadata.onz_class = tetrad["onz"]
             quadruplex_entity_tetrad_metadata.save()
             quadruplex_entity_tetrad.metadata = quadruplex_entity_tetrad_metadata
+            quadruplex_entity_tetrad.planarity = tetrad["planarityDeviation"]
             quadruplex_entity_tetrad.name = tetrad["id"]
             quadruplex_entity_tetrad.query_id = user_request.id
             quadruplex_entity_tetrad.nt1 = Nucleotide.objects.get(
@@ -235,16 +235,17 @@ def add_quadruplexes(quadruplexes, file_data, helice_entity, user_request, cif=F
             quadruplex_entity_metadata.onz_class = (
                 quadruplex["onzm"] if "onzm" in quadruplex else "-"
             )
-            quadruplex_entity_metadata.loopClassification = (
+            quadruplex_entity_metadata.save()
+            quadruplex_entity.metadata = quadruplex_entity_metadata
+            quadruplex_entity.save()
+
+            quadruplex_entity.loop_classification = (
                 " ".join(quadruplex["loopClassification"].values())
                 if "loopClassification" in quadruplex
                 else "-"
             )
-            quadruplex_entity_metadata.molecule = file_data.header["head"].upper()
+            quadruplex_entity.molecule = file_data.header["head"].upper()
 
-            quadruplex_entity_metadata.save()
-            quadruplex_entity.metadata = quadruplex_entity_metadata
-            quadruplex_entity.save()
 
             add_loops(quadruplex["loops"], quadruplex_entity, user_request)
             add_tetrads(
@@ -266,9 +267,7 @@ def add_quadruplexes(quadruplexes, file_data, helice_entity, user_request, cif=F
             else:
                 chains_type = "OTHER"
 
-            quadruplex_entity_metadata.type = chains_type
-            quadruplex_entity_metadata.save()
-            quadruplex_entity.metadata = quadruplex_entity_metadata
+            quadruplex_entity.type = chains_type
             quadruplex_entity.save()
             helice_entity.quadruplex.add(quadruplex_entity)
         except Exception:

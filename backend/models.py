@@ -4,21 +4,8 @@ from django.dispatch import receiver
 from django.db.models.signals import pre_delete
 
 class Metadata(models.Model):
-    COLOR_CHOICES = (
-        ("UNI", "unimolecular"),
-        ("BI", "bimolecular"),
-        ("TETRA", "tetramolecular"),
-        ("OTHER", "other"),
-    )
-
-    molecule = models.CharField(max_length=100, blank=True)
-    method = models.CharField(max_length=100, blank=True)
-    planarity = models.FloatField(default=0)
     onz_class = models.CharField(max_length=100, blank=True)
     tetrad_combination = models.CharField(max_length=100, blank=True)
-    loopClassification = models.CharField(max_length=50, blank=True)
-    type = models.CharField(choices=COLOR_CHOICES, max_length=10, default="OTHER")
-    structure_dot_bracked = models.TextField(blank=True)
 
 
 class Nucleotide(models.Model):
@@ -59,6 +46,7 @@ class Tetrad(models.Model):
     name = models.CharField(max_length=100)
     query_id = models.IntegerField()
     metadata = models.ForeignKey(to=Metadata, on_delete=models.CASCADE)
+    planarity = models.FloatField(default=0)
     nt1 = models.ForeignKey(
         to=Nucleotide, related_name="nucleotide1", on_delete=models.DO_NOTHING
     )
@@ -94,6 +82,8 @@ class TetradPair(models.Model):
     rise = models.FloatField()
     twist = models.FloatField()
     strand_direction = models.CharField(max_length=100)
+    def __str__(self):
+        return str(self.tetrad1.name) + "-" + str(self.tetrad2.name)
 
 
 class Loop(models.Model):
@@ -101,14 +91,25 @@ class Loop(models.Model):
     length = models.IntegerField()
     type = models.CharField(max_length=50)
     nucleotide = models.ManyToManyField(Nucleotide)
+    def __str__(self):
+        return str(self.id)+': '+str(self.length)+' '+'-'.join([n.name for n in self.nucleotide.all()])
 
 
 class Quadruplex(models.Model):
+    COLOR_CHOICES = (
+        ("UNI", "unimolecular"),
+        ("BI", "bimolecular"),
+        ("TETRA", "tetramolecular"),
+        ("OTHER", "other"),
+    )
+
     id = models.AutoField(primary_key=True)
     metadata = models.ForeignKey(to=Metadata, on_delete=models.CASCADE)
     tetrad = models.ManyToManyField(Tetrad)
     loop = models.ManyToManyField(Loop)
-
+    type = models.CharField(choices=COLOR_CHOICES, max_length=10, default="OTHER")
+    molecule = models.CharField(max_length=100, blank=True)
+    loop_classification = models.CharField(max_length=50, blank=True)
 
 class Helice(models.Model):
     id = models.AutoField(primary_key=True)
@@ -155,15 +156,16 @@ class TetradoRequest(models.Model):
 
     id = models.AutoField(primary_key=True)
     hash_id = models.UUIDField(default=uuid.uuid1, editable=False)
-    cookie_user_id = models.CharField(max_length=50, blank=True)
+
     source = models.IntegerField(choices=Sources.choices)
     status = models.IntegerField(choices=Statuses.choices)
     structure_body = models.FileField(upload_to="files/structures/")
     structure_body_original = models.FileField(upload_to="files/structures_original/", blank=True)
+    file_extension = models.CharField(max_length=20)
+
     dot_bracket_line1 = models.TextField(blank=True)
     dot_bracket_line2 = models.TextField(blank=True)
     dot_bracket_sequence = models.TextField(blank=True)
-    file_extension = models.CharField(max_length=20)
     complete_2d = models.BooleanField()
     no_reorder = models.BooleanField()
     stacking_mismatch = models.IntegerField()
