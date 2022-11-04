@@ -26,7 +26,7 @@ def compose_json_result(id: int):
     result["dot_bracket"]["line2"] = tetrado_request.dot_bracket_line2
     result["dot_bracket"]["sequence"] = tetrado_request.dot_bracket_sequence
     result["g4_limited"] = tetrado_request.g4_limited
-    result["structure_file"] = tetrado_request.structure_body.url
+    result["structure_file"] = tetrado_request.structure_body.url if tetrado_request.structure_body else ''
     if tetrado_request.varna:
         result["varna"] = tetrado_request.varna.url
     else:

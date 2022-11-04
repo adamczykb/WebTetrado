@@ -2,6 +2,8 @@ import { message } from "antd";
 import { getCookie } from "../../components/CSRF";
 import config from "../../config.json";
 import lang from "../../lang.json";
+import fetch from "node-fetch";
+
 type form_values = {
   fileId: string;
   rcsbPdbId: string;
@@ -25,7 +27,7 @@ export function processingRequest(data: form_values, setLoading: any) {
   };
   requestOptions.headers["Access-Control-Allow-Origin"] = "*";
   fetch(config.SERVER_URL + "/api/process/request/", requestOptions)
-    .then((response) => {
+    .then((response: any) => {
       if (response.status == 404) {
         message.error(lang.rcsb_error);
         setLoading(false);
@@ -34,7 +36,7 @@ export function processingRequest(data: form_values, setLoading: any) {
         return response.json();
       }
     })
-    .then((response) => {
+    .then((response: any) => {
       if (response != "") {
         window.open(
           config.FRONTEND_URL + "/result/" + response.orderId,
@@ -43,5 +45,5 @@ export function processingRequest(data: form_values, setLoading: any) {
         setLoading(false);
       }
     })
-    .catch((error) => message.error("Request error: \n" + error.message));
+    .catch((error: any) => message.error("Request error: \n" + error.message));
 }

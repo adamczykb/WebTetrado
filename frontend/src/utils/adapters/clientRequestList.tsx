@@ -19,8 +19,8 @@ export function clientRequestList(
     config.SERVER_URL + "/api/process/client/list/" + userId,
     requestOptions
   )
-    .then((response) => response.json())
-    .then((response) => {
+    .then((response: any) => response.json())
+    .then((response: any) => {
       setResultSet(response);
       setLoading(false);
     }); //.catch((error) => message.error('Processing error'));

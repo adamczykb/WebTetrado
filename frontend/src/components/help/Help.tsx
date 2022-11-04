@@ -1,6 +1,5 @@
 import { Image } from "antd";
 import { Content } from "antd/es/layout/layout";
-import { useMediaQuery } from "react-responsive";
 import { Divider } from "../layout/common/Divider";
 import help_home_set_request from "../../assets/images/help_home_set_request.png";
 import help_request_result from "../../assets/images/help_request_result.png";
@@ -15,13 +14,18 @@ import { WebbDaSilvaClassificationHelpSection } from "./WebbDaSilvaClassificatio
 import { SecondaryStructureDrawingHelpSection } from "./SecondaryStructureDrawingHelpSection";
 import { Suspense } from "react";
 import { RenderLoader } from "../result/RenderLoader";
+import { UseAppContext } from "../../AppContextProvider";
 
 export const Help = () => {
-  let isDesktop = useMediaQuery({ query: "(min-width: 900px)" });
+  const context = UseAppContext();
   let renderContent = () => {
     return (
       <Content
-        style={{ padding: isDesktop ? "0 24px" : "0 0" }}
+        style={{
+          padding: !context.viewSettings.isCompressedViewNeeded
+            ? "0 24px"
+            : "0 0",
+        }}
         id="help-navigation"
       >
         <div id="help-page" className="site-layout-content">

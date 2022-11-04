@@ -3,12 +3,12 @@ import { useParams } from "react-router-dom";
 import { lazy, Suspense, useEffect, useState } from "react";
 import { result_values } from "../../types/RestultSet";
 import { processingResponse } from "../../utils/adapters/processingResponse";
-import { useMediaQuery } from "react-responsive";
 import { Divider } from "../layout/common/Divider";
 import { RenderLoader } from "./RenderLoader";
 import DotBracketDrawer from "./DotBracketDrawer";
 import ResultDescription from "./ResultDescription";
 import WebPushSubscriptionButton from "./WebPushSubscriptionButton";
+import { UseAppContext } from "../../AppContextProvider";
 
 const { Step } = Steps;
 const { TabPane } = Tabs;
@@ -44,8 +44,7 @@ export const Result = () => {
     nucleotides: [],
     remove_date: "",
   };
-
-  let isDesktop = useMediaQuery({ query: "(min-width: 900px)" });
+  const context = UseAppContext();
 
   const { requestNumber } = useParams<{ requestNumber: string }>();
   let [loadingResult, setLoadingResult] = useState(true);
@@ -175,18 +174,27 @@ export const Result = () => {
                           <TetradTable
                             value={v.tetrad}
                             g4Limited={resultSet.g4_limited}
-                            isDesktop={isDesktop}
+                            isDesktop={
+                              context.viewSettings.isCompressedViewNeeded
+                            }
                           />
                         </Suspense>
                         <Divider />
                         <Suspense fallback={<RenderLoader />}>
-                          <LoopTable value={v.loop} isDesktop={isDesktop} />
+                          <LoopTable
+                            value={v.loop}
+                            isDesktop={
+                              context.viewSettings.isCompressedViewNeeded
+                            }
+                          />
                         </Suspense>
                         <Divider />
                         <Suspense fallback={<RenderLoader />}>
                           <ChiAngleTable
                             value={v.chi_angle_value}
-                            isDesktop={isDesktop}
+                            isDesktop={
+                              context.viewSettings.isCompressedViewNeeded
+                            }
                           />
                         </Suspense>
                       </TabPane>
@@ -196,21 +204,21 @@ export const Result = () => {
                   <Suspense fallback={<RenderLoader />}>
                     <TetradPairTable
                       value={z.tetrad_pairs}
-                      isDesktop={isDesktop}
+                      isDesktop={context.viewSettings.isCompressedViewNeeded}
                     />
                   </Suspense>
                   <Divider />
                   <Suspense fallback={<RenderLoader />}>
                     <BasePairTable
                       value={resultSet.base_pairs}
-                      isDesktop={isDesktop}
+                      isDesktop={context.viewSettings.isCompressedViewNeeded}
                     />
                   </Suspense>
                   <Divider />
                   <Suspense fallback={<RenderLoader />}>
                     <NucleotideTable
                       value={resultSet.nucleotides}
-                      isDesktop={isDesktop}
+                      isDesktop={context.viewSettings.isCompressedViewNeeded}
                     />
                   </Suspense>
                 </TabPane>

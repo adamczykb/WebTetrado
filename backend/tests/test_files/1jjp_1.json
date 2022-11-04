@@ -1,0 +1,601 @@
+{
+  "basePairs": [
+    {
+      "canonical": false,
+      "inTetrad": true,
+      "lw": "cHW",
+      "nt1": "A.DG1",
+      "nt2": "B.DG5"
+    },
+    {
+      "canonical": false,
+      "inTetrad": true,
+      "lw": "cWH",
+      "nt1": "A.DG1",
+      "nt2": "B.DG11"
+    },
+    {
+      "canonical": false,
+      "inTetrad": false,
+      "lw": "tSH",
+      "nt1": "A.DG2",
+      "nt2": "A.DA4"
+    },
+    {
+      "canonical": false,
+      "inTetrad": true,
+      "lw": "cWH",
+      "nt1": "A.DG2",
+      "nt2": "A.DG5"
+    },
+    {
+      "canonical": false,
+      "inTetrad": true,
+      "lw": "cHW",
+      "nt1": "A.DG2",
+      "nt2": "A.DG11"
+    },
+    {
+      "canonical": false,
+      "inTetrad": true,
+      "lw": "cWH",
+      "nt1": "A.DG3",
+      "nt2": "A.DG6"
+    },
+    {
+      "canonical": false,
+      "inTetrad": true,
+      "lw": "cHW",
+      "nt1": "A.DG3",
+      "nt2": "A.DG12"
+    },
+    {
+      "canonical": false,
+      "inTetrad": true,
+      "lw": "cWH",
+      "nt1": "A.DG5",
+      "nt2": "B.DG1"
+    },
+    {
+      "canonical": false,
+      "inTetrad": true,
+      "lw": "cWH",
+      "nt1": "A.DG6",
+      "nt2": "A.DG10"
+    },
+    {
+      "canonical": false,
+      "inTetrad": false,
+      "lw": "tWW",
+      "nt1": "A.DT8",
+      "nt2": "A.DA13"
+    },
+    {
+      "canonical": false,
+      "inTetrad": false,
+      "lw": "tWH",
+      "nt1": "A.DT9",
+      "nt2": "A.DA13"
+    },
+    {
+      "canonical": false,
+      "inTetrad": true,
+      "lw": "cWH",
+      "nt1": "A.DG10",
+      "nt2": "A.DG12"
+    },
+    {
+      "canonical": false,
+      "inTetrad": true,
+      "lw": "cHW",
+      "nt1": "A.DG11",
+      "nt2": "B.DG1"
+    },
+    {
+      "canonical": false,
+      "inTetrad": false,
+      "lw": "cSW",
+      "nt1": "A.DA13",
+      "nt2": "A.DT14"
+    },
+    {
+      "canonical": false,
+      "inTetrad": false,
+      "lw": "tSH",
+      "nt1": "B.DG2",
+      "nt2": "B.DA4"
+    },
+    {
+      "canonical": false,
+      "inTetrad": true,
+      "lw": "cWH",
+      "nt1": "B.DG2",
+      "nt2": "B.DG5"
+    },
+    {
+      "canonical": false,
+      "inTetrad": true,
+      "lw": "cHW",
+      "nt1": "B.DG2",
+      "nt2": "B.DG11"
+    },
+    {
+      "canonical": false,
+      "inTetrad": true,
+      "lw": "cWH",
+      "nt1": "B.DG3",
+      "nt2": "B.DG6"
+    },
+    {
+      "canonical": false,
+      "inTetrad": true,
+      "lw": "cHW",
+      "nt1": "B.DG3",
+      "nt2": "B.DG12"
+    },
+    {
+      "canonical": false,
+      "inTetrad": true,
+      "lw": "cWH",
+      "nt1": "B.DG6",
+      "nt2": "B.DG10"
+    },
+    {
+      "canonical": false,
+      "inTetrad": false,
+      "lw": "tWW",
+      "nt1": "B.DT8",
+      "nt2": "B.DA13"
+    },
+    {
+      "canonical": false,
+      "inTetrad": false,
+      "lw": "tWH",
+      "nt1": "B.DT9",
+      "nt2": "B.DA13"
+    },
+    {
+      "canonical": false,
+      "inTetrad": true,
+      "lw": "cWH",
+      "nt1": "B.DG10",
+      "nt2": "B.DG12"
+    },
+    {
+      "canonical": false,
+      "inTetrad": false,
+      "lw": "cSW",
+      "nt1": "B.DA13",
+      "nt2": "B.DT14"
+    }
+  ],
+  "dotBracket": {
+    "line1": "(([.)]...([)..-][{.)(...)]}..",
+    "line2": "([{.((...)]}..-)([.)]...[)]..",
+    "sequence": "GGGAGGTTTGGGAT-GGGAGGTTTGGGAT"
+  },
+  "helices": [
+    {
+      "quadruplexes": [
+        {
+          "gbaClassification": [
+            "VIII"
+          ],
+          "loops": [
+            {
+              "nucleotides": [
+                "A.DA4"
+              ],
+              "type": "propeller-"
+            },
+            {
+              "nucleotides": [
+                "A.DT7",
+                "A.DT8",
+                "A.DT9"
+              ],
+              "type": "lateral-"
+            },
+            {
+              "nucleotides": [
+                "B.DA4"
+              ],
+              "type": "propeller-"
+            },
+            {
+              "nucleotides": [
+                "B.DT7",
+                "B.DT8",
+                "B.DT9"
+              ],
+              "type": "lateral-"
+            }
+          ],
+          "onzm": "Mh*",
+          "tetrads": [
+            {
+              "gbaClassification": "VIIIa",
+              "id": "A.DG3-A.DG6-A.DG10-A.DG12",
+              "ionsChannel": [],
+              "ionsOutside": [],
+              "nt1": "A.DG3",
+              "nt2": "A.DG6",
+              "nt3": "A.DG10",
+              "nt4": "A.DG12",
+              "onz": "O+",
+              "planarityDeviation": 0.10895469241845367
+            },
+            {
+              "gbaClassification": "VIIIa",
+              "id": "A.DG2-A.DG5-B.DG1-A.DG11",
+              "ionsChannel": [],
+              "ionsOutside": [],
+              "nt1": "A.DG2",
+              "nt2": "A.DG5",
+              "nt3": "B.DG1",
+              "nt4": "A.DG11",
+              "onz": "N+",
+              "planarityDeviation": 0.21792802710986875
+            },
+            {
+              "gbaClassification": "VIIIa",
+              "id": "A.DG1-B.DG5-B.DG2-B.DG11",
+              "ionsChannel": [],
+              "ionsOutside": [],
+              "nt1": "A.DG1",
+              "nt2": "B.DG5",
+              "nt3": "B.DG2",
+              "nt4": "B.DG11",
+              "onz": "Z-",
+              "planarityDeviation": 0.22114432504588394
+            },
+            {
+              "gbaClassification": "VIIIa",
+              "id": "B.DG10-B.DG6-B.DG3-B.DG12",
+              "ionsChannel": [],
+              "ionsOutside": [],
+              "nt1": "B.DG10",
+              "nt2": "B.DG6",
+              "nt3": "B.DG3",
+              "nt4": "B.DG12",
+              "onz": "O+",
+              "planarityDeviation": 0.10937835709133735
+            }
+          ],
+          "tracts": [
+            [
+              "A.DG3",
+              "A.DG2",
+              "A.DG1",
+              "B.DG10"
+            ],
+            [
+              "A.DG6",
+              "A.DG5",
+              "B.DG5",
+              "B.DG6"
+            ],
+            [
+              "A.DG10",
+              "B.DG1",
+              "B.DG2",
+              "B.DG3"
+            ],
+            [
+              "A.DG12",
+              "A.DG11",
+              "B.DG11",
+              "B.DG12"
+            ]
+          ]
+        }
+      ],
+      "tetradPairs": [
+        {
+          "direction": "hybrid",
+          "rise": 3.0885780405390437,
+          "tetrad1": "A.DG3-A.DG6-A.DG10-A.DG12",
+          "tetrad2": "A.DG2-A.DG5-B.DG1-A.DG11",
+          "twist": 35.4908314547415
+        },
+        {
+          "direction": "hybrid",
+          "rise": 3.0551232406606776,
+          "tetrad1": "A.DG2-A.DG5-B.DG1-A.DG11",
+          "tetrad2": "A.DG1-B.DG5-B.DG2-B.DG11",
+          "twist": 22.303463746361235
+        },
+        {
+          "direction": "parallel",
+          "rise": 3.087909853869602,
+          "tetrad1": "A.DG1-B.DG5-B.DG2-B.DG11",
+          "tetrad2": "B.DG10-B.DG6-B.DG3-B.DG12",
+          "twist": 34.841270552836974
+        }
+      ]
+    }
+  ],
+  "metals": [],
+  "nucleotides": [
+    {
+      "chain": "A",
+      "chi": 97.75505604993218,
+      "fullName": "A.DG1",
+      "glycosidicBond": "anti",
+      "index": 1,
+      "molecule": "DNA",
+      "number": 1,
+      "shortName": "G"
+    },
+    {
+      "chain": "A",
+      "chi": -152.92634702807905,
+      "fullName": "A.DG2",
+      "glycosidicBond": "anti",
+      "index": 2,
+      "molecule": "DNA",
+      "number": 2,
+      "shortName": "G"
+    },
+    {
+      "chain": "A",
+      "chi": -126.25505654124876,
+      "fullName": "A.DG3",
+      "glycosidicBond": "anti",
+      "index": 3,
+      "molecule": "DNA",
+      "number": 3,
+      "shortName": "G"
+    },
+    {
+      "chain": "A",
+      "chi": -91.3611984504717,
+      "fullName": "A.DA4",
+      "glycosidicBond": "anti",
+      "index": 4,
+      "molecule": "DNA",
+      "number": 4,
+      "shortName": "A"
+    },
+    {
+      "chain": "A",
+      "chi": -158.60346915488108,
+      "fullName": "A.DG5",
+      "glycosidicBond": "anti",
+      "index": 5,
+      "molecule": "DNA",
+      "number": 5,
+      "shortName": "G"
+    },
+    {
+      "chain": "A",
+      "chi": -115.58613420471316,
+      "fullName": "A.DG6",
+      "glycosidicBond": "anti",
+      "index": 6,
+      "molecule": "DNA",
+      "number": 6,
+      "shortName": "G"
+    },
+    {
+      "chain": "A",
+      "chi": -112.93435184770954,
+      "fullName": "A.DT7",
+      "glycosidicBond": "anti",
+      "index": 7,
+      "molecule": "DNA",
+      "number": 7,
+      "shortName": "T"
+    },
+    {
+      "chain": "A",
+      "chi": -177.69361087314144,
+      "fullName": "A.DT8",
+      "glycosidicBond": "anti",
+      "index": 8,
+      "molecule": "DNA",
+      "number": 8,
+      "shortName": "T"
+    },
+    {
+      "chain": "A",
+      "chi": -117.38521289817184,
+      "fullName": "A.DT9",
+      "glycosidicBond": "anti",
+      "index": 9,
+      "molecule": "DNA",
+      "number": 9,
+      "shortName": "T"
+    },
+    {
+      "chain": "A",
+      "chi": 94.11352275862559,
+      "fullName": "A.DG10",
+      "glycosidicBond": "anti",
+      "index": 10,
+      "molecule": "DNA",
+      "number": 10,
+      "shortName": "G"
+    },
+    {
+      "chain": "A",
+      "chi": 169.70093994201804,
+      "fullName": "A.DG11",
+      "glycosidicBond": "anti",
+      "index": 11,
+      "molecule": "DNA",
+      "number": 11,
+      "shortName": "G"
+    },
+    {
+      "chain": "A",
+      "chi": -125.99414062916051,
+      "fullName": "A.DG12",
+      "glycosidicBond": "anti",
+      "index": 12,
+      "molecule": "DNA",
+      "number": 12,
+      "shortName": "G"
+    },
+    {
+      "chain": "A",
+      "chi": -128.23151674199823,
+      "fullName": "A.DA13",
+      "glycosidicBond": "anti",
+      "index": 13,
+      "molecule": "DNA",
+      "number": 13,
+      "shortName": "A"
+    },
+    {
+      "chain": "A",
+      "chi": -122.99652135528751,
+      "fullName": "A.DT14",
+      "glycosidicBond": "anti",
+      "index": 14,
+      "molecule": "DNA",
+      "number": 14,
+      "shortName": "T"
+    },
+    {
+      "chain": "B",
+      "chi": 97.81327228699358,
+      "fullName": "B.DG1",
+      "glycosidicBond": "anti",
+      "index": 15,
+      "molecule": "DNA",
+      "number": 1,
+      "shortName": "G"
+    },
+    {
+      "chain": "B",
+      "chi": -152.806918188631,
+      "fullName": "B.DG2",
+      "glycosidicBond": "anti",
+      "index": 16,
+      "molecule": "DNA",
+      "number": 2,
+      "shortName": "G"
+    },
+    {
+      "chain": "B",
+      "chi": -126.34951899778741,
+      "fullName": "B.DG3",
+      "glycosidicBond": "anti",
+      "index": 17,
+      "molecule": "DNA",
+      "number": 3,
+      "shortName": "G"
+    },
+    {
+      "chain": "B",
+      "chi": -91.41772314042306,
+      "fullName": "B.DA4",
+      "glycosidicBond": "anti",
+      "index": 18,
+      "molecule": "DNA",
+      "number": 4,
+      "shortName": "A"
+    },
+    {
+      "chain": "B",
+      "chi": -158.5694439058279,
+      "fullName": "B.DG5",
+      "glycosidicBond": "anti",
+      "index": 19,
+      "molecule": "DNA",
+      "number": 5,
+      "shortName": "G"
+    },
+    {
+      "chain": "B",
+      "chi": -115.65348329731503,
+      "fullName": "B.DG6",
+      "glycosidicBond": "anti",
+      "index": 20,
+      "molecule": "DNA",
+      "number": 6,
+      "shortName": "G"
+    },
+    {
+      "chain": "B",
+      "chi": -112.9995996782006,
+      "fullName": "B.DT7",
+      "glycosidicBond": "anti",
+      "index": 21,
+      "molecule": "DNA",
+      "number": 7,
+      "shortName": "T"
+    },
+    {
+      "chain": "B",
+      "chi": -177.6873187127432,
+      "fullName": "B.DT8",
+      "glycosidicBond": "anti",
+      "index": 22,
+      "molecule": "DNA",
+      "number": 8,
+      "shortName": "T"
+    },
+    {
+      "chain": "B",
+      "chi": -117.3112444757513,
+      "fullName": "B.DT9",
+      "glycosidicBond": "anti",
+      "index": 23,
+      "molecule": "DNA",
+      "number": 9,
+      "shortName": "T"
+    },
+    {
+      "chain": "B",
+      "chi": 94.18149000266257,
+      "fullName": "B.DG10",
+      "glycosidicBond": "anti",
+      "index": 24,
+      "molecule": "DNA",
+      "number": 10,
+      "shortName": "G"
+    },
+    {
+      "chain": "B",
+      "chi": 169.73696249272052,
+      "fullName": "B.DG11",
+      "glycosidicBond": "anti",
+      "index": 25,
+      "molecule": "DNA",
+      "number": 11,
+      "shortName": "G"
+    },
+    {
+      "chain": "B",
+      "chi": -125.92083205672623,
+      "fullName": "B.DG12",
+      "glycosidicBond": "anti",
+      "index": 26,
+      "molecule": "DNA",
+      "number": 12,
+      "shortName": "G"
+    },
+    {
+      "chain": "B",
+      "chi": -128.26585059338717,
+      "fullName": "B.DA13",
+      "glycosidicBond": "anti",
+      "index": 27,
+      "molecule": "DNA",
+      "number": 13,
+      "shortName": "A"
+    },
+    {
+      "chain": "B",
+      "chi": -123.07804115902881,
+      "fullName": "B.DT14",
+      "glycosidicBond": "anti",
+      "index": 28,
+      "molecule": "DNA",
+      "number": 14,
+      "shortName": "T"
+    }
+  ]
+}

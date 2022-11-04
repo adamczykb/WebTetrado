@@ -97,3 +97,15 @@ export type visualsation_switch_result = {
   varna_can: boolean;
   r_chie_canonical: boolean;
 };
+export type request_form_values = {
+  fileId: string;
+  rcsbPdbId: string;
+  settings: {
+    complete2d: boolean;
+    reorder: boolean;
+    stackingMatch: number;
+    g4Limited: boolean;
+    strict: boolean;
+    model: number;
+  };
+};

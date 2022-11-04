@@ -10,19 +10,19 @@ import {
   Switch,
   Tooltip,
 } from "antd";
-import Dragger from "antd/lib/upload/Dragger";
-import { UploadFile, UploadProps } from "antd/lib/upload/interface";
+import { UploadFile } from "antd/lib/upload/interface";
 import { useEffect, useState } from "react";
-import { useMediaQuery } from "react-responsive";
-import config from "../../config.json";
+import { UseAppContext } from "../../AppContextProvider";
 import lang from "../../lang.json";
+import { request_form_values } from "../../types/RestultSet";
 import { checkRcsbMaxModel } from "../../utils/adapters/checkRcsbMaxModel";
 import { processingRequest } from "../../utils/adapters/processingRequest";
+import UploadStructureFile from "./UploadStructureFile";
 const { Panel } = Collapse;
 
 export default function RequestForm() {
-  let compressedView = useMediaQuery({ query: "(max-width: 900px)" });
-  let form_values = {
+  const context = UseAppContext();
+  let form_values: request_form_values = {
     fileId: "",
     rcsbPdbId: "",
     settings: {
@@ -42,73 +42,6 @@ export default function RequestForm() {
   const [fileListState, setFileList] = useState<UploadFile[] | undefined>(
     undefined
   );
-
-  let props: UploadProps = {
-    name: "structure",
-    multiple: false,
-    action: config.SERVER_URL + "/api/upload/structure/",
-    maxCount: 1,
-    beforeUpload: (file: File) => {
-      let fileName = file.name.split(".");
-      let fileNameLength = file.name.split(".").length;
-      setFileList(undefined);
-      setFormValues({
-        ...formValues,
-        fileId: "",
-        rcsbPdbId: "",
-        settings: { ...formValues.settings, model: 1 },
-      });
-      setMaxModel(0);
-      const isCifOrPdb =
-        file.type === "chemical/x-cif" ||
-        file.type === "chemical/x-pdb" ||
-        fileName[fileNameLength - 1].toLowerCase() === "cif" ||
-        fileName[fileNameLength - 1].toLowerCase() === "pdb";
-      if (!isCifOrPdb) {
-        message.error(lang.file_not_pdb_cif + `${file.name}`);
-        setFormValues({ ...formValues, fileId: "" });
-        setFileList([] as UploadFile<File>[]);
-        return false;
-      } else {
-        message.info(lang.uploading_file + `${file.name}`);
-      }
-      return isCifOrPdb;
-    },
-    onRemove(info: any) {
-      setFormValues({ ...formValues, fileId: "" });
-      setFileList([] as UploadFile<File>[]);
-      setMaxModel(0);
-    },
-    onChange(event) {
-      const { status } = event.file;
-      if (status === "done") {
-        if (event.file.response.error.length > 0) {
-          message.error(lang.file_not_pdb_cif + `${event.file.name}`);
-          setFileList([] as UploadFile<File>[]);
-          setFormValues({ ...formValues, fileId: "" });
-          return;
-        }
-        message.success(lang.file_upload_success + `${event.file.name}`);
-        setFormValues({
-          ...formValues,
-          rcsbPdbId: "",
-          fileId: event.file.response.id,
-          settings: { ...formValues.settings, model: 1 },
-        });
-
-        setMaxModel(event.file.response.models);
-        setFileList([event.file]);
-      } else if (status === "error") {
-        message.error(lang.error_uploading + `${event.file.name}`);
-        setFormValues({ ...formValues, fileId: "" });
-        setFileList(undefined);
-      }
-    },
-    onDrop(e: any) {
-      setFileList(undefined);
-      setFormValues({ ...formValues, fileId: "" });
-    },
-  };
   const submit = () => {
     if (
       (!fileListState || fileListState.length == 0) &&
@@ -160,7 +93,9 @@ export default function RequestForm() {
       </h2>
       <div style={{ marginBottom: "40px", textAlign: "center" }}>
         <Button
-          size={compressedView ? "large" : "middle"}
+          size={
+            !context.viewSettings.isCompressedViewNeeded ? "large" : "middle"
+          }
           onClick={() => {
             setFileList([]);
             setFormValues({
@@ -173,7 +108,9 @@ export default function RequestForm() {
           2HY9
         </Button>
         <Button
-          size={compressedView ? "large" : "middle"}
+          size={
+            !context.viewSettings.isCompressedViewNeeded ? "large" : "middle"
+          }
           onClick={() => {
             setFileList([]);
             setFormValues({
@@ -186,7 +123,9 @@ export default function RequestForm() {
           6RS3
         </Button>
         <Button
-          size={compressedView ? "large" : "middle"}
+          size={
+            !context.viewSettings.isCompressedViewNeeded ? "large" : "middle"
+          }
           onClick={() => {
             setFileList([]);
             setFormValues({
@@ -199,7 +138,9 @@ export default function RequestForm() {
           1JJP
         </Button>
         <Button
-          size={compressedView ? "large" : "middle"}
+          size={
+            !context.viewSettings.isCompressedViewNeeded ? "large" : "middle"
+          }
           onClick={() => {
             setFileList([]);
             setFormValues({
@@ -212,7 +153,9 @@ export default function RequestForm() {
           6FC9
         </Button>
         <Button
-          size={compressedView ? "large" : "middle"}
+          size={
+            !context.viewSettings.isCompressedViewNeeded ? "large" : "middle"
+          }
           onClick={() => {
             setFileList([
               { name: "q-ugg-5k-salt_4…00ns_frame1065.pdb", uid: "" },
@@ -230,26 +173,21 @@ export default function RequestForm() {
         </Button>{" "}
       </div>
       <Form labelCol={{ span: 16 }} wrapperCol={{ span: 32 }}>
-        {!compressedView ? (
+        {!!context.viewSettings.isCompressedViewNeeded ? (
           <div className={"horizontal-center"} style={{ height: 250 }}>
             <div>
               <div style={{ width: "400px", height: "200px" }}>
                 <h4 style={{ margin: "0", marginBottom: "5px" }}>
                   From local drive:
                 </h4>
-                <Dragger
-                  fileList={fileListState ? fileListState : undefined}
-                  {...props}
-                  style={{ padding: "20px" }}
-                >
-                  <p className="ant-upload-drag-icon">
-                    <InboxOutlined />
-                  </p>
-                  <h3 className="ant-upload-text">
-                    Click or drag file to this area to upload
-                  </h3>
-                  <h3 className="ant-upload-hint">*.cif, *.pdb</h3>
-                </Dragger>
+                <UploadStructureFile
+                  maxModel={maxModel}
+                  setMaxModel={setMaxModel}
+                  formValues={formValues}
+                  setFormValues={setFormValues}
+                  fileListState={fileListState}
+                  setFileList={setFileList}
+                />
               </div>
             </div>
             <div className="split-layout__divider" style={{ width: "90px" }}>
@@ -294,20 +232,14 @@ export default function RequestForm() {
             <h4 style={{ margin: "0", marginBottom: "5px" }}>
               From local drive:
             </h4>
-            <Dragger
-              fileList={fileListState ? fileListState : undefined}
-              {...props}
-              style={{ padding: "20px" }}
-            >
-              <p className="ant-upload-drag-icon">
-                <InboxOutlined />
-              </p>
-              <h3 className="ant-upload-text">
-                Click or drag file to this area to upload
-              </h3>
-              <h3 className="ant-upload-hint">*.cif, *.pdb</h3>
-            </Dragger>
-
+            <UploadStructureFile
+              maxModel={maxModel}
+              setMaxModel={setMaxModel}
+              formValues={formValues}
+              setFormValues={setFormValues}
+              fileListState={fileListState}
+              setFileList={setFileList}
+            />
             <div className="split-layout__divider__row">
               <div className="split-layout__rule__row"></div>
               <div className="split-layout__label__row">or</div>
@@ -363,7 +295,11 @@ export default function RequestForm() {
                     </Tooltip>
                   </div>
                   <Switch
-                    size={compressedView ? "default" : "small"}
+                    size={
+                      !context.viewSettings.isCompressedViewNeeded
+                        ? "default"
+                        : "small"
+                    }
                     checkedChildren="Yes"
                     unCheckedChildren="No"
                     defaultChecked
@@ -383,7 +319,11 @@ export default function RequestForm() {
                 <div className="horizontal-item-center">
                   <div className="item-label">G4-limited search: </div>
                   <Switch
-                    size={compressedView ? "default" : "small"}
+                    size={
+                      !context.viewSettings.isCompressedViewNeeded
+                        ? "default"
+                        : "small"
+                    }
                     checkedChildren="Yes"
                     unCheckedChildren="No"
                     defaultChecked
@@ -410,7 +350,11 @@ export default function RequestForm() {
                     </Tooltip>
                   </div>
                   <Switch
-                    size={compressedView ? "default" : "small"}
+                    size={
+                      !context.viewSettings.isCompressedViewNeeded
+                        ? "default"
+                        : "small"
+                    }
                     checkedChildren="Yes"
                     unCheckedChildren="No"
                     onChange={() =>
@@ -429,7 +373,11 @@ export default function RequestForm() {
                 <div className="horizontal-item-center">
                   <div
                     className="item-label"
-                    style={compressedView ? { padding: "5px 0" } : {}}
+                    style={
+                      !context.viewSettings.isCompressedViewNeeded
+                        ? { padding: "5px 0" }
+                        : {}
+                    }
                   >
                     <Tooltip
                       title="A perfect tetrad stacking covers 4 nucleotides; this
@@ -442,7 +390,11 @@ export default function RequestForm() {
                   </div>
                   <Input
                     style={{ width: "calc(50% - 5px)", maxWidth: "100px" }}
-                    size={compressedView ? "middle" : "small"}
+                    size={
+                      !context.viewSettings.isCompressedViewNeeded
+                        ? "middle"
+                        : "small"
+                    }
                     type={"number"}
                     min="0"
                     max="4"
@@ -478,7 +430,11 @@ export default function RequestForm() {
                     <div className="horizontal-item-center">
                       <div
                         className="item-label"
-                        style={compressedView ? { padding: "5px 0" } : {}}
+                        style={
+                          !context.viewSettings.isCompressedViewNeeded
+                            ? { padding: "5px 0" }
+                            : {}
+                        }
                       >
                         Model number:
                       </div>
@@ -504,11 +460,19 @@ export default function RequestForm() {
                     <div className="horizontal-item-center">
                       <div
                         className="item-label"
-                        style={compressedView ? { padding: "5px 0" } : {}}
+                        style={
+                          !context.viewSettings.isCompressedViewNeeded
+                            ? { padding: "5px 0" }
+                            : {}
+                        }
                       ></div>
                       <Input
                         style={{ width: "calc(50% - 5px)", maxWidth: "100px" }}
-                        size={compressedView ? "middle" : "small"}
+                        size={
+                          !context.viewSettings.isCompressedViewNeeded
+                            ? "middle"
+                            : "small"
+                        }
                         type={"number"}
                         min="1"
                         max={maxModel}

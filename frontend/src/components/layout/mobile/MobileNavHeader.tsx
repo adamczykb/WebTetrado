@@ -4,11 +4,11 @@ import { Button } from "antd";
 import { Menu } from "../common/Menu";
 
 export const MobileNavHeader = () => {
-  const [navExpanded, setNavExpanded] = useState(false);
+  const [isMenuExpanded, setMenuExpanded] = useState<Boolean>(false);
 
   return (
     <>
-      {Menu(navExpanded, setNavExpanded)}
+      <Menu isMenuExpanded={isMenuExpanded} setMenuExpanded={setMenuExpanded} />
       <div id="webtetrado-banner-mobile">
         <div style={{ width: "67.15px" }}></div>
         <a href={"/"}>
@@ -17,7 +17,7 @@ export const MobileNavHeader = () => {
         <Button
           type="text"
           onClick={() => {
-            setNavExpanded(!navExpanded);
+            setMenuExpanded(!isMenuExpanded);
           }}
           style={{ height: "auto" }}
         >

@@ -10,7 +10,7 @@ export const DesktopLayout = () => {
   const [isMenuExpanded, setMenuExpanded] = useState<Boolean>(false);
   return (
     <>
-      {Menu(isMenuExpanded, setMenuExpanded)}
+      <Menu isMenuExpanded={isMenuExpanded} setMenuExpanded={setMenuExpanded} />
       <Layout>
         <Content className="site-layout">
           {ContentList(setMenuExpanded)}

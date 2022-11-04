@@ -39,7 +39,7 @@ class GetterException(Exception):
         super().__init__(self.message)
 
     def __str__(self):
-        return f'{self.operation} -> {self.message}'
+        return f"{self.operation} -> {self.message}"
 
 
 class LwParser(Enum):
@@ -84,7 +84,7 @@ def add_base_pairs(base_pairs, tetrado_request):
             ).save()
             tetrado_request.error = "Error during adding base pairs"
             tetrado_request.save()
-            raise GetterException('Base pair parser',traceback.format_exc())
+            raise GetterException("Base pair parser", traceback.format_exc())
 
 
 def add_nucleotides(nucleotides, tetrado_request):
@@ -112,7 +112,7 @@ def add_nucleotides(nucleotides, tetrado_request):
             ).save()
             tetrado_request.error = "Error during adding nucleodities"
             tetrado_request.save()
-            raise GetterException('Nucleotides parser',traceback.format_exc())
+            raise GetterException("Nucleotides parser", traceback.format_exc())
 
 
 def add_tetrads(quadruplexes, quadruplex_entity, file_data, user_request, cif=False):
@@ -142,19 +142,19 @@ def add_tetrads(quadruplexes, quadruplex_entity, file_data, user_request, cif=Fa
                 query_id=user_request.id, name=tetrad["nt4"]
             )
             quadruplex_entity_tetrad.save()
-
-            get_cetrain_tetrad_file(
-                file_data,
-                [
-                    quadruplex_entity_tetrad.nt1.name,
-                    quadruplex_entity_tetrad.nt2.name,
-                    quadruplex_entity_tetrad.nt3.name,
-                    quadruplex_entity_tetrad.nt4.name,
-                ],
-                quadruplex_entity_tetrad.tetrad_file,
-                user_request.id,
-                cif,
-            )
+            if file_data is not None:
+                get_cetrain_tetrad_file(
+                    file_data,
+                    [
+                        quadruplex_entity_tetrad.nt1.name,
+                        quadruplex_entity_tetrad.nt2.name,
+                        quadruplex_entity_tetrad.nt3.name,
+                        quadruplex_entity_tetrad.nt4.name,
+                    ],
+                    quadruplex_entity_tetrad.tetrad_file,
+                    user_request.id,
+                    cif,
+                )
             quadruplex_entity_tetrad.save()
             quadruplex_entity.tetrad.add(quadruplex_entity_tetrad)
         except Exception:
@@ -167,7 +167,7 @@ def add_tetrads(quadruplexes, quadruplex_entity, file_data, user_request, cif=Fa
             user_request.error = "Error during adding tetrads"
 
             user_request.save()
-            raise GetterException("Tetrad parser",traceback.format_exc())
+            raise GetterException("Tetrad parser", traceback.format_exc())
 
 
 def add_loops(loops, quadruplex_entity, user_request):
@@ -244,9 +244,10 @@ def add_quadruplexes(quadruplexes, file_data, helice_entity, user_request, cif=F
                 if "loopClassification" in quadruplex
                 else "-"
             )
-            quadruplex_entity.molecule = file_data.header["head"].upper()
-
-
+            if file_data is not None:
+                quadruplex_entity.molecule = file_data.header["head"].upper()
+            else:
+                quadruplex_entity.molecule=""
             add_loops(quadruplex["loops"], quadruplex_entity, user_request)
             add_tetrads(
                 quadruplex["tetrads"], quadruplex_entity, file_data, user_request, cif,
@@ -302,6 +303,152 @@ def file_downloader(request_key: str, url: str, file_destination):
             break
 
 
+def parse_result_from_backend(user_request, request_key: str):
+    user_request.elTetradoKey = request_key
+    user_request.status = 3
+
+    if user_request.file_extension == "cif":
+        parser = MMCIFParser(QUIET=True)
+        original_user_structure = parser.get_structure(
+            "str", user_request.structure_body_original.path
+        )
+    elif user_request.file_extension == "pdb":
+        parser = PDBParser(PERMISSIVE=True, QUIET=True)
+        original_user_structure = parser.get_structure(
+            "str", user_request.structure_body_original.path
+        )
+    elif user_request.file_extension == "test":
+        original_user_structure = None
+    else:
+        raise Exception
+
+    user_request.name = (
+        original_user_structure.header["name"].upper()
+        if original_user_structure is not None
+        and "name" in original_user_structure.header
+        else ""
+    )
+    user_request.structure_method = (
+        original_user_structure.header["structure_method"].upper()
+        if original_user_structure is not None
+        and "structure_method" in original_user_structure.header
+        and original_user_structure.header["structure_method"] != "unknown"
+        else ""
+    )
+    user_request.idcode = (
+        original_user_structure.header["idcode"].upper()
+        if original_user_structure is not None
+        and "idcode" in original_user_structure.header
+        else ""
+    )
+
+    user_request.save()
+    while True:
+        r = requests.get(WEBTETRADO_BACKEND_URL + "/v1/result/" + request_key)
+        if r.status_code == 200:
+            result = json.loads(r.content)
+
+            add_nucleotides(result["nucleotides"], user_request)
+
+            for helice in result["helices"]:
+                helice_entity = Helice()
+                helice_entity.save()
+                add_quadruplexes(
+                    helice["quadruplexes"],
+                    original_user_structure,
+                    helice_entity,
+                    user_request,
+                    user_request.file_extension == "cif",
+                )
+                add_tetrad_pairs(helice["tetradPairs"], helice_entity, user_request)
+                user_request.helice.add(helice_entity)
+            add_base_pairs(result["basePairs"], user_request)
+            user_request.dot_bracket_line1 = result["dotBracket"]["line1"]
+            user_request.dot_bracket_line2 = result["dotBracket"]["line2"]
+            user_request.dot_bracket_sequence = result["dotBracket"]["sequence"]
+            canonical = False
+            non_canonical = False
+
+            for base_pair in user_request.base_pair.all():
+                if not base_pair.inTetrad and base_pair.canonical:
+                    canonical = True
+                if not base_pair.inTetrad and not base_pair.canonical:
+                    non_canonical = True
+                if canonical and non_canonical:
+                    break
+
+            file_downloader(
+                request_key,
+                "/v1/varna/" + request_key + "?canonical=false&non-canonical=false",
+                user_request.varna,
+            )
+            if canonical:
+                file_downloader(
+                    request_key,
+                    "/v1/varna/" + request_key + "?canonical=true&non-canonical=false",
+                    user_request.varna_can,
+                )
+            if non_canonical:
+                file_downloader(
+                    request_key,
+                    "/v1/varna/" + request_key + "?canonical=false&non-canonical=true",
+                    user_request.varna_non_can,
+                )
+            if canonical and non_canonical:
+                file_downloader(
+                    request_key,
+                    "/v1/varna/" + request_key + "?canonical=true&non-canonical=true",
+                    user_request.varna_can_non_can,
+                )
+
+            file_downloader(
+                request_key,
+                "/v1/r-chie/" + request_key + "?canonical=false",
+                user_request.r_chie,
+            )
+            if canonical:
+                file_downloader(
+                    request_key,
+                    "/v1/r-chie/" + request_key + "?canonical=true",
+                    user_request.r_chie_canonical,
+                )
+            file_downloader(
+                request_key,
+                "/v1/draw-tetrado/" + request_key,
+                user_request.draw_tetrado,
+            )
+
+            user_request.status = 4
+            user_request.save()
+
+            user_request.cached_result = compose_json_result(user_request.id)
+            user_request.save()
+            payload = {
+                "image": "https://webtetrado.cs.put.poznan.pl/static/logo.svg",
+                "tag": "Complete",
+                "url": "https://webtetrado.cs.put.poznan.pl/result/"
+                + str(user_request.hash_id),
+                "title": "WebTetrado notification",
+                "text": "Processing of "
+                + str(user_request.hash_id)
+                + " has been completed",
+            }
+            for subscriber in TetradoRequest.objects.get(
+                id=user_request.id
+            ).push_notification.all():
+                send_notification_to_subscriber(
+                    subscriber, json.dumps(payload), ttl=3600
+                )
+            break
+        if r.status_code == 500:
+            user_request.status = 5
+            user_request.error = "ElTetrado processor error"
+            user_request.save()
+            break
+        time.sleep(1)
+    return True
+
+
 def add_task_to_queue(user_request):
     base64file = base64.b64encode((open(user_request.structure_body.path, "rb").read()))
     r = requests.post(
@@ -329,154 +476,7 @@ def add_task_to_queue(user_request):
 
         if r.status_code == 200:
             request_key = json.loads(r.content)["structureId"]
-            user_request.elTetradoKey = request_key
-            user_request.status = 3
-
-            if user_request.file_extension == "cif":
-                parser = MMCIFParser(QUIET=True)
-                # data = parser.get_structure("str", user_request.structure_body.path)
-                original_user_structure = parser.get_structure(
-                    "str", user_request.structure_body_original.path
-                )
-            elif user_request.file_extension == "pdb":
-                parser = PDBParser(PERMISSIVE=True, QUIET=True)
-                # data = parser.get_structure("str", user_request.structure_body.path)
-                original_user_structure = parser.get_structure(
-                    "str", user_request.structure_body_original.path
-                )
-            else:
-                raise Exception
-
-            user_request.name = (
-                original_user_structure.header["name"].upper()
-                if "name" in original_user_structure.header
-                else ""
-            )
-            user_request.structure_method = (
-                original_user_structure.header["structure_method"].upper()
-                if "structure_method" in original_user_structure.header
-                and original_user_structure.header["structure_method"] != "unknown"
-                else ""
-            )
-            user_request.idcode = (
-                original_user_structure.header["idcode"].upper()
-                if "idcode" in original_user_structure.header
-                else ""
-            )
-
-            user_request.save()
-            while True:
-                r = requests.get(WEBTETRADO_BACKEND_URL + "/v1/result/" + request_key)
-                if r.status_code == 200:
-                    result = json.loads(r.content)
-
-                    add_nucleotides(result["nucleotides"], user_request)
-
-                    for helice in result["helices"]:
-                        helice_entity = Helice()
-                        helice_entity.save()
-                        add_quadruplexes(
-                            helice["quadruplexes"],
-                            original_user_structure,
-                            helice_entity,
-                            user_request,
-                            user_request.file_extension == "cif",
-                        )
-                        add_tetrad_pairs(
-                            helice["tetradPairs"], helice_entity, user_request
-                        )
-                        user_request.helice.add(helice_entity)
-                    add_base_pairs(result["basePairs"], user_request)
-                    user_request.dot_bracket_line1 = result["dotBracket"]["line1"]
-                    user_request.dot_bracket_line2 = result["dotBracket"]["line2"]
-                    user_request.dot_bracket_sequence = result["dotBracket"]["sequence"]
-                    canonical = False
-                    non_canonical = False
-
-                    for base_pair in user_request.base_pair.all():
-                        if not base_pair.inTetrad and base_pair.canonical:
-                            canonical = True
-                        if not base_pair.inTetrad and not base_pair.canonical:
-                            non_canonical = True
-                        if canonical and non_canonical:
-                            break
-
-                    file_downloader(
-                        request_key,
-                        "/v1/varna/"
-                        + request_key
-                        + "?canonical=false&non-canonical=false",
-                        user_request.varna,
-                    )
-                    if canonical:
-                        file_downloader(
-                            request_key,
-                            "/v1/varna/"
-                            + request_key
-                            + "?canonical=true&non-canonical=false",
-                            user_request.varna_can,
-                        )
-                    if non_canonical:
-                        file_downloader(
-                            request_key,
-                            "/v1/varna/"
-                            + request_key
-                            + "?canonical=false&non-canonical=true",
-                            user_request.varna_non_can,
-                        )
-                    if canonical and non_canonical:
-                        file_downloader(
-                            request_key,
-                            "/v1/varna/"
-                            + request_key
-                            + "?canonical=true&non-canonical=true",
-                            user_request.varna_can_non_can,
-                        )
-
-                    file_downloader(
-                        request_key,
-                        "/v1/r-chie/" + request_key + "?canonical=false",
-                        user_request.r_chie,
-                    )
-                    if canonical:
-                        file_downloader(
-                            request_key,
-                            "/v1/r-chie/" + request_key + "?canonical=true",
-                            user_request.r_chie_canonical,
-                        )
-                    file_downloader(
-                        request_key,
-                        "/v1/draw-tetrado/" + request_key,
-                        user_request.draw_tetrado,
-                    )
-
-                    user_request.status = 4
-                    user_request.save()
-
-                    user_request.cached_result = compose_json_result(user_request.id)
-                    user_request.save()
-                    payload = {
-                        "image": "https://webtetrado.cs.put.poznan.pl/static/logo.svg",
-                        "tag": "Complete",
-                        "url": "https://webtetrado.cs.put.poznan.pl/result/"
-                        + str(user_request.hash_id),
-                        "title": "WebTetrado notification",
-                        "text": "Processing of "
-                        + str(user_request.hash_id)
-                        + " has been completed",
-                    }
-                    for subscriber in TetradoRequest.objects.get(
-                        id=user_request.id
-                    ).push_notification.all():
-                        send_notification_to_subscriber(subscriber, json.dumps(payload), ttl=3600)
-                    break
-                if r.status_code == 500:
-                    user_request.status = 5
-                    user_request.error = "ElTetrado processor error"
-                    user_request.save()
-                    break
-                time.sleep(1)
-            return True
+            return parse_result_from_backend(user_request, request_key)
         else:
             return "Failed to get eltetrado id"
     except Exception:

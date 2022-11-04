@@ -25,7 +25,7 @@ environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env("SECRET_KEY", default=environ.NoValue())
-DEBUG = False
+DEBUG = env("DEBUG", default=True)
 ALLOWED_HOSTS = ['webtetrado.cs.put.poznan.pl','127.0.0.1']
 CSRF_COOKIE_NAME = "csrftoken"
 
@@ -214,13 +214,12 @@ REACT_APP_DIR = os.path.join(BASE_DIR, 'frontend')
 if DEBUG:
     STATIC_ROOT = os.path.join(BASE_DIR, 'static')
     STATICFILES_DIRS = [
-        os.path.join(REACT_APP_DIR, 'build', 'static'),
-        os.path.join(REACT_APP_DIR, 'build'),
+        os.path.join(REACT_APP_DIR, 'dist'),
     ]
 else:
     STATIC_ROOT = os.path.join(BASE_DIR, 'static')
     STATICFILES_DIRS = [
-        os.path.join(REACT_APP_DIR, 'build', 'static'),
+        os.path.join(REACT_APP_DIR, 'dist'),
     ]
 
 FRONTEND_LOCATION = os.path.join(STATIC_ROOT, "index.html")

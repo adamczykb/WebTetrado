@@ -1,5 +1,6 @@
 import { message } from "antd";
 import lang from "../../lang.json";
+import fetch from "node-fetch";
 export function checkRcsbMaxModel(
   setMaxModel: any,
   setPDBError: any,
@@ -14,8 +15,8 @@ export function checkRcsbMaxModel(
   };
 
   fetch("https://data.rcsb.org/rest/v1/core/entry/" + pdbId, requestOptions)
-    .then((response) => response.json())
-    .then((response) => {
+    .then((response: any) => response.json())
+    .then((response: any) => {
       if (response.rcsb_entry_container_identifiers) {
         setMaxModel(response.rcsb_entry_container_identifiers.model_ids.length);
       } else {

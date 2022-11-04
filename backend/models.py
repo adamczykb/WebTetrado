@@ -159,7 +159,7 @@ class TetradoRequest(models.Model):
 
     source = models.IntegerField(choices=Sources.choices)
     status = models.IntegerField(choices=Statuses.choices)
-    structure_body = models.FileField(upload_to="files/structures/")
+    structure_body = models.FileField(upload_to="files/structures/", blank=True)
     structure_body_original = models.FileField(upload_to="files/structures_original/", blank=True)
     file_extension = models.CharField(max_length=20)
 

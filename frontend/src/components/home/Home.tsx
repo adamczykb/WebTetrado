@@ -1,17 +1,23 @@
 import { Divider } from "../layout/common/Divider";
 import { Results } from "./Results";
-import { useMediaQuery } from "react-responsive";
-import { Spin } from "antd";
 import { lazy, Suspense } from "react";
 import { RenderLoader } from "../result/RenderLoader";
+import { UseAppContext } from "../../AppContextProvider";
 
 const RequestForm = lazy(() => import("./RequestForm"));
 
 export const Home = () => {
-  let compressedView = useMediaQuery({ query: "(max-width: 900px)" });
+  const context = UseAppContext();
   return (
     <>
-      <h3 id={"introduction"} style={compressedView ? {} : { padding: "40px" }}>
+      <h3
+        id={"introduction"}
+        style={
+          !context.viewSettings.isCompressedViewNeeded
+            ? {}
+            : { padding: "40px" }
+        }
+      >
         Online implemetation of{" "}
         <i>
           <a href="https://github.com/tzok/eltetrado/" rel="noreferrer">

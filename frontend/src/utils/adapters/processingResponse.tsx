@@ -1,6 +1,7 @@
 import { message } from "antd";
 import { getCookie } from "../../components/CSRF";
 import config from "../../config.json";
+import fetch from "node-fetch";
 
 export function processingResponse(
   orderId: any,
@@ -32,13 +33,13 @@ export function processingResponse(
         config.SERVER_URL + "/api/process/result/" + orderId,
         requestOptions
       )
-        .then((response) => response.json())
-        .then((response) => {
+        .then((response: any) => response.json())
+        .then((response: any) => {
           setResultSet(response);
           setLoading(false);
           socket.close();
         })
-        .catch((error) => {
+        .catch((error: any) => {
           message.error("Processing error");
           clearInterval(timer);
           socket.close();
