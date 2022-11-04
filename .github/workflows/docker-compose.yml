@@ -1,0 +1,19 @@
+name: Docker Compose CI
+
+on:
+  push:
+    branches: [ "main", "develop" ]
+  pull_request:
+    branches: [ "main", "develop" ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - uses: isbang/compose-action@v1.4.0
+      with:
+        compose-file: "./docker-compose.test.yml"
