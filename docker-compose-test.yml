@@ -5,35 +5,22 @@ services:
     depends_on:
       - db
       - redis
-      - webtetrado_backend
     restart: always
     volumes:
-      - ./static:/opt/webtetrado/static
-      - ./media:/opt/webtetrado/media
-      - ./logs:/logs
+      - .:/opt/webtetrado
     entrypoint: bash ./docker-entrypoint.sh
     networks:
       - web_network
       - db_network
       - redis_network
-      - webtetrado_backend_network
     environment:
-      - DEBUG = False
+      - DEBUG=False
+      - POSTGRES_USER=test
+      - POSTGRES_PASSWORD=test
+      - POSTGRES_DB=test
     links:
       - redis
-      - webtetrado_backend
       
-  webtetrado_backend:
-    image: webtetrado
-    environment:
-      - WORKDIR=/mnt/workdir
-      - QBASE_JAR=/qbase-backend.jar
-      - LOGLEVEL=INFO
-    volumes:
-      - workdir:/mnt/workdir
-    networks:
-      - webtetrado_backend_network
-
   nginx:
       build:
         context: ./nginx
@@ -82,6 +69,4 @@ networks:
   db_network:
     driver: bridge
   redis_network:
-    driver: bridge
-  webtetrado_backend_network:
     driver: bridge
