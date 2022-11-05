@@ -8,10 +8,15 @@ const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const isProduction = process.env.NODE_ENV == "production";
 
 const config = {
-  entry: ["./src/index.tsx", "./src/service-worker.ts"],
+	entry: {
+		'app':"./src/index.tsx",
+		'service-worker':"./src/service-worker.ts"
+	},
   output: {
     path: path.resolve(__dirname, "dist"),
     //publicPath: "/static/",
+	  filename: "[name].js",
+
   },
   devServer: {
     static: {
@@ -56,7 +61,7 @@ const config = {
       },
     }),
     new MiniCssExtractPlugin(),
-
+  
     // Add your plugins here
     // Learn more about plugins from https://webpack.js.org/configuration/plugins/
   ],

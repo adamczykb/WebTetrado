@@ -28,7 +28,7 @@ SECRET_KEY = env("SECRET_KEY", default=environ.NoValue())
 DEBUG = env("DEBUG", default=True)
 ALLOWED_HOSTS = ['webtetrado.cs.put.poznan.pl','127.0.0.1']
 CSRF_COOKIE_NAME = "csrftoken"
-
+CSRF_TRUSTED_ORIGINS = ['https://webtetrado.cs.put.poznan.pl']
 PROTECTED_MEDIA_FOLDERS=['uploads']
 
 # Application definition

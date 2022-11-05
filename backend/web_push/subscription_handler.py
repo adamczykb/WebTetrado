@@ -10,7 +10,6 @@ def link_notification_to_task_action(
         request = TetradoRequest.objects.get(hash_id=post_data["orderId"])
         subscption = PushInformation.objects.get(hash_id=post_data["subscriptionId"])
         request.push_notification.add(subscption)
-        request.save()
         return True
     return False
 
