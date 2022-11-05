@@ -1,11 +1,12 @@
 import { Button, Table, Tooltip, Image } from "antd";
 import { tetrad } from "../../types/RestultSet";
 import { DownloadOutlined } from "@ant-design/icons";
-export const TetradTable = (
-  data: tetrad[],
-  g4Limited: boolean,
-  isDesktop: Boolean
-) => {
+interface TetradTableArguments {
+  value: tetrad[];
+  g4Limited: boolean;
+  isDesktop: boolean;
+}
+export default function TetradTable(props: TetradTableArguments) {
   const columns_tetrad = [
     {
       title: "Number",
@@ -35,7 +36,10 @@ export const TetradTable = (
         <>
           <Tooltip
             title={
-              <Image src={require("../../assets/da-silva/" + text + ".svg")} />
+              <Image
+                alt={"da-silva" + text}
+                src={require("../../assets/da-silva/" + text + ".svg")}
+              />
             }
             color={"white"}
           >
@@ -74,13 +78,15 @@ export const TetradTable = (
       </h2>
       <Table
         style={{ textAlign: "center" }}
-        dataSource={data}
+        dataSource={props.value}
         columns={columns_tetrad}
-        scroll={isDesktop ? { x: "auto" } : { x: "100%" }}
+        scroll={props.isDesktop ? { x: "auto" } : { x: "100%" }}
         rowClassName={(_r, i) =>
-          data[i].sequence == "GGGG" && g4Limited ? "colored-row" : ""
+          props.value[i].sequence == "GGGG" && props.g4Limited
+            ? "colored-row"
+            : ""
         }
       />
     </>
   );
-};
+}

@@ -41,6 +41,7 @@ export const WebbDaSilvaClassificationHelpSection = () => {
                     </h3>
                     <div className="da-silva-chi-column">
                       <Image
+                        alt={(v + 1).toString() + v1}
                         src={require("../../assets/da-silva/" +
                           (v + 1).toString() +
                           v1 +
@@ -71,6 +72,7 @@ export const WebbDaSilvaClassificationHelpSection = () => {
                   <h3 style={{ paddingTop: "10px" }}>{v}</h3>
                   <div className="da-silva-loop-column">
                     <Image
+                      alt={v}
                       src={require("../../assets/da-silva/" + v + ".svg")}
                     />
                   </div>

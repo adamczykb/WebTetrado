@@ -1,7 +1,12 @@
 import { Table } from "antd";
 import { loop } from "../../types/RestultSet";
 
-export const LoopTable = (data: loop[], isDesktop: Boolean) => {
+interface LoopTableArguments {
+  value: loop[];
+  isDesktop: boolean;
+}
+
+export default function LoopTable(props: LoopTableArguments) {
   const columns_loops = [
     {
       title: "Number",
@@ -36,10 +41,10 @@ export const LoopTable = (data: loop[], isDesktop: Boolean) => {
       </h2>
       <Table
         style={{ textAlign: "center" }}
-        dataSource={data}
+        dataSource={props.value}
         columns={columns_loops}
-        scroll={isDesktop ? { x: "auto" } : { x: "100%" }}
+        scroll={props.isDesktop ? { x: "auto" } : { x: "100%" }}
       />
     </>
   );
-};
+}

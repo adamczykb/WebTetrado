@@ -18,6 +18,4 @@ COPY build/ws_supervisor.conf /etc/supervisor/conf.d/
 COPY build/web_supervisor.conf /etc/supervisor/conf.d/
 RUN pip3 install -r requirements.txt
 
-
-
 WORKDIR /opt/webtetrado

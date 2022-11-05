@@ -1,7 +1,11 @@
 import { Table } from "antd";
 import { base_pair } from "../../types/RestultSet";
 
-export const BasePairTable = (data: base_pair[], isDesktop: Boolean) => {
+interface BasePairTableArguents {
+  value: base_pair[];
+  isDesktop: boolean;
+}
+export default function BasePairTable(props: BasePairTableArguents) {
   const columns_base_pairs = [
     {
       title: "Number",
@@ -45,7 +49,7 @@ export const BasePairTable = (data: base_pair[], isDesktop: Boolean) => {
         if (a.in_tetrad) return 1;
         else return -1;
       },
-      defaultSortOrder: "descend",
+      defaultSortOrder: "descend" as const,
       render: (be: boolean) => <>{be ? <u>✅</u> : ""}</>,
     },
   ];
@@ -56,10 +60,10 @@ export const BasePairTable = (data: base_pair[], isDesktop: Boolean) => {
       </h2>
       <Table
         style={{ textAlign: "center" }}
-        dataSource={data}
+        dataSource={props.value}
         columns={columns_base_pairs}
-        scroll={isDesktop ? { x: "auto" } : { x: "100%" }}
+        scroll={props.isDesktop ? { x: "auto" } : { x: "100%" }}
       />
     </>
   );
-};
+}

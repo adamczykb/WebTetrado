@@ -117,6 +117,7 @@ export const SecondaryStructureDrawingHelpSection = () => {
             <td>cis Watson-Crick Watson-Crick</td>
             <td>
               <img
+                alt={"symbol-cww"}
                 src={
                   require("../../assets/varna-symbol/symbol-cww.svg").default
                 }
@@ -127,6 +128,7 @@ export const SecondaryStructureDrawingHelpSection = () => {
             <td>trans Watson-Crick Watson-Crick</td>
             <td>
               <img
+                alt={"symbol-tww"}
                 src={
                   require("../../assets/varna-symbol/symbol-tww.svg").default
                 }
@@ -137,6 +139,7 @@ export const SecondaryStructureDrawingHelpSection = () => {
             <td>cis Watson-Crick Hoogsteen</td>
             <td>
               <img
+                alt={"symbol-cwh"}
                 src={
                   require("../../assets/varna-symbol/symbol-cwh.svg").default
                 }
@@ -147,6 +150,7 @@ export const SecondaryStructureDrawingHelpSection = () => {
             <td>trans Watson-Crick Hoogsteen</td>
             <td>
               <img
+                alt={"symbol-twh"}
                 src={
                   require("../../assets/varna-symbol/symbol-twh.svg").default
                 }
@@ -157,6 +161,7 @@ export const SecondaryStructureDrawingHelpSection = () => {
             <td>cis Watson-Crick Sugar</td>
             <td>
               <img
+                alt={"symbol-cws"}
                 src={
                   require("../../assets/varna-symbol/symbol-cws.svg").default
                 }
@@ -167,6 +172,7 @@ export const SecondaryStructureDrawingHelpSection = () => {
             <td>trans Watson-Crick Sugar</td>
             <td>
               <img
+                alt={"symbol-tws"}
                 src={
                   require("../../assets/varna-symbol/symbol-tws.svg").default
                 }
@@ -177,6 +183,7 @@ export const SecondaryStructureDrawingHelpSection = () => {
             <td>cis Hoogsteen Watson-Crick</td>
             <td>
               <img
+                alt={"symbol-chw"}
                 src={
                   require("../../assets/varna-symbol/symbol-chw.svg").default
                 }
@@ -187,6 +194,7 @@ export const SecondaryStructureDrawingHelpSection = () => {
             <td>trans Hoogsteen Watson-Crick</td>
             <td>
               <img
+                alt={"symbol-thw"}
                 src={
                   require("../../assets/varna-symbol/symbol-thw.svg").default
                 }
@@ -197,6 +205,7 @@ export const SecondaryStructureDrawingHelpSection = () => {
             <td>cis Hoogsteen Hoogsteen</td>
             <td>
               <img
+                alt={"symbol-chh"}
                 src={
                   require("../../assets/varna-symbol/symbol-chh.svg").default
                 }
@@ -207,6 +216,7 @@ export const SecondaryStructureDrawingHelpSection = () => {
             <td>trans Hoogsteen Hoogsteen</td>
             <td>
               <img
+                alt={"symbol-thh"}
                 src={
                   require("../../assets/varna-symbol/symbol-thh.svg").default
                 }
@@ -217,6 +227,7 @@ export const SecondaryStructureDrawingHelpSection = () => {
             <td>cis Hoogsteen Sugar</td>
             <td>
               <img
+                alt={"symbol-chs"}
                 src={
                   require("../../assets/varna-symbol/symbol-chs.svg").default
                 }
@@ -227,6 +238,7 @@ export const SecondaryStructureDrawingHelpSection = () => {
             <td>trans Hoogsteen Sugar</td>
             <td>
               <img
+                alt={"symbol-ths"}
                 src={
                   require("../../assets/varna-symbol/symbol-ths.svg").default
                 }
@@ -237,6 +249,7 @@ export const SecondaryStructureDrawingHelpSection = () => {
             <td>cis Sugar Watson-Crick</td>
             <td>
               <img
+                alt={"symbol-csw"}
                 src={
                   require("../../assets/varna-symbol/symbol-csw.svg").default
                 }
@@ -247,6 +260,7 @@ export const SecondaryStructureDrawingHelpSection = () => {
             <td>trans Sugar Watson-Crick</td>
             <td>
               <img
+                alt={"symbol-tsw"}
                 src={
                   require("../../assets/varna-symbol/symbol-tsw.svg").default
                 }
@@ -257,6 +271,7 @@ export const SecondaryStructureDrawingHelpSection = () => {
             <td>cis Sugar Hoogsteen</td>
             <td>
               <img
+                alt={"symbol-csh"}
                 src={
                   require("../../assets/varna-symbol/symbol-csh.svg").default
                 }
@@ -267,6 +282,7 @@ export const SecondaryStructureDrawingHelpSection = () => {
             <td>trans Sugar Hoogsteen</td>
             <td>
               <img
+                alt={"symbol-tsh"}
                 src={
                   require("../../assets/varna-symbol/symbol-tsh.svg").default
                 }
@@ -277,6 +293,7 @@ export const SecondaryStructureDrawingHelpSection = () => {
             <td>cis Sugar Sugar</td>
             <td>
               <img
+                alt={"symbol-css"}
                 src={
                   require("../../assets/varna-symbol/symbol-css.svg").default
                 }
@@ -287,6 +304,7 @@ export const SecondaryStructureDrawingHelpSection = () => {
             <td>trans Sugar Sugar</td>
             <td>
               <img
+                alt={"symbol-tss"}
                 src={
                   require("../../assets/varna-symbol/symbol-tss.svg").default
                 }

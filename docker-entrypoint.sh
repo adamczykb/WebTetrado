@@ -9,7 +9,7 @@ supervisord;
 bash ./build_front.sh;
 cd /opt/webtetrado/;
 python3 manage.py collectstatic --no-input;
-
+cp /opt/webtetrado/public/* /opt/webtetrado/static/
 if [[ ! -d /opt/webtetrado/supervisor ]];
 then
     mkdir -p /opt/webtetrado/supervisor

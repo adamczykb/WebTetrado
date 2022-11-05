@@ -1,4 +1,3 @@
-import { InboxOutlined } from "@ant-design/icons";
 import {
   Button,
   Collapse,
@@ -10,18 +9,19 @@ import {
   Switch,
   Tooltip,
 } from "antd";
-import Dragger from "antd/lib/upload/Dragger";
-import { UploadFile, UploadProps } from "antd/lib/upload/interface";
+import { UploadFile } from "antd/lib/upload/interface";
 import { useEffect, useState } from "react";
-import { useMediaQuery } from "react-responsive";
-import config from "../../config.json";
+import { UseAppContext } from "../../AppContextProvider";
 import lang from "../../lang.json";
-import { checkRcsbMaxModel } from "../../utils/adapters/CheckRcsbMaxModel";
-import { processingRequest } from "../../utils/adapters/ProcessingRequest";
+import { request_form_values } from "../../types/RestultSet";
+import { checkRcsbMaxModel } from "../../utils/adapters/checkRcsbMaxModel";
+import { processingRequest } from "../../utils/adapters/processingRequest";
+import UploadStructureFile from "./UploadStructureFile";
 const { Panel } = Collapse;
 
-export const RequestForm = () => {
-  let form_values = {
+export default function RequestForm() {
+  const context = UseAppContext();
+  let form_values: request_form_values = {
     fileId: "",
     rcsbPdbId: "",
     settings: {
@@ -33,7 +33,6 @@ export const RequestForm = () => {
       model: 1,
     },
   };
-  let isDesktop = useMediaQuery({ query: "(min-width: 900px)" });
   const [loading, setLoading] = useState(false);
   const [maxModel, setMaxModel] = useState(0);
   const [pdbError, setPDBError] = useState(false);
@@ -42,73 +41,6 @@ export const RequestForm = () => {
   const [fileListState, setFileList] = useState<UploadFile[] | undefined>(
     undefined
   );
-
-  let props: UploadProps = {
-    name: "structure",
-    multiple: false,
-    action: config.SERVER_URL + "/api/upload/structure/",
-    maxCount: 1,
-    beforeUpload: (file: File) => {
-      let fileName = file.name.split(".");
-      let fileNameLength = file.name.split(".").length;
-      setFileList(undefined);
-      setFormValues({
-        ...formValues,
-        fileId: "",
-        rcsbPdbId: "",
-        settings: { ...formValues.settings, model: 1 },
-      });
-      setMaxModel(0);
-      const isCifOrPdb =
-        file.type === "chemical/x-cif" ||
-        file.type === "chemical/x-pdb" ||
-        fileName[fileNameLength - 1].toLowerCase() === "cif" ||
-        fileName[fileNameLength - 1].toLowerCase() === "pdb";
-      if (!isCifOrPdb) {
-        message.error(lang.file_not_pdb_cif + `${file.name}`);
-        setFormValues({ ...formValues, fileId: "" });
-        setFileList([] as UploadFile<File>[]);
-        return false;
-      } else {
-        message.info(lang.uploading_file + `${file.name}`);
-      }
-      return isCifOrPdb;
-    },
-    onRemove(info: any) {
-      setFormValues({ ...formValues, fileId: "" });
-      setFileList([] as UploadFile<File>[]);
-      setMaxModel(0);
-    },
-    onChange(event) {
-      const { status } = event.file;
-      if (status === "done") {
-        if (event.file.response.error.length > 0) {
-          message.error(lang.file_not_pdb_cif + `${event.file.name}`);
-          setFileList([] as UploadFile<File>[]);
-          setFormValues({ ...formValues, fileId: "" });
-          return;
-        }
-        message.success(lang.file_upload_success + `${event.file.name}`);
-        setFormValues({
-          ...formValues,
-          rcsbPdbId: "",
-          fileId: event.file.response.id,
-          settings: { ...formValues.settings, model: 1 },
-        });
-
-        setMaxModel(event.file.response.models);
-        setFileList([event.file]);
-      } else if (status === "error") {
-        message.error(lang.error_uploading + `${event.file.name}`);
-        setFormValues({ ...formValues, fileId: "" });
-        setFileList(undefined);
-      }
-    },
-    onDrop(e: any) {
-      setFileList(undefined);
-      setFormValues({ ...formValues, fileId: "" });
-    },
-  };
   const submit = () => {
     if (
       (!fileListState || fileListState.length == 0) &&
@@ -132,7 +64,7 @@ export const RequestForm = () => {
     processingRequest(formValues, setLoading);
   };
   useEffect(() => {
-    setMaxModel(0);
+    if (formValues.fileId === "") setMaxModel(0);
 
     if (formValues.rcsbPdbId.length === 4) {
       setMaxModelQuery(true);
@@ -160,6 +92,9 @@ export const RequestForm = () => {
       </h2>
       <div style={{ marginBottom: "40px", textAlign: "center" }}>
         <Button
+          size={
+            !context.viewSettings.isCompressedViewNeeded ? "large" : "middle"
+          }
           onClick={() => {
             setFileList([]);
             setFormValues({
@@ -172,6 +107,9 @@ export const RequestForm = () => {
           2HY9
         </Button>
         <Button
+          size={
+            !context.viewSettings.isCompressedViewNeeded ? "large" : "middle"
+          }
           onClick={() => {
             setFileList([]);
             setFormValues({
@@ -184,6 +122,9 @@ export const RequestForm = () => {
           6RS3
         </Button>
         <Button
+          size={
+            !context.viewSettings.isCompressedViewNeeded ? "large" : "middle"
+          }
           onClick={() => {
             setFileList([]);
             setFormValues({
@@ -196,6 +137,9 @@ export const RequestForm = () => {
           1JJP
         </Button>
         <Button
+          size={
+            !context.viewSettings.isCompressedViewNeeded ? "large" : "middle"
+          }
           onClick={() => {
             setFileList([]);
             setFormValues({
@@ -208,6 +152,9 @@ export const RequestForm = () => {
           6FC9
         </Button>
         <Button
+          size={
+            !context.viewSettings.isCompressedViewNeeded ? "large" : "middle"
+          }
           onClick={() => {
             setFileList([
               { name: "q-ugg-5k-salt_4…00ns_frame1065.pdb", uid: "" },
@@ -216,6 +163,7 @@ export const RequestForm = () => {
               ...formValues,
               fileId: "rdy_q-ugg-5k-salt-0-00ns-0rame1065_pdb",
               rcsbPdbId: "",
+              settings: { ...formValues.settings, model: 1 },
             });
             setMaxModel(1);
           }}
@@ -224,26 +172,21 @@ export const RequestForm = () => {
         </Button>{" "}
       </div>
       <Form labelCol={{ span: 16 }} wrapperCol={{ span: 32 }}>
-        {isDesktop ? (
+        {!!context.viewSettings.isCompressedViewNeeded ? (
           <div className={"horizontal-center"} style={{ height: 250 }}>
             <div>
               <div style={{ width: "400px", height: "200px" }}>
                 <h4 style={{ margin: "0", marginBottom: "5px" }}>
                   From local drive:
                 </h4>
-                <Dragger
-                  fileList={fileListState ? fileListState : undefined}
-                  {...props}
-                  style={{ padding: "20px" }}
-                >
-                  <p className="ant-upload-drag-icon">
-                    <InboxOutlined />
-                  </p>
-                  <h3 className="ant-upload-text">
-                    Click or drag file to this area to upload
-                  </h3>
-                  <h3 className="ant-upload-hint">*.cif, *.pdb</h3>
-                </Dragger>
+                <UploadStructureFile
+                  maxModel={maxModel}
+                  setMaxModel={setMaxModel}
+                  formValues={formValues}
+                  setFormValues={setFormValues}
+                  fileListState={fileListState}
+                  setFileList={setFileList}
+                />
               </div>
             </div>
             <div className="split-layout__divider" style={{ width: "90px" }}>
@@ -257,6 +200,7 @@ export const RequestForm = () => {
                 <Form.Item>
                   <Input
                     name="rcsbPdbId"
+                    data-testid="rcsb-pdb-id-input"
                     value={formValues.rcsbPdbId}
                     status={pdbError ? "error" : ""}
                     onChange={(e) =>
@@ -287,20 +231,14 @@ export const RequestForm = () => {
             <h4 style={{ margin: "0", marginBottom: "5px" }}>
               From local drive:
             </h4>
-            <Dragger
-              fileList={fileListState ? fileListState : undefined}
-              {...props}
-              style={{ padding: "20px" }}
-            >
-              <p className="ant-upload-drag-icon">
-                <InboxOutlined />
-              </p>
-              <h3 className="ant-upload-text">
-                Click or drag file to this area to upload
-              </h3>
-              <h3 className="ant-upload-hint">*.cif, *.pdb</h3>
-            </Dragger>
-
+            <UploadStructureFile
+              maxModel={maxModel}
+              setMaxModel={setMaxModel}
+              formValues={formValues}
+              setFormValues={setFormValues}
+              fileListState={fileListState}
+              setFileList={setFileList}
+            />
             <div className="split-layout__divider__row">
               <div className="split-layout__rule__row"></div>
               <div className="split-layout__label__row">or</div>
@@ -310,6 +248,7 @@ export const RequestForm = () => {
             <h4 style={{ margin: "0" }}>From Protein Data Bank:</h4>
             <Form.Item>
               <Input
+                data-testid="rcsb-pdb-id-input"
                 name="rcsbPdbId"
                 value={formValues.rcsbPdbId}
                 onChange={(e) =>
@@ -341,27 +280,6 @@ export const RequestForm = () => {
         >
           <Collapse defaultActiveKey={1} style={{ width: "70%" }}>
             <Panel header="Additional settings" key="1">
-              {
-                //<Form.Item valuePropName="checked">
-                //<div className="horizontal-item-center">
-                //<div className="item-label">Complete 2D: </div>
-                //<Switch
-                //size={isDesktop ? "small" : "default"}
-                //checkedChildren="Yes"
-                //unCheckedChildren="No"
-                //onChange={() =>
-                //setFormValues({
-                //...formValues,
-                //settings: {
-                //...formValues.settings,
-                //complete2d: !formValues.settings.complete2d,
-                //},
-                //})
-                //}
-                ///>
-                //</div>
-                //</Form.Item>
-              }
               <Form.Item valuePropName="checked">
                 <div className="horizontal-item-center">
                   <div className="item-label">
@@ -376,7 +294,11 @@ export const RequestForm = () => {
                     </Tooltip>
                   </div>
                   <Switch
-                    size={isDesktop ? "small" : "default"}
+                    size={
+                      !context.viewSettings.isCompressedViewNeeded
+                        ? "default"
+                        : "small"
+                    }
                     checkedChildren="Yes"
                     unCheckedChildren="No"
                     defaultChecked
@@ -396,7 +318,11 @@ export const RequestForm = () => {
                 <div className="horizontal-item-center">
                   <div className="item-label">G4-limited search: </div>
                   <Switch
-                    size={isDesktop ? "small" : "default"}
+                    size={
+                      !context.viewSettings.isCompressedViewNeeded
+                        ? "default"
+                        : "small"
+                    }
                     checkedChildren="Yes"
                     unCheckedChildren="No"
                     defaultChecked
@@ -423,7 +349,11 @@ export const RequestForm = () => {
                     </Tooltip>
                   </div>
                   <Switch
-                    size={isDesktop ? "small" : "default"}
+                    size={
+                      !context.viewSettings.isCompressedViewNeeded
+                        ? "default"
+                        : "small"
+                    }
                     checkedChildren="Yes"
                     unCheckedChildren="No"
                     onChange={() =>
@@ -442,7 +372,11 @@ export const RequestForm = () => {
                 <div className="horizontal-item-center">
                   <div
                     className="item-label"
-                    style={isDesktop ? {} : { padding: "5px 0" }}
+                    style={
+                      !context.viewSettings.isCompressedViewNeeded
+                        ? { padding: "5px 0" }
+                        : {}
+                    }
                   >
                     <Tooltip
                       title="A perfect tetrad stacking covers 4 nucleotides; this
@@ -455,7 +389,11 @@ export const RequestForm = () => {
                   </div>
                   <Input
                     style={{ width: "calc(50% - 5px)", maxWidth: "100px" }}
-                    size={isDesktop ? "small" : "middle"}
+                    size={
+                      !context.viewSettings.isCompressedViewNeeded
+                        ? "middle"
+                        : "small"
+                    }
                     type={"number"}
                     min="0"
                     max="4"
@@ -491,7 +429,11 @@ export const RequestForm = () => {
                     <div className="horizontal-item-center">
                       <div
                         className="item-label"
-                        style={isDesktop ? {} : { padding: "5px 0" }}
+                        style={
+                          !context.viewSettings.isCompressedViewNeeded
+                            ? { padding: "5px 0" }
+                            : {}
+                        }
                       >
                         Model number:
                       </div>
@@ -517,14 +459,23 @@ export const RequestForm = () => {
                     <div className="horizontal-item-center">
                       <div
                         className="item-label"
-                        style={isDesktop ? {} : { padding: "5px 0" }}
+                        style={
+                          !context.viewSettings.isCompressedViewNeeded
+                            ? { padding: "5px 0" }
+                            : {}
+                        }
                       ></div>
                       <Input
                         style={{ width: "calc(50% - 5px)", maxWidth: "100px" }}
-                        size={isDesktop ? "small" : "middle"}
+                        size={
+                          !context.viewSettings.isCompressedViewNeeded
+                            ? "middle"
+                            : "small"
+                        }
                         type={"number"}
                         min="1"
                         max={maxModel}
+                        data-testid="model-selector-slider"
                         value={formValues.settings.model}
                         onChange={(e) => {
                           if (e.target.valueAsNumber > maxModel) {
@@ -551,7 +502,10 @@ export const RequestForm = () => {
                 </>
               ) : maxModelQuery ? (
                 <Form.Item>
-                  <p className="horizontal-center">
+                  <p
+                    className="horizontal-center"
+                    data-testid="waiting-for-server-p"
+                  >
                     Waiting for server response...
                   </p>
                   <Spin className="horizontal-center" />
@@ -565,6 +519,7 @@ export const RequestForm = () => {
         <div className={"horizontal-center"} style={{ paddingTop: "30px" }}>
           <Form.Item>
             <Button
+              data-testid="send-request-button"
               htmlType="submit"
               type="primary"
               disabled={
@@ -583,4 +538,4 @@ export const RequestForm = () => {
       </Form>
     </>
   );
-};
+}

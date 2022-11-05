@@ -5,7 +5,7 @@ import IndexRouter from "../../../routes/router";
 import pp_img from "../../../assets/images/PP-PUT_logo_jasne.png";
 import ichb_img from "../../../assets/images/ICHB_PAN_EN_kolor.png";
 import rna_polis_img from "../../../assets/images/RNApolis-logo.png";
-import { MobileNavHeader } from "./nav";
+import { MobileNavHeader } from "./MobileNavHeader";
 
 export class MobileLayout extends React.Component {
   render(): React.ReactNode {
@@ -18,37 +18,70 @@ export class MobileLayout extends React.Component {
           </div>
         </Content>
 
-        <div id={"footer-logos"}>
-          <div className={"center"}>
-            <a
-              target="_blank"
-              rel="noreferrer"
-              href={"https://www.put.poznan.pl/index.php/en"}
+        <div id={"footer-logos-oneline"}>
+          <a
+            target="_blank"
+            rel="noreferrer"
+            href={"https://www.put.poznan.pl/index.php/en"}
+          >
+            <img alt={"PP logo"} height="86px" src={pp_img} />
+          </a>
+          <a target="_blank" rel="noreferrer" href={"https://www.rnapolis.pl/"}>
+            <img
+              alt={"RNApolis"}
+              style={{ height: "40px", margin: "0 40px" }}
+              src={rna_polis_img}
+            />
+          </a>
+          <a
+            target="_blank"
+            rel="noreferrer"
+            href={"https://www.ibch.poznan.pl/en.html"}
+          >
+            <img alt={"IBCH logo"} style={{ height: "86px" }} src={ichb_img} />
+          </a>
+        </div>
+        <div id={"footer-logos-splited"}>
+          <div style={{ display: "block", width: "50%" }}>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
             >
-              <img alt={"PP logo"} height="86px" src={pp_img} />
-            </a>
-            <a
-              target="_blank"
-              rel="noreferrer"
-              href={"https://www.rnapolis.pl/"}
-            >
-              <img
-                alt={"RNApolis"}
-                style={{ height: "40px", marginLeft: "40px" }}
-                src={rna_polis_img}
-              />
-            </a>
-            <a
-              target="_blank"
-              rel="noreferrer"
-              href={"https://www.ibch.poznan.pl/en.html"}
-            >
-              <img
-                alt={"IBCH logo"}
-                style={{ height: "86px", marginLeft: "40px" }}
-                src={ichb_img}
-              />
-            </a>
+              <a
+                target="_blank"
+                rel="noreferrer"
+                href={"https://www.put.poznan.pl/index.php/en"}
+              >
+                <img alt={"PP logo"} style={{ width: "80%" }} src={pp_img} />
+              </a>
+              <a
+                target="_blank"
+                rel="noreferrer"
+                href={"https://www.ibch.poznan.pl/en.html"}
+              >
+                <img
+                  alt={"IBCH logo"}
+                  style={{ width: "80%", float: "right" }}
+                  src={ichb_img}
+                />
+              </a>
+            </div>
+            <div style={{ marginTop: "30px" }}>
+              <a
+                target="_blank"
+                rel="noreferrer"
+                href={"https://www.rnapolis.pl/"}
+              >
+                <img
+                  alt={"RNApolis"}
+                  style={{ width: "100%" }}
+                  src={rna_polis_img}
+                />
+              </a>
+            </div>
           </div>
         </div>
         <Footer style={{ textAlign: "center" }}>

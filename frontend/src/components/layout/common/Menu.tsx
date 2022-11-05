@@ -1,11 +1,15 @@
 import { CloseOutlined } from "@ant-design/icons";
-
-export const Menu = (isMenuExpanded: any, setMenuExpanded: any) => {
+interface MenuArguments {
+  isMenuExpanded: any;
+  setMenuExpanded: any;
+}
+export const Menu = (props: MenuArguments) => {
   return (
     <div
       id="menu"
+      data-testid="menu"
       style={{
-        left: isMenuExpanded ? "0px" : "-100%",
+        left: props.isMenuExpanded ? "0" : "-100%",
       }}
     >
       <a href="/">
@@ -21,8 +25,9 @@ export const Menu = (isMenuExpanded: any, setMenuExpanded: any) => {
         <div>ABOUT</div>
       </a>
       <div
+        data-testid="menu-button"
         onClick={() => {
-          setMenuExpanded(false);
+          props.setMenuExpanded(false);
         }}
         style={{
           border: "0",

@@ -1,7 +1,11 @@
 import { Table } from "antd";
 import { nucleotide } from "../../types/RestultSet";
 
-export const NucleotideTable = (data: nucleotide[], isDesktop: Boolean) => {
+interface NucleotideTableArguemnts {
+  value: nucleotide[];
+  isDesktop: boolean;
+}
+export default function NucleotideTable(props: NucleotideTableArguemnts) {
   const columns_nucleotides = [
     {
       title: "Number",
@@ -36,10 +40,10 @@ export const NucleotideTable = (data: nucleotide[], isDesktop: Boolean) => {
       </h2>
       <Table
         style={{ textAlign: "center" }}
-        dataSource={data}
-        scroll={isDesktop ? { x: "auto" } : { x: "100%" }}
+        dataSource={props.value}
+        scroll={props.isDesktop ? { x: "auto" } : { x: "100%" }}
         columns={columns_nucleotides}
       />
     </>
   );
-};
+}

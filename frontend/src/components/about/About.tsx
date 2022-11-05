@@ -1,13 +1,17 @@
 import { Content } from "antd/es/layout/layout";
-import { useMediaQuery } from "react-responsive";
+import { UseAppContext } from "../../AppContextProvider";
 
 export default function About() {
-  let isDesktop = useMediaQuery({ query: "(min-width: 900px)" });
-
+  const context = UseAppContext();
   let renderContent = () => {
     return (
       <Content
-        style={{ padding: isDesktop ? "0 24px" : "0 0", minHeight: 280 }}
+        style={{
+          padding: !context.viewSettings.isCompressedViewNeeded
+            ? "0 24px"
+            : "0 0",
+          minHeight: 280,
+        }}
       >
         <div className="site-layout-content">
           <h1>About</h1>

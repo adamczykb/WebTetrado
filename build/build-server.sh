@@ -1,3 +1,5 @@
+#! /bin/bash
+
 rm ../static/js/* -R
 rm ../static/css/* -R
 cd ../frontend

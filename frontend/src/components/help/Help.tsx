@@ -1,6 +1,5 @@
 import { Image } from "antd";
 import { Content } from "antd/es/layout/layout";
-import { useMediaQuery } from "react-responsive";
 import { Divider } from "../layout/common/Divider";
 import help_home_set_request from "../../assets/images/help_home_set_request.png";
 import help_request_result from "../../assets/images/help_request_result.png";
@@ -13,18 +12,27 @@ import edge from "../../assets/images/microsoftedgenewlogo.jpg";
 import { TableOfHelpContents } from "./TableOfHelpContents";
 import { WebbDaSilvaClassificationHelpSection } from "./WebbDaSilvaClassificationHelpSection";
 import { SecondaryStructureDrawingHelpSection } from "./SecondaryStructureDrawingHelpSection";
+import { Suspense } from "react";
+import { RenderLoader } from "../result/RenderLoader";
+import { UseAppContext } from "../../AppContextProvider";
 
 export const Help = () => {
-  let isDesktop = useMediaQuery({ query: "(min-width: 900px)" });
+  const context = UseAppContext();
   let renderContent = () => {
     return (
       <Content
-        style={{ padding: isDesktop ? "0 24px" : "0 0" }}
+        style={{
+          padding: !context.viewSettings.isCompressedViewNeeded
+            ? "0 24px"
+            : "0 0",
+        }}
         id="help-navigation"
       >
         <div id="help-page" className="site-layout-content">
           <h1>Help</h1>
-          <TableOfHelpContents />
+          <Suspense fallback={<RenderLoader />}>
+            <TableOfHelpContents />
+          </Suspense>
           <h2 id={"navigation"}>1. Navigation</h2>
           <div style={{ textAlign: "justify" }}>
             <h3 id={"home_paragraph"}>1.1. Home</h3>
@@ -69,11 +77,15 @@ export const Help = () => {
           <h2 id={"webb_da_silva_classification"}>
             2. Webb da Silva classification
           </h2>
-          <WebbDaSilvaClassificationHelpSection />
+          <Suspense fallback={<RenderLoader />}>
+            <WebbDaSilvaClassificationHelpSection />
+          </Suspense>
           <Divider />
 
           <h2 id={"secondary_structure"}>3. Secondary structure drawing</h2>
-          <SecondaryStructureDrawingHelpSection />
+          <Suspense fallback={<RenderLoader />}>
+            <SecondaryStructureDrawingHelpSection />
+          </Suspense>
           <Divider />
           <h2 id={"system_requirements"}>4. System requirements</h2>
           <p>

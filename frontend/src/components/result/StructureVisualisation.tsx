@@ -1,11 +1,21 @@
-import { Button, Image, Switch, Tooltip } from "antd";
+import { Button, Image, Spin, Switch, Tooltip } from "antd";
 import config from "../../config.json";
 import { DownloadOutlined } from "@ant-design/icons";
 import { quadruplex, result_values } from "../../types/RestultSet";
 import { MolStarWrapper } from "../molstar/MolStarWrapper";
 import { VisualisationLegend } from "./Legend";
 import { visualsation_switch_result } from "../../types/RestultSet";
+import { Suspense, useState } from "react";
 
+const renderLoader = () => (
+  <div
+    style={{ height: "400px", margin: "20px" }}
+    className={"horizontal-center"}
+  >
+    <br />
+    <Spin size="large" />
+  </div>
+);
 function downloadFile(type: any, url: any) {
   const requestOptions = {
     method: "GET",
@@ -51,13 +61,23 @@ function r_chie_url(
     return config.SERVER_URL + resultSet.r_chie;
   }
 }
-export const StructureVisualisation = (
-  data: quadruplex,
-  resultSet: result_values,
-  visualisationSwitchOptions: visualsation_switch_result,
-  setSwitchOptions: any
-) => {
-  const extension = resultSet.structure_file.split(".").splice(-1)[0];
+
+interface StructureVisualisationArguments {
+  value: quadruplex;
+  resultSet: result_values;
+}
+
+export default function StructureVisualisation(
+  props: StructureVisualisationArguments
+) {
+  const extension = props.resultSet.structure_file.split(".").splice(-1)[0];
+  let visualisation_switch: visualsation_switch_result = {
+    varna_non_can: false,
+    varna_can: false,
+    r_chie_canonical: false,
+  };
+  let [visualisationSwitchOptions, setSwitchOptions] =
+    useState(visualisation_switch);
   return (
     <div id={"result-visualization"}>
       <div
@@ -67,7 +87,10 @@ export const StructureVisualisation = (
           flexWrap: "wrap",
         }}
       >
-        <div hidden={resultSet.varna == ""} className="result-visualization">
+        <div
+          hidden={props.resultSet.varna == ""}
+          className="result-visualization"
+        >
           <h2>
             <a target={"_blank"} href="/help#secondary_drawing_varna">
               VARNA
@@ -79,7 +102,7 @@ export const StructureVisualisation = (
           >
             <Tooltip
               title={
-                resultSet.varna_can == ""
+                props.resultSet.varna_can == ""
                   ? "The analyzed quadruplex does not have any canonical base pairs outside of tetrads"
                   : ""
               }
@@ -95,7 +118,7 @@ export const StructureVisualisation = (
                   checked={visualisationSwitchOptions.varna_can}
                   checkedChildren="Yes"
                   unCheckedChildren="No"
-                  disabled={resultSet.varna_can == ""}
+                  disabled={props.resultSet.varna_can == ""}
                   onChange={() =>
                     setSwitchOptions({
                       ...visualisationSwitchOptions,
@@ -107,7 +130,7 @@ export const StructureVisualisation = (
             </Tooltip>
             <Tooltip
               title={
-                resultSet.varna_non_can == ""
+                props.resultSet.varna_non_can == ""
                   ? "The analyzed quadruplex does not have any non-canonical base pairs outside of tetrads"
                   : ""
               }
@@ -123,7 +146,7 @@ export const StructureVisualisation = (
                   checked={visualisationSwitchOptions.varna_non_can}
                   checkedChildren="Yes"
                   unCheckedChildren="No"
-                  disabled={resultSet.varna_non_can == ""}
+                  disabled={props.resultSet.varna_non_can == ""}
                   onChange={() =>
                     setSwitchOptions({
                       ...visualisationSwitchOptions,
@@ -134,8 +157,9 @@ export const StructureVisualisation = (
               </div>
             </Tooltip>
             <Image
+              alt={"varna"}
               className="two-d-image"
-              src={varna_url(resultSet, visualisationSwitchOptions)}
+              src={varna_url(props.resultSet, visualisationSwitchOptions)}
             />
             <br />
             <Button
@@ -151,7 +175,7 @@ export const StructureVisualisation = (
                 ) {
                   downloadFile(
                     "varna_canonical_and_non_canonical.svg",
-                    varna_url(resultSet, visualisationSwitchOptions)
+                    varna_url(props.resultSet, visualisationSwitchOptions)
                   );
                 }
                 if (
@@ -160,7 +184,7 @@ export const StructureVisualisation = (
                 ) {
                   downloadFile(
                     "varna_canonical.svg",
-                    varna_url(resultSet, visualisationSwitchOptions)
+                    varna_url(props.resultSet, visualisationSwitchOptions)
                   );
                 }
                 if (
@@ -169,7 +193,7 @@ export const StructureVisualisation = (
                 ) {
                   downloadFile(
                     "varna_non_canonical.svg",
-                    varna_url(resultSet, visualisationSwitchOptions)
+                    varna_url(props.resultSet, visualisationSwitchOptions)
                   );
                 }
                 if (
@@ -178,7 +202,7 @@ export const StructureVisualisation = (
                 ) {
                   downloadFile(
                     "varna.svg",
-                    varna_url(resultSet, visualisationSwitchOptions)
+                    varna_url(props.resultSet, visualisationSwitchOptions)
                   );
                 }
               }}
@@ -187,7 +211,10 @@ export const StructureVisualisation = (
             </Button>
           </div>
         </div>
-        <div hidden={resultSet.r_chie == ""} className="result-visualization">
+        <div
+          hidden={props.resultSet.r_chie == ""}
+          className="result-visualization"
+        >
           <h2>
             <a target={"_blank"} href="/help#secondary_drawing_rchie">
               R-chie
@@ -199,7 +226,7 @@ export const StructureVisualisation = (
           >
             <Tooltip
               title={
-                resultSet.r_chie_canonical == ""
+                props.resultSet.r_chie_canonical == ""
                   ? "The analyzed quadruplex does not have any canonical base pairs outside of tetrads"
                   : ""
               }
@@ -212,7 +239,7 @@ export const StructureVisualisation = (
                   checked={visualisationSwitchOptions.r_chie_canonical}
                   checkedChildren="Yes"
                   unCheckedChildren="No"
-                  disabled={resultSet.r_chie_canonical == ""}
+                  disabled={props.resultSet.r_chie_canonical == ""}
                   onChange={() =>
                     setSwitchOptions({
                       ...visualisationSwitchOptions,
@@ -225,8 +252,9 @@ export const StructureVisualisation = (
             </Tooltip>
             <div style={{ marginTop: "64px" }}></div>
             <Image
+              alt="r-chie"
               className="two-d-image"
-              src={r_chie_url(resultSet, visualisationSwitchOptions)}
+              src={r_chie_url(props.resultSet, visualisationSwitchOptions)}
             />
             <br />
             <Button
@@ -238,18 +266,18 @@ export const StructureVisualisation = (
               onClick={() => {
                 downloadFile(
                   "r_chie.svg",
-                  config.SERVER_URL + resultSet.r_chie
+                  config.SERVER_URL + props.resultSet.r_chie
                 );
                 if (!visualisationSwitchOptions.r_chie_canonical) {
                   downloadFile(
                     "r_chie.svg",
-                    r_chie_url(resultSet, visualisationSwitchOptions)
+                    r_chie_url(props.resultSet, visualisationSwitchOptions)
                   );
                 }
                 if (visualisationSwitchOptions.r_chie_canonical) {
                   downloadFile(
                     "r_chie_canonical.svg",
-                    r_chie_url(resultSet, visualisationSwitchOptions)
+                    r_chie_url(props.resultSet, visualisationSwitchOptions)
                   );
                 }
               }}
@@ -259,7 +287,7 @@ export const StructureVisualisation = (
           </div>
         </div>
         <div
-          hidden={resultSet.draw_tetrado == ""}
+          hidden={props.resultSet.draw_tetrado == ""}
           className="result-visualization"
         >
           <h2>DrawTetrado (2.5D structure)</h2>
@@ -269,8 +297,9 @@ export const StructureVisualisation = (
           >
             <div style={{ marginTop: "108px" }}></div>
             <Image
+              alt="draw-tetardo"
               className="two-d-image"
-              src={config.SERVER_URL + resultSet.draw_tetrado}
+              src={config.SERVER_URL + props.resultSet.draw_tetrado}
             />
             <br />
 
@@ -283,7 +312,7 @@ export const StructureVisualisation = (
               onClick={() =>
                 downloadFile(
                   "drawTetrado.svg",
-                  config.SERVER_URL + resultSet.draw_tetrado
+                  config.SERVER_URL + props.resultSet.draw_tetrado
                 )
               }
             >
@@ -293,13 +322,18 @@ export const StructureVisualisation = (
         </div>
       </div>
       <div style={{ display: "block", marginTop: "50px" }}>
-        {resultSet.structure_file != "" ? (
+        {props.resultSet.structure_file != "" ? (
           <div>
             <h2>Mol*</h2>
-            <MolStarWrapper
-              structure_file={config.SERVER_URL + resultSet.structure_file}
-              tetrads={data.tetrad}
-            />
+
+            <Suspense fallback={renderLoader()}>
+              <MolStarWrapper
+                structure_file={
+                  config.SERVER_URL + props.resultSet.structure_file
+                }
+                tetrads={props.value.tetrad}
+              />
+            </Suspense>
             <br />
             <VisualisationLegend />
             <br />
@@ -313,7 +347,7 @@ export const StructureVisualisation = (
                 onClick={() =>
                   downloadFile(
                     "structure." + extension,
-                    config.SERVER_URL + resultSet.structure_file
+                    config.SERVER_URL + props.resultSet.structure_file
                   )
                 }
               >
@@ -327,4 +361,4 @@ export const StructureVisualisation = (
       </div>
     </div>
   );
-};
+}

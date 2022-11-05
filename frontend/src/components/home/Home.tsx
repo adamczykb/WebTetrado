@@ -1,18 +1,21 @@
 import { Divider } from "../layout/common/Divider";
-import { RequestForm } from "./RequestForm";
 import { Results } from "./Results";
-import { useMediaQuery } from "react-responsive";
+import { lazy, Suspense } from "react";
+import { RenderLoader } from "../result/RenderLoader";
+import { UseAppContext } from "../../AppContextProvider";
+
+const RequestForm = lazy(() => import("./RequestForm"));
 
 export const Home = () => {
-  let isDesktop = useMediaQuery({ query: "(min-width: 900px)" });
+  const context = UseAppContext();
   return (
     <>
       <h3
         id={"introduction"}
         style={
-          isDesktop
-            ? { padding: "40px", paddingBottom: "20px", textAlign: "justify" }
-            : { paddingBottom: "20px", textAlign: "justify" }
+          !context.viewSettings.isCompressedViewNeeded
+            ? {}
+            : { padding: "40px" }
         }
       >
         Online implemetation of{" "}
@@ -38,7 +41,10 @@ export const Home = () => {
       >
         Upload DNA/RNA structure
       </h1>
-      <RequestForm />
+
+      <Suspense fallback={<RenderLoader />}>
+        <RequestForm />
+      </Suspense>
       <Divider />
       <h1
         id="check-your-result"

@@ -1,5 +1,6 @@
 import json
 from django.contrib import admin
+from backend.web_push.notification_handler import send_notification_to_subscriber
 from backend.models import (
     Helice,
     Loop,
@@ -14,7 +15,6 @@ from backend.models import (
     BasePair,
     Log,
 )
-from backend.scripts.webPush import _send_notification
 
 
 @admin.register(TemporaryFile)
@@ -30,6 +30,7 @@ class TetradoRequest(admin.ModelAdmin):
         "status",
         "timestamp",
         "structure_body",
+        "structure_body",
         "hash_id",
         "draw_tetrado",
         "complete_2d",
@@ -43,7 +44,7 @@ class TetradoRequest(admin.ModelAdmin):
 
 @admin.register(Quadruplex)
 class Quadruplex(admin.ModelAdmin):
-    list_display = ("id", "metadata")
+    list_display = ("id", "molecule", "type", "loop_classification", "metadata")
 
 
 @admin.register(Helice)
@@ -72,6 +73,7 @@ class Tetrad(admin.ModelAdmin):
         "id",
         "name",
         "query_id",
+        "planarity",
         "metadata",
         "nt1",
         "nt2",
@@ -90,13 +92,8 @@ class Nucleotide(admin.ModelAdmin):
 class Metadata(admin.ModelAdmin):
     list_display = (
         "id",
-        "molecule",
-        "method",
-        "planarity",
         "onz_class",
         "tetrad_combination",
-        "loopClassification",
-        "structure_dot_bracked",
     )
 
 
@@ -108,7 +105,9 @@ class PushInfoAdmin(admin.ModelAdmin):
     def send_test_message(self, request, queryset):
         payload = {"head": "Hey", "body": "Hello World"}
         for device in queryset:
-            notification = _send_notification(device, json.dumps(payload), 0)
+            notification = send_notification_to_subscriber(
+                device, json.dumps(payload), 0
+            )
             if notification:
                 self.message_user(request, "Test sent successfully")
             else:

@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 
 import config from "../config.json";
-import { getCookie } from "../components/csrf";
+import { getCookie } from "../components/CSRF";
 
 const pushServerPublicKey =
   "BHhtArJe7JRbUaHmVqGQnWNfOAwVnxgjeyJ9cT6WZLWmJLR4tV-T2yC53olPn_16xD9uQZRnA_xfBZ7PU6Senbs";
@@ -38,16 +38,16 @@ async function createNotificationSubscription() {
 /**
  * returns the subscription if present or nothing
  */
-export const getUserSubscription = () => {
+export const getUserSubscription = async () => {
   //wait for service worker installation to be ready, and then
   return navigator.serviceWorker.ready
-    .then(function (serviceWorker) {
+    .then(function (serviceWorker: any) {
       return serviceWorker.pushManager.getSubscription();
     })
-    .then(function (pushSubscription) {
+    .then(function (pushSubscription: any) {
       return pushSubscription;
     })
-    .catch((error) => {});
+    .catch((error: any) => {});
 };
 
 //import all the function created to manage the push notifications
@@ -75,7 +75,7 @@ export default function usePushNotifications() {
   //if the push notifications are supported, registers the service worker
   //this effect runs only the first render
 
-  const getExixtingSubscription = async () => {
+  const getExistingSubscription = async () => {
     const existingSubscription = await getUserSubscription();
     if (existingSubscription) {
       setUserSubscription(existingSubscription);
@@ -84,7 +84,7 @@ export default function usePushNotifications() {
   };
   useEffect(() => {
     setLoadingPush(true);
-    getExixtingSubscription();
+    getExistingSubscription();
     setLoadingPush(false);
   }, []);
   //Retrieve if there is any push notification subscription for the registered service worker
@@ -129,7 +129,7 @@ export default function usePushNotifications() {
     if (temp && temp.length > 0) {
       browser = temp[0].toLowerCase();
     }
-    let exixtingSubscription: any = await getExixtingSubscription();
+    let exixtingSubscription: any = await getExistingSubscription();
 
     if (exixtingSubscription) {
       let tempUserSubscription = exixtingSubscription;

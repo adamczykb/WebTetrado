@@ -4,12 +4,9 @@ import App from "./App";
 import "./index.css";
 import reportWebVitals from "./reportWebVitals";
 import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
-import { CookiesProvider } from "react-cookie";
 ReactDOM.render(
   <React.StrictMode>
-    <CookiesProvider>
-      <App />
-    </CookiesProvider>
+    <App />
   </React.StrictMode>,
   document.getElementById("root")
 );
