@@ -1,17 +1,16 @@
 from typing import List
-import Bio
 from tempfile import NamedTemporaryFile
 from Bio.PDB.mmcifio import MMCIFIO
-from Bio.PDB import PDBIO
-
+from Bio.PDB import PDBIO,Select
+from Bio.PDB import PDBParser, MMCIFParser
 from backend.file_processor.structure_columns_parser import add_necessary_columns_cif
 
 
-class TetradSelect(Bio.PDB.Select):
+class TetradSelect(Select):
     ids = []
 
     def __init__(self, ids):
-        self.ids = ids
+        self.ids = [i.replace('/','') for i in ids]
 
     def accept_residue(self, residue):
         if (
@@ -27,23 +26,30 @@ class TetradSelect(Bio.PDB.Select):
 
 
 def get_cetrain_tetrad_file(
-        data_file_absolute_path:str, tetrad_residue: List[str], tetrad_result_file, order_id, cif=True
+        tetrad_residue: List[str], tetrad_result_file, user_request, cif=True
 ):
     tetrad_file = NamedTemporaryFile()
     if cif:
         io = MMCIFIO()
+        parser = MMCIFParser(QUIET=True)
         output_extension = ".cif"
     else:
         io = PDBIO()
+        parser = PDBParser(PERMISSIVE=True, QUIET=True)
         output_extension = ".pdb"
-    io.set_structure(data_file_absolute_path)
+
+    if not user_request.structure_body:
+        return
+
+    io.set_structure(parser.get_structure(
+            "str", user_request.structure_body.path
+        )
+    )
     io.save(tetrad_file.name, TetradSelect(tetrad_residue))
     if cif:
         add_necessary_columns_cif(tetrad_file.name)
     tetrad_result_file.save(
-        "-".join(tetrad_residue).replace(".", "_")
-        + "__"
-        + str(order_id)
+        "-".join(tetrad_residue).replace(".", "_").replace('/','-')
         + output_extension,
         tetrad_file,
     )

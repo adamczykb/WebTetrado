@@ -43,7 +43,7 @@ const config = {
       cache: true,
     }),
     new HtmlCriticalWebpackPlugin({
-      base: path.resolve(__dirname, "build"),
+      base: path.resolve(__dirname, "public"),
       src: "index.html",
       dest: "index.html",
       inline: true,

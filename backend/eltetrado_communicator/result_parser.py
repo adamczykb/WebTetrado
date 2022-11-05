@@ -115,7 +115,7 @@ def add_nucleotides(nucleotides, tetrado_request):
             raise GetterException("Nucleotides parser", traceback.format_exc())
 
 
-def add_tetrads(quadruplexes, quadruplex_entity, file_data, user_request, cif=False):
+def add_tetrads(quadruplexes, quadruplex_entity, user_request, cif=False):
     for tetrad in quadruplexes:
         try:
             quadruplex_entity_tetrad = Tetrad()
@@ -142,9 +142,8 @@ def add_tetrads(quadruplexes, quadruplex_entity, file_data, user_request, cif=Fa
                 query_id=user_request.id, name=tetrad["nt4"]
             )
             quadruplex_entity_tetrad.save()
-            if file_data is not None:
+            if user_request.structure_body is not None:
                 get_cetrain_tetrad_file(
-                    file_data,
                     [
                         quadruplex_entity_tetrad.nt1.name,
                         quadruplex_entity_tetrad.nt2.name,
@@ -152,7 +151,7 @@ def add_tetrads(quadruplexes, quadruplex_entity, file_data, user_request, cif=Fa
                         quadruplex_entity_tetrad.nt4.name,
                     ],
                     quadruplex_entity_tetrad.tetrad_file,
-                    user_request.id,
+                    user_request,
                     cif,
                 )
             quadruplex_entity_tetrad.save()
@@ -250,7 +249,7 @@ def add_quadruplexes(quadruplexes, file_data, helice_entity, user_request, cif=F
                 quadruplex_entity.molecule=""
             add_loops(quadruplex["loops"], quadruplex_entity, user_request)
             add_tetrads(
-                quadruplex["tetrads"], quadruplex_entity, file_data, user_request, cif,
+                quadruplex["tetrads"], quadruplex_entity, user_request, cif,
             )
             chains = []
             for tetrad in quadruplex_entity.tetrad.all():

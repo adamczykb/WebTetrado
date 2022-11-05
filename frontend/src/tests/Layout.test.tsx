@@ -1,7 +1,6 @@
 import {
   cleanup,
   fireEvent,
-  getByTestId,
   render,
   screen,
   waitFor,

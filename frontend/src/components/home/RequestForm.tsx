@@ -1,4 +1,3 @@
-import { InboxOutlined } from "@ant-design/icons";
 import {
   Button,
   Collapse,
