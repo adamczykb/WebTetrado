@@ -1,12 +1,14 @@
 import { Table } from "antd";
+import { UseAppContext } from "../../AppContextProvider";
 import { tetrad_pair } from "../../types/RestultSet";
 
 interface TetradPariTableArguments {
   value: tetrad_pair[];
-  isDesktop: boolean;
+  id: boolean;
 }
 
 export default function TetradPairTable(props: TetradPariTableArguments) {
+  const context = UseAppContext();
   const columns_tetrad_pairs = [
     {
       title: "Number",
@@ -36,13 +38,17 @@ export default function TetradPairTable(props: TetradPariTableArguments) {
   ];
   return (
     <>
-      <h2 id="tetrad-pairs" style={{ marginTop: "40px" }}>
+      <h2 id={props.id ? "tetrad-pairs" : ""} style={{ marginTop: "40px" }}>
         Tetrad pairs
       </h2>
       <Table
         style={{ textAlign: "center" }}
         dataSource={props.value}
-        scroll={props.isDesktop ? { x: "auto" } : { x: "100%" }}
+        scroll={
+          !context.viewSettings.isCompressedViewNeeded
+            ? { x: "auto" }
+            : { x: "100%" }
+        }
         columns={columns_tetrad_pairs}
       />
     </>

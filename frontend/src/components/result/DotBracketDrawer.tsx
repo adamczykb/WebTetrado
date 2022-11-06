@@ -56,7 +56,10 @@ const DotBracketDrawer = (props: DotBracketDrawerArguments) => {
         .split("")
         .map((sequence: string, index: number) =>
           sequence == "-" ? (
-            <span style={{ fontFamily: '"PT Mono", monospace' }}>
+            <span
+              key={"dbs" + index.toString()}
+              style={{ fontFamily: '"PT Mono", monospace' }}
+            >
               {sequence}
             </span>
           ) : bracketArray?.has(
@@ -66,6 +69,7 @@ const DotBracketDrawer = (props: DotBracketDrawerArguments) => {
                   .length
             ) ? (
             <Tooltip
+              key={"dbs" + index.toString()}
               placement="top"
               title={
                 STRING_ONZ_COLORS[
@@ -113,7 +117,10 @@ const DotBracketDrawer = (props: DotBracketDrawerArguments) => {
               </span>
             </Tooltip>
           ) : (
-            <span style={{ fontFamily: '"PT Mono", monospace' }}>
+            <span
+              style={{ fontFamily: '"PT Mono", monospace' }}
+              key={"dbs" + index.toString()}
+            >
               {sequence}
             </span>
           )
@@ -123,7 +130,10 @@ const DotBracketDrawer = (props: DotBracketDrawerArguments) => {
         .split("")
         .map((sequence: string, index: number) =>
           sequence == "-" ? (
-            <span style={{ fontFamily: '"PT Mono", monospace' }}>
+            <span
+              style={{ fontFamily: '"PT Mono", monospace' }}
+              key={"dbl1" + index.toString()}
+            >
               {sequence}
             </span>
           ) : bracketArray?.has(
@@ -133,6 +143,7 @@ const DotBracketDrawer = (props: DotBracketDrawerArguments) => {
                   .length
             ) ? (
             <Tooltip
+              key={"dbl1" + index.toString()}
               placement="top"
               title={
                 STRING_ONZ_COLORS[
@@ -180,7 +191,10 @@ const DotBracketDrawer = (props: DotBracketDrawerArguments) => {
               </span>
             </Tooltip>
           ) : (
-            <span style={{ fontFamily: '"PT Mono", monospace' }}>
+            <span
+              style={{ fontFamily: '"PT Mono", monospace' }}
+              key={"dbl1" + index.toString()}
+            >
               {sequence}
             </span>
           )
@@ -191,7 +205,10 @@ const DotBracketDrawer = (props: DotBracketDrawerArguments) => {
         .split("")
         .map((sequence: string, index: number) =>
           sequence == "-" ? (
-            <span style={{ fontFamily: '"PT Mono", monospace' }}>
+            <span
+              style={{ fontFamily: '"PT Mono", monospace' }}
+              key={"dbl2" + index.toString()}
+            >
               {sequence}
             </span>
           ) : bracketArray?.has(
@@ -201,6 +218,7 @@ const DotBracketDrawer = (props: DotBracketDrawerArguments) => {
                   .length
             ) ? (
             <Tooltip
+              key={"dbl2" + index.toString()}
               placement="top"
               title={
                 STRING_ONZ_COLORS[
@@ -248,7 +266,10 @@ const DotBracketDrawer = (props: DotBracketDrawerArguments) => {
               </span>
             </Tooltip>
           ) : (
-            <span style={{ fontFamily: '"PT Mono", monospace' }}>
+            <span
+              style={{ fontFamily: '"PT Mono", monospace' }}
+              key={"dbl2" + index.toString()}
+            >
               {sequence}
             </span>
           )

@@ -6,22 +6,21 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const HtmlCriticalWebpackPlugin = require("html-critical-webpack-plugin");
 const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
 const isProduction = process.env.NODE_ENV == "production";
-
 const config = {
-	entry: {
-		'app':"./src/index.tsx",
-		'service-worker':"./src/service-worker.ts"
-	},
+  entry: {
+    app: "./src/index.tsx",
+    "service-worker": "./src/service-worker.ts",
+  },
   output: {
     path: path.resolve(__dirname, "dist"),
     //publicPath: "/static/",
-	  filename: "[name].js",
-
+    filename: "[name].js",
   },
   devServer: {
     static: {
       directory: path.join(__dirname, "public"),
     },
+
     compress: true,
     port: 3000,
     historyApiFallback: true,
@@ -47,21 +46,7 @@ const config = {
       },
       cache: true,
     }),
-    new HtmlCriticalWebpackPlugin({
-      base: path.resolve(__dirname, "public"),
-      src: "index.html",
-      dest: "index.html",
-      inline: true,
-      minify: true,
-      extract: true,
-      width: 320,
-      height: 565,
-      penthouse: {
-        blockJSRequests: false,
-      },
-    }),
     new MiniCssExtractPlugin(),
-  
     // Add your plugins here
     // Learn more about plugins from https://webpack.js.org/configuration/plugins/
   ],
@@ -115,6 +100,21 @@ module.exports = () => {
         chunkFilename: "[id].css",
       })
     );
+    config.plugins.push(
+      new HtmlCriticalWebpackPlugin({
+        base: path.resolve(__dirname, "public"),
+        src: "index.html",
+        dest: "index.html",
+        inline: true,
+        minify: true,
+        extract: true,
+        width: 320,
+        height: 565,
+        penthouse: {
+          blockJSRequests: false,
+        },
+      })
+    );
     config.output.publicPath = "/static/";
   } else {
     config.mode = "development";
@@ -123,6 +123,7 @@ module.exports = () => {
         "process.env.PUBLIC_URL": JSON.stringify("http://127.0.0.1"),
       })
     );
+
     config.output.publicPath = "/";
   }
   return config;

@@ -1,4 +1,4 @@
-import { Button, Image, Spin, Switch, Tooltip } from "antd";
+import { Button, Image, Switch, Tooltip } from "antd";
 import config from "../../config.json";
 import { DownloadOutlined } from "@ant-design/icons";
 import { quadruplex, result_values } from "../../types/RestultSet";
@@ -6,16 +6,8 @@ import { MolStarWrapper } from "../molstar/MolStarWrapper";
 import { VisualisationLegend } from "./Legend";
 import { visualsation_switch_result } from "../../types/RestultSet";
 import { Suspense, useState } from "react";
+import { RenderLoader } from "./RenderLoader";
 
-const renderLoader = () => (
-  <div
-    style={{ height: "400px", margin: "20px" }}
-    className={"horizontal-center"}
-  >
-    <br />
-    <Spin size="large" />
-  </div>
-);
 function downloadFile(type: any, url: any) {
   const requestOptions = {
     method: "GET",
@@ -65,6 +57,7 @@ function r_chie_url(
 interface StructureVisualisationArguments {
   value: quadruplex;
   resultSet: result_values;
+  id: boolean;
 }
 
 export default function StructureVisualisation(
@@ -79,7 +72,7 @@ export default function StructureVisualisation(
   let [visualisationSwitchOptions, setSwitchOptions] =
     useState(visualisation_switch);
   return (
-    <div id={"result-visualization"}>
+    <div id={props.id ? "result-visualization" : ""}>
       <div
         style={{
           display: "flex",
@@ -326,7 +319,7 @@ export default function StructureVisualisation(
           <div>
             <h2>Mol*</h2>
 
-            <Suspense fallback={renderLoader()}>
+            <Suspense fallback={<RenderLoader />}>
               <MolStarWrapper
                 structure_file={
                   config.SERVER_URL + props.resultSet.structure_file

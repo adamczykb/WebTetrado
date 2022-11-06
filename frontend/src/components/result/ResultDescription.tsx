@@ -81,6 +81,7 @@ const ResultDescription = (props: ResultDescriptionArguments) => {
               .map((value, ind, array) => {
                 return (
                   <Tooltip
+                    key={ind}
                     title={
                       <div
                         style={{

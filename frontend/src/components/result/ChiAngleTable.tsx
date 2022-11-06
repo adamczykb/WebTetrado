@@ -1,11 +1,13 @@
 import { Table } from "antd";
+import { UseAppContext } from "../../AppContextProvider";
 import { chi_angle_value } from "../../types/RestultSet";
 
 interface ChiAngleTableArguments {
   value: chi_angle_value[];
-  isDesktop: boolean;
+  id: boolean;
 }
 export default function ChiAngleTable(props: ChiAngleTableArguments) {
+  const context = UseAppContext();
   const columns_chi = [
     {
       title: "Number",
@@ -35,14 +37,18 @@ export default function ChiAngleTable(props: ChiAngleTableArguments) {
   ];
   return (
     <>
-      <h2 id="chi-angle" style={{ marginTop: "40px" }}>
+      <h2 id={props.id ? "chi-angle" : ""} style={{ marginTop: "40px" }}>
         Chi angle value and type in each nucleotide
       </h2>
       <Table
         style={{ textAlign: "center" }}
         dataSource={props.value}
         columns={columns_chi}
-        scroll={props.isDesktop ? { x: "auto" } : { x: "100%" }}
+        scroll={
+          !context.viewSettings.isCompressedViewNeeded
+            ? { x: "auto" }
+            : { x: "100%" }
+        }
       />
     </>
   );

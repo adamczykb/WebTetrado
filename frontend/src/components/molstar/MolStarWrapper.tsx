@@ -65,16 +65,29 @@ async function addTetradComponents(
   // Create array of expressions defining nucleotides of each tetrad
   const nucleotideTetradExpressions = tetrads.map((tetrad) => {
     const tetradNucleotides = parseTetrad(tetrad.name);
-    return MS.core.logic.or(
-      tetradNucleotides.map((nucleotide) =>
-        MS.core.logic.and([
-          // Check if chain name is corresponding
-          MS.core.rel.eq([nucleotide?.chainId, MS.ammp("auth_asym_id")]),
-          // Check if residue number is corresponding
-          MS.core.rel.eq([nucleotide?.residueId, MS.ammp("auth_seq_id")]),
-        ])
-      )
-    );
+    if (
+      tetrads.every((v) => v.nucleotides.every((v1) => v1.indexOf(".") == -1))
+    ) {
+      return MS.core.logic.or(
+        tetradNucleotides.map((nucleotide) =>
+          MS.core.logic.and([
+            // Check if residue number is corresponding
+            MS.core.rel.eq([nucleotide?.residueId, MS.ammp("auth_seq_id")]),
+          ])
+        )
+      );
+    } else {
+      return MS.core.logic.or(
+        tetradNucleotides.map((nucleotide) =>
+          MS.core.logic.and([
+            // Check if chain name is corresponding
+            MS.core.rel.eq([nucleotide?.chainId, MS.ammp("auth_asym_id")]),
+            // Check if residue number is corresponding
+            MS.core.rel.eq([nucleotide?.residueId, MS.ammp("auth_seq_id")]),
+          ])
+        )
+      );
+    }
   });
 
   // Create quadruplex structure
@@ -140,17 +153,51 @@ function applyTetradOnzColorScheme(plugin: PluginUIContext, tetrads: tetrad[]) {
         let outputColor = Color(0xeeeeee);
 
         const atom_data = unit.model.atomicHierarchy;
-        const residue =
-          atom_data.chains.auth_asym_id
-            .value(atom_data.chainAtomSegments.index[element])
-            .toString() +
-          "." +
-          atom_data.atoms.auth_comp_id.value(element) +
-          atom_data.residues.auth_seq_id
-            .value(atom_data.residueAtomSegments.index[element])
-            .toString();
+        let residue: string;
+        let residue_without_chains: string;
+        if (/\d+/.test(atom_data.atoms.auth_comp_id.value(element))) {
+          residue =
+            atom_data.chains.auth_asym_id
+              .value(atom_data.chainAtomSegments.index[element])
+              .toString() +
+            "." +
+            atom_data.atoms.auth_comp_id.value(element) +
+            "/" +
+            atom_data.residues.auth_seq_id
+              .value(atom_data.residueAtomSegments.index[element])
+              .toString();
+
+          residue_without_chains =
+            atom_data.atoms.auth_comp_id.value(element) +
+            "/" +
+            atom_data.residues.auth_seq_id
+              .value(atom_data.residueAtomSegments.index[element])
+              .toString();
+        } else {
+          residue =
+            atom_data.chains.auth_asym_id
+              .value(atom_data.chainAtomSegments.index[element])
+              .toString() +
+            "." +
+            atom_data.atoms.auth_comp_id.value(element) +
+            atom_data.residues.auth_seq_id
+              .value(atom_data.residueAtomSegments.index[element])
+              .toString();
+
+          residue_without_chains =
+            atom_data.atoms.auth_comp_id.value(element) +
+            atom_data.residues.auth_seq_id
+              .value(atom_data.residueAtomSegments.index[element])
+              .toString();
+        }
         tetrads.forEach((x) => {
-          if (x.nucleotides.includes(residue)) {
+          if (
+            (x.nucleotides.every((v) => {
+              return v.indexOf(".") == -1;
+            }) &&
+              x.nucleotides.includes(residue_without_chains)) ||
+            x.nucleotides.includes(residue)
+          ) {
             outputColor = Color(ONZ_COLORS[x.onz_class]);
           }
         });
@@ -204,6 +251,7 @@ const createPlugin = async (
     name: "model",
     params: {},
   });
+
   await addTetradComponents(plugin, tetrads, structure);
   applyTetradOnzColorScheme(plugin, tetrads);
   plugin.behaviors.layout.leftPanelTabName.next("data");

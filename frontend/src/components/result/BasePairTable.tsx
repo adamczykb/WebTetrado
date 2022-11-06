@@ -1,11 +1,13 @@
 import { Table } from "antd";
+import { UseAppContext } from "../../AppContextProvider";
 import { base_pair } from "../../types/RestultSet";
 
 interface BasePairTableArguents {
   value: base_pair[];
-  isDesktop: boolean;
+  id: boolean;
 }
 export default function BasePairTable(props: BasePairTableArguents) {
+  const context = UseAppContext();
   const columns_base_pairs = [
     {
       title: "Number",
@@ -55,14 +57,18 @@ export default function BasePairTable(props: BasePairTableArguents) {
   ];
   return (
     <>
-      <h2 id="base-pairs" style={{ marginTop: "40px" }}>
+      <h2 id={props.id ? "base-pairs" : ""} style={{ marginTop: "40px" }}>
         Base pairs
       </h2>
       <Table
         style={{ textAlign: "center" }}
         dataSource={props.value}
         columns={columns_base_pairs}
-        scroll={props.isDesktop ? { x: "auto" } : { x: "100%" }}
+        scroll={
+          !context.viewSettings.isCompressedViewNeeded
+            ? { x: "auto" }
+            : { x: "100%" }
+        }
       />
     </>
   );

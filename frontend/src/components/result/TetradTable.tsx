@@ -1,12 +1,14 @@
 import { Button, Table, Tooltip, Image } from "antd";
 import { tetrad } from "../../types/RestultSet";
 import { DownloadOutlined } from "@ant-design/icons";
+import { UseAppContext } from "../../AppContextProvider";
 interface TetradTableArguments {
   value: tetrad[];
   g4Limited: boolean;
-  isDesktop: boolean;
+  id: boolean;
 }
 export default function TetradTable(props: TetradTableArguments) {
+  const context = UseAppContext();
   const columns_tetrad = [
     {
       title: "Number",
@@ -73,14 +75,18 @@ export default function TetradTable(props: TetradTableArguments) {
   ];
   return (
     <>
-      <h2 id="tetrads" style={{ marginTop: "40px" }}>
+      <h2 id={props.id ? "tetrads" : ""} style={{ marginTop: "40px" }}>
         Tetrads
       </h2>
       <Table
         style={{ textAlign: "center" }}
         dataSource={props.value}
         columns={columns_tetrad}
-        scroll={props.isDesktop ? { x: "auto" } : { x: "100%" }}
+        scroll={
+          !context.viewSettings.isCompressedViewNeeded
+            ? { x: "auto" }
+            : { x: "100%" }
+        }
         rowClassName={(_r, i) =>
           props.value[i].sequence == "GGGG" && props.g4Limited
             ? "colored-row"
