@@ -118,9 +118,7 @@ export const SecondaryStructureDrawingHelpSection = () => {
             <td>
               <img
                 alt={"symbol-cww"}
-                src={
-                  require("../../assets/varna-symbol/symbol-cww.svg").default
-                }
+                src={require("../../assets/varna-symbol/symbol-cww.svg")}
               />
             </td>
           </tr>
@@ -129,9 +127,7 @@ export const SecondaryStructureDrawingHelpSection = () => {
             <td>
               <img
                 alt={"symbol-tww"}
-                src={
-                  require("../../assets/varna-symbol/symbol-tww.svg").default
-                }
+                src={require("../../assets/varna-symbol/symbol-tww.svg")}
               />
             </td>
           </tr>
@@ -140,9 +136,7 @@ export const SecondaryStructureDrawingHelpSection = () => {
             <td>
               <img
                 alt={"symbol-cwh"}
-                src={
-                  require("../../assets/varna-symbol/symbol-cwh.svg").default
-                }
+                src={require("../../assets/varna-symbol/symbol-cwh.svg")}
               />
             </td>
           </tr>
@@ -151,9 +145,7 @@ export const SecondaryStructureDrawingHelpSection = () => {
             <td>
               <img
                 alt={"symbol-twh"}
-                src={
-                  require("../../assets/varna-symbol/symbol-twh.svg").default
-                }
+                src={require("../../assets/varna-symbol/symbol-twh.svg")}
               />
             </td>
           </tr>
@@ -162,9 +154,7 @@ export const SecondaryStructureDrawingHelpSection = () => {
             <td>
               <img
                 alt={"symbol-cws"}
-                src={
-                  require("../../assets/varna-symbol/symbol-cws.svg").default
-                }
+                src={require("../../assets/varna-symbol/symbol-cws.svg")}
               />
             </td>
           </tr>
@@ -173,9 +163,7 @@ export const SecondaryStructureDrawingHelpSection = () => {
             <td>
               <img
                 alt={"symbol-tws"}
-                src={
-                  require("../../assets/varna-symbol/symbol-tws.svg").default
-                }
+                src={require("../../assets/varna-symbol/symbol-tws.svg")}
               />
             </td>
           </tr>
@@ -184,9 +172,7 @@ export const SecondaryStructureDrawingHelpSection = () => {
             <td>
               <img
                 alt={"symbol-chw"}
-                src={
-                  require("../../assets/varna-symbol/symbol-chw.svg").default
-                }
+                src={require("../../assets/varna-symbol/symbol-chw.svg")}
               />
             </td>
           </tr>
@@ -195,9 +181,7 @@ export const SecondaryStructureDrawingHelpSection = () => {
             <td>
               <img
                 alt={"symbol-thw"}
-                src={
-                  require("../../assets/varna-symbol/symbol-thw.svg").default
-                }
+                src={require("../../assets/varna-symbol/symbol-thw.svg")}
               />
             </td>
           </tr>
@@ -206,9 +190,7 @@ export const SecondaryStructureDrawingHelpSection = () => {
             <td>
               <img
                 alt={"symbol-chh"}
-                src={
-                  require("../../assets/varna-symbol/symbol-chh.svg").default
-                }
+                src={require("../../assets/varna-symbol/symbol-chh.svg")}
               />
             </td>
           </tr>
@@ -217,9 +199,7 @@ export const SecondaryStructureDrawingHelpSection = () => {
             <td>
               <img
                 alt={"symbol-thh"}
-                src={
-                  require("../../assets/varna-symbol/symbol-thh.svg").default
-                }
+                src={require("../../assets/varna-symbol/symbol-thh.svg")}
               />
             </td>
           </tr>
@@ -228,9 +208,7 @@ export const SecondaryStructureDrawingHelpSection = () => {
             <td>
               <img
                 alt={"symbol-chs"}
-                src={
-                  require("../../assets/varna-symbol/symbol-chs.svg").default
-                }
+                src={require("../../assets/varna-symbol/symbol-chs.svg")}
               />
             </td>
           </tr>
@@ -239,9 +217,7 @@ export const SecondaryStructureDrawingHelpSection = () => {
             <td>
               <img
                 alt={"symbol-ths"}
-                src={
-                  require("../../assets/varna-symbol/symbol-ths.svg").default
-                }
+                src={require("../../assets/varna-symbol/symbol-ths.svg")}
               />
             </td>
           </tr>
@@ -250,9 +226,7 @@ export const SecondaryStructureDrawingHelpSection = () => {
             <td>
               <img
                 alt={"symbol-csw"}
-                src={
-                  require("../../assets/varna-symbol/symbol-csw.svg").default
-                }
+                src={require("../../assets/varna-symbol/symbol-csw.svg")}
               />
             </td>
           </tr>
@@ -261,9 +235,7 @@ export const SecondaryStructureDrawingHelpSection = () => {
             <td>
               <img
                 alt={"symbol-tsw"}
-                src={
-                  require("../../assets/varna-symbol/symbol-tsw.svg").default
-                }
+                src={require("../../assets/varna-symbol/symbol-tsw.svg")}
               />
             </td>
           </tr>
@@ -272,9 +244,7 @@ export const SecondaryStructureDrawingHelpSection = () => {
             <td>
               <img
                 alt={"symbol-csh"}
-                src={
-                  require("../../assets/varna-symbol/symbol-csh.svg").default
-                }
+                src={require("../../assets/varna-symbol/symbol-csh.svg")}
               />
             </td>
           </tr>
@@ -283,9 +253,7 @@ export const SecondaryStructureDrawingHelpSection = () => {
             <td>
               <img
                 alt={"symbol-tsh"}
-                src={
-                  require("../../assets/varna-symbol/symbol-tsh.svg").default
-                }
+                src={require("../../assets/varna-symbol/symbol-tsh.svg")}
               />
             </td>
           </tr>
@@ -294,9 +262,7 @@ export const SecondaryStructureDrawingHelpSection = () => {
             <td>
               <img
                 alt={"symbol-css"}
-                src={
-                  require("../../assets/varna-symbol/symbol-css.svg").default
-                }
+                src={require("../../assets/varna-symbol/symbol-css.svg")}
               />
             </td>
           </tr>
@@ -305,9 +271,7 @@ export const SecondaryStructureDrawingHelpSection = () => {
             <td>
               <img
                 alt={"symbol-tss"}
-                src={
-                  require("../../assets/varna-symbol/symbol-tss.svg").default
-                }
+                src={require("../../assets/varna-symbol/symbol-tss.svg")}
               />
             </td>
           </tr>
