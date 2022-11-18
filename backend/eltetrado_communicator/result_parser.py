@@ -291,7 +291,7 @@ def file_downloader(request_key: str, url: str, file_destination):
         file_destination.save(name=request_key + ".svg", content=data_file)
         data_file.close()
         if r.status_code == 200:
-            svg_count = str(r.content).count("\n")
+            svg_count = str(r.content).count("/>")
             if svg_count < 5:
                 file_destination.delete()
             break
