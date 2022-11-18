@@ -44,12 +44,24 @@ export const Result = () => {
         nucleotides: [],
         remove_date: "",
     };
-    const context = UseAppContext();
+
 
     const { requestNumber } = useParams<{ requestNumber: string }>();
+    let [currentTab, setCurrentTab] = useState("00");
     let [loadingResult, setLoadingResult] = useState(true);
     let [resultSet, setResultSet] = useState(result);
-
+    const steps = [
+        { title: "Task uploaded" },
+        { title: "Queueing" },
+        { title: "Processing" },
+        {
+            title: "Task completed",
+            description:
+                resultSet.status === 4
+                    ? "Results will be stored until " + resultSet.remove_date + "."
+                    : "",
+        },
+    ];
     useEffect(() => {
         processingResponse(
             requestNumber,
@@ -80,20 +92,7 @@ export const Result = () => {
                 </span>
             </h2>
 
-            <Steps current={resultSet.status} status="wait">
-                <Step title="Task uploaded" description="" />
-                <Step title="Queueing" description="" />
-                <Step title="Processing" description="" />
-                <Step
-                    title="Task completed"
-                    description={
-                        resultSet.status === 4
-                            ? "Results will be stored until " + resultSet.remove_date + "."
-                            : ""
-                    }
-                />
-            </Steps>
-
+            <Steps current={resultSet.status} items={steps} status="wait" />
             {resultSet.status == 5 ? (
                 <Alert
                     message="Server error"
@@ -138,94 +137,134 @@ export const Result = () => {
                             </h2>
                         </>
                     ) : (
-                        <Tabs defaultActiveKey="0" type="card" tabPosition={"top"}>
-                            {[...Array.from(resultSet.helices, (z, i) => z)].map((z, i) => (
-                                <TabPane tab={`N4-Helix ${i + 1}`} key={i}>
-                                    <Tabs defaultActiveKey="0" type="card" tabPosition={"top"}>
-                                        {[
-                                            ...Array.from(
-                                                resultSet.helices[i].quadruplexes,
-                                                (v, j) => v
-                                            ),
-                                        ].map((v, j) => (
-                                            <TabPane tab={`Quadruplex ${j + 1}`} key={j}>
-                                                <ResultDescription
-                                                    resultSet={resultSet}
-                                                    quadruplex={v}
+                        <Tabs
+                            defaultActiveKey="0"
+                            type="card"
+                            tabPosition={"top"}
+                            onChange={(aK) => {
+                                setCurrentTab(aK + "0");
+                            }}
+                            items={[...Array.from(resultSet.helices, (z, i) => z)].map(
+                                (z, i) => {
+                                    return {
+                                        label: `N4-Helix ${i + 1}`,
+                                        key: i.toString(),
+                                        children: (
+                                            <>
+                                                <Tabs
+                                                    defaultActiveKey="0"
+                                                    type="card"
+                                                    onChange={(aK) => {
+                                                        setCurrentTab(i.toString() + aK);
+                                                    }}
+                                                    tabPosition={"top"}
+                                                    items={[
+                                                        ...Array.from(
+                                                            resultSet.helices[i].quadruplexes,
+                                                            (v, j) => v
+                                                        ),
+                                                    ].map((v, j) => {
+                                                        return {
+                                                            label: `Quadruplex ${j + 1}`,
+                                                            key: j.toString(),
+                                                            children: (
+                                                                <>
+                                                                    <ResultDescription
+                                                                        resultSet={resultSet}
+                                                                        quadruplex={v}
+                                                                    />
+                                                                    <Divider />
+                                                                    <h2
+                                                                        id={
+                                                                            currentTab == i.toString() + j.toString()
+                                                                                ? "two-d-structure"
+                                                                                : ""
+                                                                        }
+                                                                        style={{ marginTop: "40px" }}
+                                                                    >
+                                                                        2D structure (dot-bracket):
+                                                                    </h2>
+                                                                    <DotBracketDrawer
+                                                                        helice={resultSet.helices}
+                                                                        nucleotides={resultSet.nucleotides}
+                                                                        dot_bracket={resultSet.dot_bracket}
+                                                                    />
+                                                                    <Suspense fallback={<RenderLoader />}>
+                                                                        <StructureVisualisation
+                                                                            value={v}
+                                                                            resultSet={resultSet}
+                                                                            id={
+                                                                                currentTab ==
+                                                                                i.toString() + j.toString()
+                                                                            }
+                                                                        />
+                                                                    </Suspense>
+                                                                    <Divider />
+                                                                    <Suspense fallback={<RenderLoader />}>
+                                                                        <TetradTable
+                                                                            value={v.tetrad}
+                                                                            g4Limited={resultSet.g4_limited}
+                                                                            id={
+                                                                                currentTab ==
+                                                                                i.toString() + j.toString()
+                                                                            }
+                                                                        />
+                                                                    </Suspense>
+                                                                    <Divider />
+                                                                    <Suspense fallback={<RenderLoader />}>
+                                                                        <LoopTable
+                                                                            value={v.loop}
+                                                                            id={
+                                                                                currentTab ==
+                                                                                i.toString() + j.toString()
+                                                                            }
+                                                                        />
+                                                                    </Suspense>
+                                                                    <Divider />
+                                                                    <Suspense fallback={<RenderLoader />}>
+                                                                        <ChiAngleTable
+                                                                            value={v.chi_angle_value}
+                                                                            id={
+                                                                                currentTab ==
+                                                                                i.toString() + j.toString()
+                                                                            }
+                                                                        />
+                                                                    </Suspense>
+                                                                </>
+                                                            ),
+                                                        };
+                                                    })}
                                                 />
                                                 <Divider />
-                                                <h2 id="two-d-structure" style={{ marginTop: "40px" }}>
-                                                    2D structure (dot-bracket):
-                                                </h2>
-                                                <DotBracketDrawer
-                                                    helice={resultSet.helices}
-                                                    nucleotides={resultSet.nucleotides}
-                                                    dot_bracket={resultSet.dot_bracket}
-                                                />
                                                 <Suspense fallback={<RenderLoader />}>
-                                                    <StructureVisualisation
-                                                        value={v}
-                                                        resultSet={resultSet}
+                                                    <TetradPairTable
+                                                        value={z.tetrad_pairs}
+                                                        id={currentTab.startsWith(i.toString())}
                                                     />
                                                 </Suspense>
                                                 <Divider />
                                                 <Suspense fallback={<RenderLoader />}>
-                                                    <TetradTable
-                                                        value={v.tetrad}
-                                                        g4Limited={resultSet.g4_limited}
-                                                        isDesktop={
-                                                            context.viewSettings.isCompressedViewNeeded
-                                                        }
+                                                    <BasePairTable
+                                                        value={resultSet.base_pairs}
+                                                        id={currentTab.startsWith(i.toString())}
                                                     />
                                                 </Suspense>
                                                 <Divider />
                                                 <Suspense fallback={<RenderLoader />}>
-                                                    <LoopTable
-                                                        value={v.loop}
-                                                        isDesktop={
-                                                            context.viewSettings.isCompressedViewNeeded
-                                                        }
+                                                    <NucleotideTable
+                                                        value={resultSet.nucleotides}
+                                                        id={currentTab.startsWith(i.toString())}
                                                     />
                                                 </Suspense>
-                                                <Divider />
-                                                <Suspense fallback={<RenderLoader />}>
-                                                    <ChiAngleTable
-                                                        value={v.chi_angle_value}
-                                                        isDesktop={
-                                                            context.viewSettings.isCompressedViewNeeded
-                                                        }
-                                                    />
-                                                </Suspense>
-                                            </TabPane>
-                                        ))}
-                                    </Tabs>
-                                    <Divider />
-                                    <Suspense fallback={<RenderLoader />}>
-                                        <TetradPairTable
-                                            value={z.tetrad_pairs}
-                                            isDesktop={context.viewSettings.isCompressedViewNeeded}
-                                        />
-                                    </Suspense>
-                                    <Divider />
-                                    <Suspense fallback={<RenderLoader />}>
-                                        <BasePairTable
-                                            value={resultSet.base_pairs}
-                                            isDesktop={context.viewSettings.isCompressedViewNeeded}
-                                        />
-                                    </Suspense>
-                                    <Divider />
-                                    <Suspense fallback={<RenderLoader />}>
-                                        <NucleotideTable
-                                            value={resultSet.nucleotides}
-                                            isDesktop={context.viewSettings.isCompressedViewNeeded}
-                                        />
-                                    </Suspense>
-                                </TabPane>
-                            ))}
-                        </Tabs>
+                                            </>
+                                        ),
+                                    };
+                                }
+                            )}
+                        />
                     )}
                 </>
             )}
         </>
-    );
+    )
 };

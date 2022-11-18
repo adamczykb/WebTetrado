@@ -19,7 +19,7 @@ clientsClaim();
 // Their URLs are injected into the manifest variable below.
 // This variable must be present somewhere in your service worker file,
 // even if you decide not to use precaching. See https://cra.link/PWA
-precacheAndRoute(self.__WB_MANIFEST);
+//precacheAndRoute(self.__WB_MANIFEST);
 
 function receivePushNotification(event: any) {
   const { image, tag, url, title, text } = event.data.json();

@@ -1,11 +1,13 @@
 import { Table } from "antd";
+import { UseAppContext } from "../../AppContextProvider";
 import { nucleotide } from "../../types/RestultSet";
 
 interface NucleotideTableArguemnts {
   value: nucleotide[];
-  isDesktop: boolean;
+  id: boolean;
 }
 export default function NucleotideTable(props: NucleotideTableArguemnts) {
+  const context = UseAppContext();
   const columns_nucleotides = [
     {
       title: "Number",
@@ -35,13 +37,17 @@ export default function NucleotideTable(props: NucleotideTableArguemnts) {
   ];
   return (
     <>
-      <h2 id="nucleotides" style={{ marginTop: "40px" }}>
+      <h2 id={props.id ? "nucleotides" : ""} style={{ marginTop: "40px" }}>
         Nucleotides
       </h2>
       <Table
         style={{ textAlign: "center" }}
         dataSource={props.value}
-        scroll={props.isDesktop ? { x: "auto" } : { x: "100%" }}
+        scroll={
+          !context.viewSettings.isCompressedViewNeeded
+            ? { x: "auto" }
+            : { x: "100%" }
+        }
         columns={columns_nucleotides}
       />
     </>

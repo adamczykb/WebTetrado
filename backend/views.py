@@ -10,7 +10,7 @@ from asgiref.sync import sync_to_async
 from django.views.decorators.http import require_POST
 from django.shortcuts import render
 import json
-from backend.web_push.subscription_handler import save_notification_subscription_action
+from backend.web_push.subscription_handler import save_notification_subscription_action, link_notification_to_task_action
 from WebTetrado.settings import FRONTEND_LOCATION
 
 
@@ -67,7 +67,7 @@ async def websocket_endpoint(socket):
 def link_notification_to_task_endpoint(request):
     try:
         return HttpResponse(
-            status=(200 if json.loads(request.body.decode("utf-8")) else 400)
+            status=(200 if link_notification_to_task_action(json.loads(request.body.decode("utf-8"))) else 400)
         )
     except ValueError:
         return HttpResponse(status=400)
@@ -76,16 +76,8 @@ def link_notification_to_task_endpoint(request):
 @require_POST
 def save_notification_subscription_endpoint(request):
     try:
-        return HttpResponse(
-            status=(
-                200
-                if save_notification_subscription_action(
-                    json.loads(request.body.decode("utf-8")),
-                    request.headers["user-agent"],
-                )
-                else 400
-            )
-        )
+        status, response = save_notification_subscription_action(json.loads(request.body.decode("utf-8")),request.headers["user-agent"])
+        return HttpResponse(status=status,content=response)
     except ValueError:
         return HttpResponse(status=400)
 

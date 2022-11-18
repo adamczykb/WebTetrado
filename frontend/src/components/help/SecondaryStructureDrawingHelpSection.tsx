@@ -331,4 +331,5 @@ export const SecondaryStructureDrawingHelpSection = () => {
             </table>
         </div>
     );
+
 };

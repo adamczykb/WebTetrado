@@ -1,12 +1,14 @@
 import { Table } from "antd";
+import { UseAppContext } from "../../AppContextProvider";
 import { loop } from "../../types/RestultSet";
 
 interface LoopTableArguments {
     value: loop[];
-    isDesktop: boolean;
+    id: boolean;
 }
 
 export default function LoopTable(props: LoopTableArguments) {
+    const context = UseAppContext();
     const columns_loops = [
         {
             title: "Number",
@@ -37,14 +39,18 @@ export default function LoopTable(props: LoopTableArguments) {
     return (
         <>
             {props.value.length > 0 ? <>
-                <h2 id="loops" style={{ marginTop: "40px" }}>
+                <h2 id={props.id ? "loops" : ""} style={{ marginTop: "40px" }}>
                     Loops
                 </h2>
                 <Table
                     style={{ textAlign: "center" }}
                     dataSource={props.value}
                     columns={columns_loops}
-                    scroll={props.isDesktop ? { x: "auto" } : { x: "100%" }}
+                    scroll={
+                        !context.viewSettings.isCompressedViewNeeded
+                            ? { x: "auto" }
+                            : { x: "100%" }
+                    }
                 />
             </> : <></>}
         </>

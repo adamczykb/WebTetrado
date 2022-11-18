@@ -1,4 +1,4 @@
-import { Button, Image, Spin, Switch, Tooltip } from "antd";
+import { Button, Image, Switch, Tooltip } from "antd";
 import config from "../../config.json";
 import { DownloadOutlined } from "@ant-design/icons";
 import { quadruplex, result_values } from "../../types/RestultSet";
@@ -6,16 +6,8 @@ import { MolStarWrapper } from "../molstar/MolStarWrapper";
 import { VisualisationLegend } from "./Legend";
 import { visualsation_switch_result } from "../../types/RestultSet";
 import { Suspense, useState } from "react";
+import { RenderLoader } from "./RenderLoader";
 
-const renderLoader = () => (
-    <div
-        style={{ height: "400px", margin: "20px" }}
-        className={"horizontal-center"}
-    >
-        <br />
-        <Spin size="large" />
-    </div>
-);
 function downloadFile(type: any, url: any) {
     const requestOptions = {
         method: "GET",
@@ -65,11 +57,13 @@ function r_chie_url(
 interface StructureVisualisationArguments {
     value: quadruplex;
     resultSet: result_values;
+    id: boolean;
 }
 
 export default function StructureVisualisation(
     props: StructureVisualisationArguments
 ) {
+
     const extension = props.resultSet.structure_file.split(".").splice(-1)[0];
     let visualisation_switch: visualsation_switch_result = {
         varna_non_can: false,
@@ -79,278 +73,241 @@ export default function StructureVisualisation(
     let [visualisationSwitchOptions, setSwitchOptions] =
         useState(visualisation_switch);
     return (
-        <div id={"result-visualization"}>
-            <VisualisationLegend />
-            <br />
-            <div
-                style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    flexWrap: "wrap",
-                }}
-            >
+        <div id={props.id ? "result-visualization" : ""}>
+            <div>
+
+                <VisualisationLegend />
+                <br />
                 <div
-                    hidden={props.resultSet.varna == ""}
-                    className="result-visualization"
+                    style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        flexWrap: "wrap",
+                    }}
                 >
-                    <h2>
-                        Classic diagram (by{" "}
-                        <a target={"_blank"} href="/help#secondary_drawing_varna">
-                            VARNA
-                        </a>)
-                    </h2>
                     <div
-                        style={{ padding: "20px", flexDirection: "column" }}
-                        className={"vertical-center"}
+                        hidden={props.resultSet.varna == ""}
+                        className="result-visualization"
                     >
-                        <Tooltip
-                            title={
-                                props.resultSet.varna_can == ""
-                                    ? "The analyzed quadruplex does not have any canonical base pairs outside of tetrads"
-                                    : ""
-                            }
+                        <h2>
+                            Classic diagram (by{" "}
+                            <a target={"_blank"} href="/help#secondary_drawing_varna">
+                                VARNA
+                            </a>)
+                        </h2>
+                        <div
+                            style={{ padding: "20px", flexDirection: "column" }}
+                            className={"vertical-center"}
                         >
-                            <div
-                                style={{ paddingBottom: "10px" }}
-                                className="horizontal-item-center"
+                            <Tooltip
+                                title={
+                                    props.resultSet.varna_can == ""
+                                        ? "The analyzed quadruplex does not have any canonical base pairs outside of tetrads"
+                                        : ""
+                                }
                             >
-                                <div className="item-label">
-                                    Show canonical base pairs outside tetrads:
+                                <div
+                                    style={{ paddingBottom: "10px" }}
+                                    className="horizontal-item-center"
+                                >
+                                    <div className="item-label">
+                                        Show canonical base pairs outside tetrads:
+                                    </div>
+                                    <Switch
+                                        checked={visualisationSwitchOptions.varna_can}
+                                        checkedChildren="Yes"
+                                        unCheckedChildren="No"
+                                        disabled={props.resultSet.varna_can == ""}
+                                        onChange={() =>
+                                            setSwitchOptions({
+                                                ...visualisationSwitchOptions,
+                                                varna_can: !visualisationSwitchOptions.varna_can,
+                                            })
+                                        }
+                                    />
                                 </div>
-                                <Switch
-                                    checked={visualisationSwitchOptions.varna_can}
-                                    checkedChildren="Yes"
-                                    unCheckedChildren="No"
-                                    disabled={props.resultSet.varna_can == ""}
-                                    onChange={() =>
-                                        setSwitchOptions({
-                                            ...visualisationSwitchOptions,
-                                            varna_can: !visualisationSwitchOptions.varna_can,
-                                        })
-                                    }
-                                />
-                            </div>
-                        </Tooltip>
-                        <Tooltip
-                            title={
-                                props.resultSet.varna_non_can == ""
-                                    ? "The analyzed quadruplex does not have any non-canonical base pairs outside of tetrads"
-                                    : ""
-                            }
-                        >
-                            <div
-                                style={{ paddingBottom: "10px" }}
-                                className="horizontal-item-center"
+                            </Tooltip>
+                            <Tooltip
+                                title={
+                                    props.resultSet.varna_non_can == ""
+                                        ? "The analyzed quadruplex does not have any non-canonical base pairs outside of tetrads"
+                                        : ""
+                                }
                             >
-                                <div className="item-label">
-                                    Show non-canonical base pairs outside tetrads:
+                                <div
+                                    style={{ paddingBottom: "10px" }}
+                                    className="horizontal-item-center"
+                                >
+                                    <div className="item-label">
+                                        Show non-canonical base pairs outside tetrads:
+                                    </div>
+                                    <Switch
+                                        checked={visualisationSwitchOptions.varna_non_can}
+                                        checkedChildren="Yes"
+                                        unCheckedChildren="No"
+                                        disabled={props.resultSet.varna_non_can == ""}
+                                        onChange={() =>
+                                            setSwitchOptions({
+                                                ...visualisationSwitchOptions,
+                                                varna_non_can: !visualisationSwitchOptions.varna_non_can,
+                                            })
+                                        }
+                                    />
                                 </div>
-                                <Switch
-                                    checked={visualisationSwitchOptions.varna_non_can}
-                                    checkedChildren="Yes"
-                                    unCheckedChildren="No"
-                                    disabled={props.resultSet.varna_non_can == ""}
-                                    onChange={() =>
-                                        setSwitchOptions({
-                                            ...visualisationSwitchOptions,
-                                            varna_non_can: !visualisationSwitchOptions.varna_non_can,
-                                        })
+                            </Tooltip>
+                            <Image
+                                alt={"varna"}
+                                className="two-d-image"
+                                src={varna_url(props.resultSet, visualisationSwitchOptions)}
+                            />
+                            <br />
+                            <Button
+                                type="primary"
+                                shape="round"
+                                icon={<DownloadOutlined />}
+                                style={{ marginTop: "15px" }}
+                                size={"large"}
+                                onClick={() => {
+                                    if (
+                                        visualisationSwitchOptions.varna_non_can &&
+                                        visualisationSwitchOptions.varna_can
+                                    ) {
+                                        downloadFile(
+                                            "varna_canonical_and_non_canonical.svg",
+                                            varna_url(props.resultSet, visualisationSwitchOptions)
+                                        );
                                     }
-                                />
-                            </div>
-                        </Tooltip>
-                        <Image
-                            alt={"varna"}
-                            className="two-d-image"
-                            src={varna_url(props.resultSet, visualisationSwitchOptions)}
-                        />
-                        <br />
-                        <Button
-                            type="primary"
-                            shape="round"
-                            icon={<DownloadOutlined />}
-                            style={{ marginTop: "15px" }}
-                            size={"large"}
-                            onClick={() => {
-                                if (
-                                    visualisationSwitchOptions.varna_non_can &&
-                                    visualisationSwitchOptions.varna_can
-                                ) {
-                                    downloadFile(
-                                        "varna_canonical_and_non_canonical.svg",
-                                        varna_url(props.resultSet, visualisationSwitchOptions)
-                                    );
-                                }
-                                if (
-                                    !visualisationSwitchOptions.varna_non_can &&
-                                    visualisationSwitchOptions.varna_can
-                                ) {
-                                    downloadFile(
-                                        "varna_canonical.svg",
-                                        varna_url(props.resultSet, visualisationSwitchOptions)
-                                    );
-                                }
-                                if (
-                                    visualisationSwitchOptions.varna_non_can &&
-                                    !visualisationSwitchOptions.varna_can
-                                ) {
-                                    downloadFile(
-                                        "varna_non_canonical.svg",
-                                        varna_url(props.resultSet, visualisationSwitchOptions)
-                                    );
-                                }
-                                if (
-                                    !visualisationSwitchOptions.varna_non_can &&
-                                    !visualisationSwitchOptions.varna_can
-                                ) {
-                                    downloadFile(
-                                        "varna.svg",
-                                        varna_url(props.resultSet, visualisationSwitchOptions)
-                                    );
-                                }
-                            }}
-                        >
-                            Download
-                        </Button>
+                                    if (
+                                        !visualisationSwitchOptions.varna_non_can &&
+                                        visualisationSwitchOptions.varna_can
+                                    ) {
+                                        downloadFile(
+                                            "varna_canonical.svg",
+                                            varna_url(props.resultSet, visualisationSwitchOptions)
+                                        );
+                                    }
+                                    if (
+                                        visualisationSwitchOptions.varna_non_can &&
+                                        !visualisationSwitchOptions.varna_can
+                                    ) {
+                                        downloadFile(
+                                            "varna_non_canonical.svg",
+                                            varna_url(props.resultSet, visualisationSwitchOptions)
+                                        );
+                                    }
+                                    if (
+                                        !visualisationSwitchOptions.varna_non_can &&
+                                        !visualisationSwitchOptions.varna_can
+                                    ) {
+                                        downloadFile(
+                                            "varna.svg",
+                                            varna_url(props.resultSet, visualisationSwitchOptions)
+                                        );
+                                    }
+                                }}
+                            >
+                                Download
+                            </Button>
+                        </div>
                     </div>
-                </div>
-                <div
-                    hidden={props.resultSet.r_chie == ""}
-                    className="result-visualization"
-                >
-                    <h2>
-                        Arc diagram (by{" "}
-                        <a target={"_blank"} href="/help#secondary_drawing_rchie">
-                            R-chie
-                        </a>
-                        )
-                    </h2>
                     <div
-                        style={{ padding: "20px", flexDirection: "column" }}
-                        className={"vertical-center"}
+                        hidden={props.resultSet.r_chie == ""}
+                        className="result-visualization"
                     >
-                        <Tooltip
-                            title={
-                                props.resultSet.r_chie_canonical == ""
-                                    ? "The analyzed quadruplex does not have any canonical base pairs outside of tetrads"
-                                    : ""
-                            }
+                        <h2>
+                            Arc diagram (by{" "}
+                            <a target={"_blank"} href="/help#secondary_drawing_rchie">
+                                R-chie
+                            </a>
+                            )
+                        </h2>
+                        <div
+                            style={{ padding: "20px", flexDirection: "column" }}
+                            className={"vertical-center"}
                         >
-                            <div className="horizontal-item-center">
-                                <div className="item-label">
-                                    Show canonical base pairs outside tetrads:{" "}
+                            <Tooltip
+                                title={
+                                    props.resultSet.r_chie_canonical == ""
+                                        ? "The analyzed quadruplex does not have any canonical base pairs outside of tetrads"
+                                        : ""
+                                }
+                            >
+                                <div className="horizontal-item-center">
+                                    <div className="item-label">
+                                        Show canonical base pairs outside tetrads:{" "}
+                                    </div>
+                                    <Switch
+                                        checked={visualisationSwitchOptions.r_chie_canonical}
+                                        checkedChildren="Yes"
+                                        unCheckedChildren="No"
+                                        disabled={props.resultSet.r_chie_canonical == ""}
+                                        onChange={() =>
+                                            setSwitchOptions({
+                                                ...visualisationSwitchOptions,
+                                                r_chie_canonical:
+                                                    !visualisationSwitchOptions.r_chie_canonical,
+                                            })
+                                        }
+                                    />
                                 </div>
-                                <Switch
-                                    checked={visualisationSwitchOptions.r_chie_canonical}
-                                    checkedChildren="Yes"
-                                    unCheckedChildren="No"
-                                    disabled={props.resultSet.r_chie_canonical == ""}
-                                    onChange={() =>
-                                        setSwitchOptions({
-                                            ...visualisationSwitchOptions,
-                                            r_chie_canonical:
-                                                !visualisationSwitchOptions.r_chie_canonical,
-                                        })
-                                    }
-                                />
-                            </div>
-                        </Tooltip>
-                        <div style={{ marginTop: "64px" }}></div>
-                        <Image
-                            alt="r-chie"
-                            className="two-d-image"
-                            src={r_chie_url(props.resultSet, visualisationSwitchOptions)}
-                        />
-                        <br />
-                        <Button
-                            type="primary"
-                            shape="round"
-                            icon={<DownloadOutlined />}
-                            style={{ marginTop: "15px" }}
-                            size={"large"}
-                            onClick={() => {
-                                downloadFile(
-                                    "r_chie.svg",
-                                    config.SERVER_URL + props.resultSet.r_chie
-                                );
-                                if (!visualisationSwitchOptions.r_chie_canonical) {
+                            </Tooltip>
+                            <div style={{ marginTop: "64px" }}></div>
+                            <Image
+                                alt="r-chie"
+                                className="two-d-image"
+                                src={r_chie_url(props.resultSet, visualisationSwitchOptions)}
+                            />
+                            <br />
+                            <Button
+                                type="primary"
+                                shape="round"
+                                icon={<DownloadOutlined />}
+                                style={{ marginTop: "15px" }}
+                                size={"large"}
+                                onClick={() => {
                                     downloadFile(
                                         "r_chie.svg",
-                                        r_chie_url(props.resultSet, visualisationSwitchOptions)
+                                        config.SERVER_URL + props.resultSet.r_chie
                                     );
-                                }
-                                if (visualisationSwitchOptions.r_chie_canonical) {
-                                    downloadFile(
-                                        "r_chie_canonical.svg",
-                                        r_chie_url(props.resultSet, visualisationSwitchOptions)
-                                    );
-                                }
-                            }}
-                        >
-                            Download
-                        </Button>
-                    </div>
-                </div>
-                <div
-                    hidden={props.resultSet.draw_tetrado == ""}
-                    className="result-visualization"
-                >
-                    <h2>Layer diagram (by{" "}
-                        <a target={"_blank"} href="/help#secondary_drawing_drawtetrado">
-                            DrawTetrado
-                        </a>
-                        )</h2>
-                    <div
-                        style={{ padding: "20px", flexDirection: "column" }}
-                        className={"vertical-center"}
-                    >
-                        <div style={{ marginTop: "108px" }}></div>
-                        <Image
-                            alt="draw-tetardo"
-                            className="two-d-image"
-                            src={config.SERVER_URL + props.resultSet.draw_tetrado}
-                        />
-                        <br />
-
-                        <Button
-                            type="primary"
-                            shape="round"
-                            icon={<DownloadOutlined />}
-                            style={{ marginTop: "15px" }}
-                            size={"large"}
-                            onClick={() =>
-                                downloadFile(
-                                    "drawTetrado.svg",
-                                    config.SERVER_URL + props.resultSet.draw_tetrado
-                                )
-                            }
-                        >
-                            Download
-                        </Button>
-                    </div>
-                </div>
-            </div>
-            <div style={{ display: "block", marginTop: "50px" }}>
-                {props.resultSet.structure_file != "" ? (
-                    <div>
-                        <h2>3D structure (by{" "}
-                            <a target={"_blank"} href="https://molstar.org" rel="noreferrer"
+                                    if (!visualisationSwitchOptions.r_chie_canonical) {
+                                        downloadFile(
+                                            "r_chie.svg",
+                                            r_chie_url(props.resultSet, visualisationSwitchOptions)
+                                        );
+                                    }
+                                    if (visualisationSwitchOptions.r_chie_canonical) {
+                                        downloadFile(
+                                            "r_chie_canonical.svg",
+                                            r_chie_url(props.resultSet, visualisationSwitchOptions)
+                                        );
+                                    }
+                                }}
                             >
-                                Mol*
+                                Download
+                            </Button>
+                        </div>
+                    </div>
+                    <div
+                        hidden={props.resultSet.draw_tetrado == ""}
+                        className="result-visualization"
+                    >
+                        <h2>Layer diagram (by{" "}
+                            <a target={"_blank"} href="/help#secondary_drawing_drawtetrado">
+                                DrawTetrado
                             </a>
                             )</h2>
-
-                        <Suspense fallback={renderLoader()}>
-                            <MolStarWrapper
-                                structure_file={
-                                    config.SERVER_URL + props.resultSet.structure_file
-                                }
-                                tetrads={props.value.tetrad}
+                        <div
+                            style={{ padding: "20px", flexDirection: "column" }}
+                            className={"vertical-center"}
+                        >
+                            <div style={{ marginTop: "108px" }}></div>
+                            <Image
+                                alt="draw-tetardo"
+                                className="two-d-image"
+                                src={config.SERVER_URL + props.resultSet.draw_tetrado}
                             />
-                        </Suspense>
-                        <br />
+                            <br />
 
-                        <div className="horizontal-center" style={{ width: "100%" }}>
                             <Button
                                 type="primary"
                                 shape="round"
@@ -359,8 +316,8 @@ export default function StructureVisualisation(
                                 size={"large"}
                                 onClick={() =>
                                     downloadFile(
-                                        "structure." + extension,
-                                        config.SERVER_URL + props.resultSet.structure_file
+                                        "drawTetrado.svg",
+                                        config.SERVER_URL + props.resultSet.draw_tetrado
                                     )
                                 }
                             >
@@ -368,9 +325,49 @@ export default function StructureVisualisation(
                             </Button>
                         </div>
                     </div>
-                ) : (
-                    <></>
-                )}
+                </div>
+                <div style={{ display: "block", marginTop: "50px" }}>
+                    {props.resultSet.structure_file != "" ? (
+                        <div>
+                            <h2>3D structure (by{" "}
+                                <a target={"_blank"} href="https://molstar.org" rel="noreferrer"
+                                >
+                                    Mol*
+                                </a>
+                                )</h2>
+
+                            <Suspense fallback={<RenderLoader />}>
+                                <MolStarWrapper
+                                    structure_file={
+                                        config.SERVER_URL + props.resultSet.structure_file
+                                    }
+                                    tetrads={props.value.tetrad}
+                                />
+                            </Suspense>
+                            <br />
+
+                            <div className="horizontal-center" style={{ width: "100%" }}>
+                                <Button
+                                    type="primary"
+                                    shape="round"
+                                    icon={<DownloadOutlined />}
+                                    style={{ marginTop: "15px" }}
+                                    size={"large"}
+                                    onClick={() =>
+                                        downloadFile(
+                                            "structure." + extension,
+                                            config.SERVER_URL + props.resultSet.structure_file
+                                        )
+                                    }
+                                >
+                                    Download
+                                </Button>
+                            </div>
+                        </div>
+                    ) : (
+                        <></>
+                    )}
+                </div>
             </div>
         </div>
     );
