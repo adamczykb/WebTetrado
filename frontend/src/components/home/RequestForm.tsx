@@ -50,7 +50,7 @@ export default function RequestForm() {
             return null;
         }
 
-        if (formValues.settings.stackingMatch == NaN) {
+        if (Number.isNaN(formValues.settings.stackingMatch)) {
             formValues.settings.stackingMatch = 2;
         }
         if (
