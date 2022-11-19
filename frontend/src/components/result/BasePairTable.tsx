@@ -23,12 +23,12 @@ export default function BasePairTable(props: BasePairTableArguents) {
             key: "stericity",
         },
         {
-            title: "Edge 3'",
+            title: "3'-edge",
             dataIndex: "edge3",
             key: "edge3",
         },
         {
-            title: "Edge 5'",
+            title: "5'-edge",
             dataIndex: "edge5",
             key: "edge5",
         },
