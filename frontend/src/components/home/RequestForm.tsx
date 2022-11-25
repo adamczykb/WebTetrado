@@ -157,6 +157,25 @@ export default function RequestForm() {
                     }
                     onClick={() => {
                         setFileList([
+                            { name: "1mdg.pdb", uid: "" },
+                        ]);
+                        setFormValues({
+                            ...formValues,
+                            fileId: "rdy_1mdg_pdb",
+                            rcsbPdbId: "",
+                            settings: { ...formValues.settings, model: 1 },
+                        });
+                        setMaxModel(1);
+                    }}
+                >
+                    1MDG
+                </Button>
+                <Button
+                    size={
+                        !context.viewSettings.isCompressedViewNeeded ? "large" : "middle"
+                    }
+                    onClick={() => {
+                        setFileList([
                             { name: "q-ugg-5k-salt_4…00ns_frame1065.pdb", uid: "" },
                         ]);
                         setFormValues({
@@ -170,25 +189,7 @@ export default function RequestForm() {
                 >
                     RNA G-Quadruplex in solution
                 </Button>
-                <Button
-                    size={
-                        !context.viewSettings.isCompressedViewNeeded ? "large" : "middle"
-                    }
-                    onClick={() => {
-                        setFileList([
-                            { name: "1mdg.pdb", uid: "" },
-                        ]);
-                        setFormValues({
-                            ...formValues,
-                            fileId: "rdy_1mdg_pdb",
-                            rcsbPdbId: "",
-                            settings: { ...formValues.settings, model: 1 },
-                        });
-                        setMaxModel(1);
-                    }}
-                >
-                    RNA Octaplex
-                </Button>{" "}
+
             </div>
             <Form labelCol={{ span: 16 }} wrapperCol={{ span: 32 }}>
                 {!!context.viewSettings.isCompressedViewNeeded ? (

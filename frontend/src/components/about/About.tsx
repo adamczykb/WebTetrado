@@ -15,7 +15,23 @@ export default function About() {
             >
                 <div className="site-layout-content">
                     <h1>About</h1>
-                    <div style={{ textAlign: 'justify' }}>WebTetrado reads the 3D structures of nucleic acids given in PDB or mmCIF format. It identifies RNA/DNA base pairs and analyzes their patterns to find and classify tetrads and quadruplexes. WebTetrado engine integrates functions, including those of ElTetrado, to visualize G4 structures and compute their parameters such as rise, twist, planarity, Chi angle, etc. It classifies loop topologies and tetrad combinations. It assigns tetrads to one of the ONZ classes (O, N, Z) alongside with the directionality of the tetrad (+/-) determined by the bonds between bases and their non-canonical interactions.</div>
+                    <div style={{ textAlign: 'justify' }}>WebTetrado reads the 3D structures of nucleic acids given in PDB or mmCIF format.
+                        It identifies RNA/DNA base pairs and analyzes their patterns to find
+                        and classify tetrads and quadruplexes. WebTetrado engine integrates functions, including
+                        those of&nbsp;
+                        <a href="https://github.com/tzok/eltetrado"
+                            target="_blank"
+                            rel="noreferrer"
+                        >ElTetrado</a>,
+                        to visualize G4 structures and compute their parameters such as rise, twist,
+                        planarity, Chi angle, etc. It classifies loop topologies and tetrad combinations. It assigns tetrads to one
+                        of the ONZ classes (O, N, Z) alongside with the directionality of the tetrad
+                        (+/-) determined by the bonds between bases and their non-canonical interactions. For
+                        a standalone version of the computational engine go to <a
+                            href="https://github.com/tzok/eltetrado"
+                            target="_blank"
+                            rel="noreferrer"
+                        >GitHub</a>.</div>
                     <br />
                     <h2>Team</h2>
                     <a
@@ -27,7 +43,7 @@ export default function About() {
                     </a>
                     <sup>1</sup>,{" "}
                     <a
-                        href="http://www.cs.put.poznan.pl/mzurkowski"
+                        href="https://github.com/michal-zurkowski"
                         target="_blank"
                         rel="noreferrer"
                     >
@@ -90,7 +106,7 @@ export default function About() {
                             <a
                                 target="_blank"
                                 rel="noreferrer"
-                                href="http://www.ibch.poznan.pl/en/home/"
+                                href="https://www.ibch.poznan.pl/en/home/"
                             >
                                 Institute of Bioorganic Chemistry
                             </a>
@@ -98,7 +114,7 @@ export default function About() {
                             <a
                                 target="_blank"
                                 rel="noreferrer"
-                                href="http://institution.pan.pl/"
+                                href="https://pan.pl/en/"
                                 title="Polish Academy of Sciences"
                             >
                                 {" "}
