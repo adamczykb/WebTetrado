@@ -157,11 +157,11 @@ export default function RequestForm() {
                     }
                     onClick={() => {
                         setFileList([
-                            { name: "1mdg.pdb", uid: "" },
+                            { name: "1mdg.cif", uid: "" },
                         ]);
                         setFormValues({
                             ...formValues,
-                            fileId: "rdy_1mdg_pdb",
+                            fileId: "rdy_1mdg_cif",
                             rcsbPdbId: "",
                             settings: { ...formValues.settings, model: 1 },
                         });
