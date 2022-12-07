@@ -29,7 +29,7 @@ def set_user_request_action(body: Dict):
                 temp_file = open(
                     os.path.join(
                         settings.BASE_DIR,
-                        "example_structure_files/" + file_name[1] + "." + file_name[2],
+                        "example_structure_files/" + file_name[1].split('/')[-1] + "." + file_name[2],
                     ),
                     "rb",
                 )
@@ -84,7 +84,7 @@ def set_user_request_action(body: Dict):
         entity.status = 5
         entity.error_message = "Model does not exist"
         entity.save()
-        return HttpResponse(status=400)
+        return HttpResponse(status=500)
 
     entity.status = 2
     entity.save()
