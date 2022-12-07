@@ -22,7 +22,7 @@ const ResultAnchor = () => {
             <Link href="#loops" title="Loops" />
             <Link
                 href="#chi-angle"
-                title="Chi angle value and type in each nucleotide"
+                title="Chi angles"
             />
             <Link href="#tetrad-pairs" title="Tetrad pairs" />
             <Link href="#base-pairs" title="Base pairs" />
