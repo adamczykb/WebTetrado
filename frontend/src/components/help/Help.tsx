@@ -153,8 +153,6 @@ export const Help = () => {
                         [2019/35/B/ST6/03074], the statutory funds of Poznan University of
                         Technology and Institute of Bioorganic Chemistry PAS.
                     </p>
-                    <Divider />
-                    <h2 id={"references"}>6. References</h2>
                 </div>
             </Content>
         );
