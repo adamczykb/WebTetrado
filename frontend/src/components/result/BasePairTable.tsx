@@ -1,6 +1,7 @@
 import { Table } from "antd";
 import { UseAppContext } from "../../AppContextProvider";
 import { base_pair } from "../../types/RestultSet";
+import { JsonToCsvButton } from "../services/JsonToCsvButton";
 
 interface BasePairTableArguents {
     value: base_pair[];
@@ -59,6 +60,7 @@ export default function BasePairTable(props: BasePairTableArguents) {
             <h2 id={props.id ? "base-pairs" : ""} style={{ marginTop: "40px" }}>
                 Base pairs
             </h2>
+
             <Table
                 style={{ textAlign: "center" }}
                 dataSource={props.value}
@@ -69,6 +71,9 @@ export default function BasePairTable(props: BasePairTableArguents) {
                         : { x: "100%" }
                 }
             />
+            <div className="horizontal-center">
+                {JsonToCsvButton(props.value, ['number', 'stericity', 'edge3', 'edge5', 'nt1', 'nt2', 'in_tetrad'], ['Number', 'Stericity', '3\'-edge', '5\'-edge', 'Nucleotide 1', 'Nucleotide 2', 'In tetrad'], 'base_pair_results')}
+            </div>
         </>
     );
 }

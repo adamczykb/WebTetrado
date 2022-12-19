@@ -336,7 +336,7 @@ export default function RequestForm() {
                             </Form.Item>
                             <Form.Item valuePropName="checked">
                                 <div className="horizontal-item-center">
-                                    <div className="item-label">G4-limited search: </div>
+                                    <div className="item-label"><Tooltip title="Highlight G4 results">G4-limited search: </Tooltip> </div>
                                     <Switch
                                         size={
                                             !context.viewSettings.isCompressedViewNeeded
@@ -455,7 +455,7 @@ export default function RequestForm() {
                                                         : {}
                                                 }
                                             >
-                                                Model number:
+                                                Selected model number:
                                             </div>
                                             <Slider
                                                 min={1}

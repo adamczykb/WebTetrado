@@ -1,6 +1,7 @@
 import { Table } from "antd";
 import { UseAppContext } from "../../AppContextProvider";
 import { loop } from "../../types/RestultSet";
+import { JsonToCsvButton } from "../services/JsonToCsvButton";
 
 interface LoopTableArguments {
     value: loop[];
@@ -52,6 +53,9 @@ export default function LoopTable(props: LoopTableArguments) {
                             : { x: "100%" }
                     }
                 />
+                <div className="horizontal-center">
+                    {JsonToCsvButton(props.value, ['number', 'short_sequence', 'full_sequence', 'length', 'type'], ['Number', 'Short sequence', 'Full sequence', 'Loop length', 'Loop type'], 'loop_results')}
+                </div>
             </> : <></>}
         </>
     );

@@ -1,6 +1,7 @@
 import { Table } from "antd";
 import { UseAppContext } from "../../AppContextProvider";
 import { chi_angle_value } from "../../types/RestultSet";
+import { JsonToCsvButton } from "../services/JsonToCsvButton";
 
 interface ChiAngleTableArguments {
     value: chi_angle_value[];
@@ -50,6 +51,10 @@ export default function ChiAngleTable(props: ChiAngleTableArguments) {
                         : { x: "100%" }
                 }
             />
+            <div className="horizontal-center">
+                {JsonToCsvButton(props.value, ['number', 'nt1', 'nt2', 'nt3', 'nt4', 'nt2'], ['Number', 'Nucleotide 1', 'Nucleotide 2', 'Nucleotide 3', 'Nucleotide 4'], 'chi_angle_results')}
+            </div>
+
         </>
     );
 }

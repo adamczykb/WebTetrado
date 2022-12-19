@@ -18,7 +18,7 @@ export const Home = () => {
                         : { padding: "40px" }
                 }
             >
-                WebTetrado reads the 3D structures of nucleic acids and searches them for tetrads and quadruplexes. Identified motifs are visualized, classified, and described by a number of structural parameters.
+                WebTetrado reads the 3D structures of nucleic acids and searches them for tetrads and quadruplexes. Identified motifs are visualized, classified, and described by a number of structural parameters. This website is free and open to all users and there is no login requirement.
             </h3>
             <Divider />
             <h1
