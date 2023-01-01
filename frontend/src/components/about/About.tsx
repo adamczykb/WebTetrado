@@ -51,15 +51,6 @@ export default function About() {
                     </a>
                     <sup>1,2</sup>,{" "}
                     <a
-                        href="http://www.cs.put.poznan.pl/mantczak"
-                        target="_blank"
-                        rel="noreferrer"
-                    >
-                        Maciej Antczak
-                    </a>
-                    <sup>1,2</sup>,{" "}
-
-                    <a
                         href="https://www.cs.put.poznan.pl/mszachniuk"
                         target="_blank"
                         rel="noreferrer"
