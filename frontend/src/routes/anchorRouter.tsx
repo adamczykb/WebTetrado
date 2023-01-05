@@ -35,13 +35,12 @@ const HelpAnchor = () => {
         <>
             <Link href="#navigation" title="Navigation" />
             <Link
-                href="#webb_da_silva_classification"
-                title="Webb da Silva classification"
+                href="#topological_class"
+                title="Topological classification of quadruplex structures"
             />
-            <Link href="#secondary_structure" title="Secondary structure drawing" />
+            <Link href="#structure_visualisation" title="Structure representations and visualizations" />
             <Link href="#system_requirements" title="System requirements" />
             <Link href="#funding" title="Funding" />
-            <Link href="#references" title="References" />
         </>
     );
 };

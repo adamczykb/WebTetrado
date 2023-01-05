@@ -1,6 +1,5 @@
 import { Image } from "antd";
 import { Content } from "antd/es/layout/layout";
-import { Divider } from "../layout/common/Divider";
 import help_home_set_request from "../../assets/images/help_home_set_request.png";
 import help_request_result from "../../assets/images/help_request_result.png";
 import help_result_waiting from "../../assets/images/help_result_waiting.png";
@@ -35,8 +34,8 @@ export const Help = () => {
                     </Suspense>
                     <h2 id={"navigation"}>1. Navigation</h2>
                     <div style={{ textAlign: "justify" }}>
-                        <h3 id={"home_paragraph"}>1.1. Home</h3>
-                        <h3 id={"home_set_reqeust"}>1.1.1. Set request</h3>
+                        <h3 id={"home_paragraph"}>1.1. Homepage and input data</h3>
+                        <p>The main page of WebTetrado allows users to define and launch a new task (calculations for a given DNA/RNA structure) and check the results of a task already completed.  Launching a new task involves loading a single data file containing the atomic coordinates of a nucleic acid molecule, setting input parameters (optional), and clicking the "Send request" button. The system accepts input files in PDB and mmCIF formats. They can be uploaded from a designated location (such as a local drive) or directly from the Protein Data Bank. In the latter case, all you need to do is provide the PDB ID of the structure, and the system will download it itself. New users of WebTetrado can also use the available examples to familiarize themselves with how the system works. In this scenario, select an example and click the "Send request" button.</p>
                         <div className={"horizontal-center"}>
                             <Image
                                 alt={"infographic"}
@@ -44,8 +43,8 @@ export const Help = () => {
                                 src={help_home_set_request}
                             />
                         </div>
-                        <Divider />
-                        <h3 id={"home_check_reqeust"}>1.1.2. Check request</h3>
+                        <p>To check the results of a completed task, users should have a task ID. The ID should be pasted into the edit box located in the "Check your result" section. After entering the ID and clicking the "Show" button, the system displays the task result page.
+                            Where to get the task ID from? The system gives a unique identifier to each running task. This identifier is displayed on the processing page as "TASK id" and is added to the URL of the result page. If users plan to check the results after some time, they should save the task identifier for later use. The results of a completed task are stored in the system for 7 days.</p>
                         <div className={"horizontal-center"}>
                             <Image
                                 alt={"infographic"}
@@ -53,9 +52,8 @@ export const Help = () => {
                                 src={help_home_check_result}
                             />
                         </div>
-                        <Divider />
-                        <h3 id={"result_paragraph"}>1.2. Result</h3>
-                        <h3 id={"result_waiting_for_result"}>1.2.1. Waiting for result</h3>
+                        <h3 id={"result_paragraph"}>1.2. Results of data processing</h3>
+                        <p>Once the user runs the task, the system opens a result page that displays the status of the task (Task uploaded, Queueing, Processing, Task completed). The page has a dedicated URL whose suffix is the task identifier. The same identifier is also displayed in a header line on the result page.</p>
                         <div className={"horizontal-center"}>
                             <Image
                                 alt={"infographic"}
@@ -63,8 +61,7 @@ export const Help = () => {
                                 src={help_result_waiting}
                             />
                         </div>
-                        <Divider />
-                        <h3 id={"result_request_result"}>1.2.1. Request result</h3>
+                        <p>Once the calculation is completed, the page shows either a message about the failure to find a quadruplex in the structure or the structural data of the motif(s) found. In the latter case, the data is displayed hierarchically following the top-down order. If the input structure contains G4-helix, the system shows which quadruplexes are included in it. Next, the quadruplex-specific parameters are displayed, and then the parameters that were calculated for the tetrads that make up the quadruplex. Computed data include metadata (PDB ID, experiment, molecule type), classifications of tetrads and quadruplexes (by loop progression (Webba da Silva), chi angle (Webba da Silva), the relative orientation of the strands, base-pairing patterns (ONZ)), structure data (number of tetrads, sequences, tetrad planarity, loop lengths, loop types, chi angles, rise, twist, base pair types). WebTetrado also displays visualizations of the secondary structure (classic diagram, arc diagram), secondary-tertiary structure (layer diagram), and the tertiary structure (cartoon model).</p>
                         <div className={"horizontal-center"}>
                             <Image
                                 alt={"infographic"}
@@ -73,24 +70,22 @@ export const Help = () => {
                             />
                         </div>
                     </div>
-                    <Divider />
-                    <h2 id={"webb_da_silva_classification"}>
-                        2. Webb da Silva classification
+                    <br />
+                    <h2 id={"topological_class"}>
+                        2. Topological classification of quadruplex structures
                     </h2>
                     <Suspense fallback={<RenderLoader />}>
                         <WebbDaSilvaClassificationHelpSection />
                     </Suspense>
-                    <Divider />
-
-                    <h2 id={"secondary_structure"}>3. Secondary structure drawing</h2>
+                    <br />
+                    <h2 id={"structure_visualisation"}>3. Structure representations and visualizations</h2>
                     <Suspense fallback={<RenderLoader />}>
                         <SecondaryStructureDrawingHelpSection />
                     </Suspense>
-                    <Divider />
+                    <br />
                     <h2 id={"system_requirements"}>4. System requirements</h2>
                     <p>
-                        WebTetrado is designed to work with most of web browsers. The latest
-                        versions of browsers are recommended.
+                        WebTetrado is designed for mobile and desktop devices. It works with most common web browsers; their latest versions are recommended.
                     </p>
                     <table style={{ border: "1px solid gray", textAlign: "center" }}>
                         <tr>
@@ -146,7 +141,7 @@ export const Help = () => {
                             </td>
                         </tr>
                     </table>
-                    <Divider />
+                    <br />
                     <h2 id={"funding"}>5. Funding</h2>
                     <p>
                         We acknowledge support from the National Science Centre, Poland

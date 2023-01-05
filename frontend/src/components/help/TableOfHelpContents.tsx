@@ -25,28 +25,9 @@ export const TableOfHelpContents = () => {
                                     moveTo("home_paragraph");
                                 }}
                             >
-                                Home
+                                Homepage and input data
                             </a>
-                            <ol style={{ paddingLeft: "10px" }}>
-                                <li>
-                                    <a
-                                        onClick={() => {
-                                            moveTo("home_set_request");
-                                        }}
-                                    >
-                                        Set request
-                                    </a>
-                                </li>
-                                <li>
-                                    <a
-                                        onClick={() => {
-                                            moveTo("home_check_result");
-                                        }}
-                                    >
-                                        Check request
-                                    </a>
-                                </li>{" "}
-                            </ol>
+
                         </li>
                         <li>
                             <a
@@ -54,76 +35,84 @@ export const TableOfHelpContents = () => {
                                     moveTo("result_paragraph");
                                 }}
                             >
-                                Result
+                                Results of data processing
                             </a>
-                            <ol style={{ paddingLeft: "10px" }}>
-                                <li>
-                                    <a
-                                        onClick={() => {
-                                            moveTo("result_waiting_for_result");
-                                        }}
-                                    >
-                                        Waiting for result
-                                    </a>{" "}
-                                </li>
-                                <li>
-                                    <a
-                                        onClick={() => {
-                                            moveTo("result_request_result");
-                                        }}
-                                    >
-                                        Request result
-                                    </a>
-                                </li>
-                            </ol>
                         </li>
                     </ol>
                 </li>
                 <li>
                     <a
                         onClick={() => {
-                            moveTo("webb_da_silva_classification");
+                            moveTo("topological_class");
                         }}
                     >
-                        Webb da Silva classification
+                        Topological classification of quadruplex structures
                     </a>
                     <ol style={{ paddingLeft: "10px" }}>
-                        <li>
-                            <a
-                                onClick={() => {
-                                    moveTo("webb_chi_angle");
-                                }}
-                            >
-                                Chi angle
-                            </a>
-                        </li>
                         <li>
                             <a
                                 onClick={() => {
                                     moveTo("webb_loop_progression");
                                 }}
                             >
-                                Loop progression
+                                by loop progression (Webba da Silva)
                             </a>
                         </li>
+                        <li>
+                            <a
+                                onClick={() => {
+                                    moveTo("webb_chi_angle");
+                                }}
+                            >
+                                by Chi angle (Webba da Silva)
+                            </a>
+                        </li>
+                        <li>
+                            <a
+                                onClick={() => {
+                                    moveTo("webb_realative_strands");
+                                }}
+                            >
+                                by relative orientation of the strands
+                            </a>
+                        </li>
+                        <li>
+                            <a
+                                onClick={() => {
+                                    moveTo("webb_base_pairing_patterns");
+                                }}
+                            >
+                                by base-pairing patterns (ONZ)
+                            </a>
+                        </li>
+
                     </ol>
                 </li>
                 <li>
                     <a
                         onClick={() => {
-                            moveTo("secondary_structure");
+                            moveTo("structure_visualisation");
                         }}
                     >
-                        Secondary structure drawing
+                        Structure representations and visualizations
                     </a>
                     <ol style={{ paddingLeft: "10px" }}>
+                        <li>
+                            <a
+                                onClick={() => {
+                                    moveTo("secondary_drawing_dotbracket");
+                                }}
+                            >
+                                2D structure (dot-bracket)
+                            </a>
+                        </li>
                         <li>
                             <a
                                 onClick={() => {
                                     moveTo("secondary_drawing_varna");
                                 }}
                             >
-                                VARNA
+                                2D structure (classic diagram)
                             </a>
                         </li>
                         <li>
@@ -132,7 +121,7 @@ export const TableOfHelpContents = () => {
                                     moveTo("secondary_drawing_rchie");
                                 }}
                             >
-                                R-chie
+                                2D structure (arc diagram)
                             </a>
                         </li>
                         <li>
@@ -141,26 +130,16 @@ export const TableOfHelpContents = () => {
                                     moveTo("secondary_drawing_drawtetrado");
                                 }}
                             >
-                                Layer diagram (by DrawTetrado)
-                            </a>
-                        </li>
-
-                        <li>
-                            <a
-                                onClick={() => {
-                                    moveTo("secondary_drawing_pseudoknot");
-                                }}
-                            >
-                                Pseudoknot annotation drawing
+                                2.5D structure (layer diagram)
                             </a>
                         </li>
                         <li>
                             <a
                                 onClick={() => {
-                                    moveTo("secondary_drawing_interactions");
+                                    moveTo("tetrary_drawing_molstar");
                                 }}
                             >
-                                Scripts to annotate non-canonical interactions
+                                3D structure (cartoon model)
                             </a>
                         </li>
                     </ol>
