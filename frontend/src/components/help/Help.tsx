@@ -27,15 +27,15 @@ export const Help = () => {
                 }}
                 id="help-navigation"
             >
-                <div id="help-page" className="site-layout-content">
+                <div id="help-page" className="site-layout-content" style={{ textAlign: "justify" }}>
                     <h1>Help</h1>
                     <Suspense fallback={<RenderLoader />}>
                         <TableOfHelpContents />
                     </Suspense>
                     <h2 id={"navigation"}>1. Navigation</h2>
-                    <div style={{ textAlign: "justify" }}>
+                    <div>
                         <h3 id={"home_paragraph"}>1.1. Homepage and input data</h3>
-                        <p>The main page of WebTetrado allows users to define and launch a new task (calculations for a given DNA/RNA structure) and check the results of a task already completed.  Launching a new task involves loading a single data file containing the atomic coordinates of a nucleic acid molecule, setting input parameters (optional), and clicking the "Send request" button. The system accepts input files in PDB and mmCIF formats. They can be uploaded from a designated location (such as a local drive) or directly from the Protein Data Bank. In the latter case, all you need to do is provide the PDB ID of the structure, and the system will download it itself. New users of WebTetrado can also use the available examples to familiarize themselves with how the system works. In this scenario, select an example and click the "Send request" button.</p>
+                        <p>The main page of WebTetrado allows users to define and launch a new task (calculations for a given DNA/RNA structure) and check the results of a task already completed.  Launching a new task involves loading a single data file containing the atomic coordinates of a nucleic acid molecule, setting input parameters (optional), and clicking the "Send request" button. The system accepts input files in PDB and mmCIF formats. They can be uploaded from a designated location (such as a local drive) or directly from the Protein Data Bank (Berman et al., 2000). In the latter case, all you need to do is provide the PDB ID of the structure, and the system will download it itself. New users of WebTetrado can also use the available examples to familiarize themselves with how the system works. In this scenario, select an example and click the "Send request" button.</p>
                         <div className={"horizontal-center"}>
                             <Image
                                 alt={"infographic"}
@@ -74,6 +74,7 @@ export const Help = () => {
                     <h2 id={"topological_class"}>
                         2. Topological classification of quadruplex structures
                     </h2>
+                    <p>WebTetrado analyzes a number of parameters and properties of the input structure. Based on this analysis, it classifies tetrads and quadruplexes according to several criteria.</p>
                     <Suspense fallback={<RenderLoader />}>
                         <WebbDaSilvaClassificationHelpSection />
                     </Suspense>
@@ -148,6 +149,18 @@ export const Help = () => {
                         [2019/35/B/ST6/03074], the statutory funds of Poznan University of
                         Technology and Institute of Bioorganic Chemistry PAS.
                     </p>
+                    <h2 id={"bibliography"}>6. Bibliography</h2>
+                    <ul>
+                        <li>&#8226; Berman et al. (2000) The Protein Data Bank. Nucleic Acids Res 28(1):235–242. </li>
+                        <li>&#8226; Darty et al. (2009) VARNA: interactive drawing and editing of the RNA secondary structure. Bioinformatics 25(15):1974--1975.</li>
+                        <li>&#8226; Esposito et al. (2007) A topological classification of G-quadruplex structures. Nucleosides, Nucleotides & Nucleic Acids 26(8-9): 1155-1159.</li>
+                        <li>&#8226; Lai et al. (2012) R-chie: a web server and R package for visualizing RNA secondary structures. Nucleic Acids Res 40(12):e95.</li>
+                        <li>&#8226; Leontis and Westhof (2001) Geometric nomenclature and classification of RNA base pairs. RNA 7(4):499-512.</li>
+                        <li>&#8226; Popenda et al. (2020) Topology-based classification of tetrads and quadruplex structures. Bioinformatics 36(4):1129-1134. </li>
+                        <li>&#8226; Sehnal et al. (2021) Mol* Viewer: modern web app for 3D visualization and analysis of large biomolecular structures. Nucleic Acids Res 49(W1):W431–W437.</li>
+                        <li>&#8226; Webba da Silva (2007) Geometric formalism for DNA quadruplex folding. Chemistry 13(35):9738-45.</li>
+                        <li>&#8226; Zurkowski et al. (2022) DrawTetrado to create layer diagrams of G4 structures. Bioinformatics 38(15):3835-3836.</li>
+                    </ul>
                 </div>
             </Content>
         );

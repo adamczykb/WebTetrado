@@ -23,6 +23,16 @@ export const WebbDaSilvaClassificationHelpSection = () => {
     return (
         <>
             <h3 id={"webb_loop_progression"}>2.1. by loop progression (Webba da Silva)</h3>
+            <p>Nucleotides connecting individual tetrads in a quadruplex form so-called loops. We distinguish four types of these loops:</p>
+            <ul>
+                <li>&#8226; lateral loop (edge-wise loop) connects two adjacent, antiparallel strands,</li>
+                <li>&#8226; diagonal loop connects two opposite, antiparallel strands,</li>
+                <li>&#8226; propeller loop (external loop, double-chain reversal loop) connects two adjacent, parallel strands,</li>
+                <li>&#8226; V-shaped loop connects two vertices of adjacent tetrads in which one guanosine residue lacks phosphodiester chain support.</li>
+            </ul>
+            <p>
+                Webba da Silva (Webba da Silva, 2007) proposed a classification of topologies of unimolecular quadruplexes that is based on three types of loops (lateral, diagonal, and propeller). It defines 26 permissible loop combinations, with 13 starting from a clockwise loop and the other 13 from an anticlockwise loop. The following figure shows the schemes of all of these looping topologies. Denoted by "a" are topologies that start with anticlockwise progressing loops, and the topologies denoted by "b" start with clockwise progressing loops.
+            </p>
             <Collapse defaultActiveKey={1}>
                 <Panel header="Loop progression " key="1">
                     <div
@@ -58,6 +68,9 @@ export const WebbDaSilvaClassificationHelpSection = () => {
             </Collapse>
             <br />
             <h3 id={"webb_chi_angle"}>2.2. by Chi angle (Webba da Silva)</h3>
+            <p>
+                Each G-quadruplex is built from stacked G-tetrads. In such a tetrad, four guanine bases align in a pseudo-plane through hydrogen-bond alignments involving the Watson–Crick edge of a guanine and the Hoogsteen edge of its partner. Tetrads can be classified according to the glycosidic bond angle of the intervening nucleotides, which have either an anti or a syn conformation. As shown in the figure below, there exist 16 possible positions of glycosidic bond angle in a tetrad (Webba da Silva, 2007).
+            </p>
             <Collapse defaultActiveKey={1}>
                 <Panel header="Chi angle" key="1">
                     <div
@@ -85,7 +98,7 @@ export const WebbDaSilvaClassificationHelpSection = () => {
             <br />
             <h3 id={"webb_realative_strands"}>2.3. by relative orientation of the strands</h3>
             <p>
-                The relative orientation of the strands determines the type of quadruplex structure:
+                The relative orientation of the strands determines the type of quadruplex structure (Esposito et al., 2007):
             </p>
             <ul>
                 <li>
@@ -104,9 +117,9 @@ export const WebbDaSilvaClassificationHelpSection = () => {
                     flexWrap: "wrap",
                 }}
             >
-                <div style={{ textAlign: 'center' }}><img alt="antiparallel" width="250px" src={require("../../assets/images/antiparallel-clean.svg")} /><br /><span>Antiparallel</span></div>
-                <div style={{ textAlign: 'center' }}><img alt="hybrid-clean" width="250px" src={require("../../assets/images/hybrid-clean.svg")} /><br /><span>Hybrid</span></div>
-                <div style={{ textAlign: 'center' }}><img alt="parallel" width="250px" src={require("../../assets/images/parallel-clean.svg")} /><br /><span>Parallel</span></div>
+                <div style={{ textAlign: 'center' }}><img alt="parallel" width="250px" src={require("../../assets/images/parallel.svg")} /><br /><span>Parallel</span></div>
+                <div style={{ textAlign: 'center' }}><img alt="hybrid-clean" width="250px" src={require("../../assets/images/hybrid.svg")} /><br /><span>Hybrid</span></div>
+                <div style={{ textAlign: 'center' }}><img alt="antiparallel" width="250px" src={require("../../assets/images/antiparallel-a.svg")} /><br /><span>Antiparallel (top-top-down-down)</span></div>
             </div>
             <br />
             <h3 id={"webb_base_pairing_patterns"}>2.4. by base-pairing patterns (ONZ)</h3>

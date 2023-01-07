@@ -162,6 +162,16 @@ export const TableOfHelpContents = () => {
                         Funding
                     </a>
                 </li>
+                <li>
+                    <a
+                        onClick={() => {
+                            moveTo("bibliography");
+                        }}
+                    >
+                        Bibliography
+                    </a>
+                </li>
+
             </ol>
         </>
     );

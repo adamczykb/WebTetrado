@@ -1,6 +1,11 @@
+import { VisualisationLegend } from "../result/Legend";
+
 export const SecondaryStructureDrawingHelpSection = () => {
     return (
         <div>
+            <p>The quadruplex structure shown on the result page in dot-bracket notation and in all visualizations is colored by default according to the color codes corresponding to the ONZ classification. This means that any tetrad that is assigned to the O class is colored blue, the N-type tetrad is green, and the Z-type tetrad is orange. In addition, we distinguish between the tetrads of the + (clockwise) type and the tetrads of the - (anticlockwise) type. The former ones have a dark shade, and the latter - have a light shade. The output visualizations can be downloaded and saved in the SVG format.</p>
+            <VisualisationLegend />
+            <br />
             <h3 id={"secondary_drawing_dotbracket"}>
                 3.1.{" "}
                 2D structure (dot-bracket)
@@ -19,37 +24,23 @@ export const SecondaryStructureDrawingHelpSection = () => {
                 </a>
             </h3>
             <p>
-                VARNA is mainly an interactive software for drawing and editing RNA
-                secondary structures. It supports several input file formats, including
-                BPSEQ, CT and others. The main advantage of VARNA is its support for
-                non-canonical base pairs (
-                <a href="http://rnajournal.cshlp.org/content/7/4/499.long">
-                    Leontis/Westhof
-                </a>
-                &nbsp; nomenclature). The output visualisation can be extracted in vector and
-                bitmap picture formats including EPS, SVG, XFIG, JPG, or PNG. VARNA is
-                available as the lightweight applet and swing component at{" "}
-                <a href="http://varna.lri.fr/">http://varna.lri.fr/</a>.
-            </p>
-            <p>
-                Additional scripts post-process the VARNA images to
-                display non-canonical interactions. VARNA visualization supports
-                Leontis/Westhof classification and it is used during WebTetrado
-                post-processing (see table below). Gray dashed lines are used to connect multiplet-involved
-                residues and other pairs unrepresentable in text format.
+                The secondary structure of the quadruplex is presented in a classical diagram generated using a VARNA-based procedure (Darty et al., 2009). In WebTetrado, we adjusted this procedure to visualize quadruplexes. Its advantage is the support for non-canonical base pairs. They are graphically annotated according to the Leontis-Westhof classification (Leontis and Westhof, 2001). For this annotation, we use pictograms presented in the table below. By default, only base pairs involved in the quadruplex are drawn on the diagram. However, two switches available on the interactive panel with the diagram, allow users to view canonical and non-canonical pairings outside the tetrads. The latter are colored grey.
             </p>
             <table id={"visualization-symbol-table"}>
                 <tbody>
                     <tr>
                         <td>
-                            <b>RNA base-base classification</b>
+                            <b>Base pair type</b>
                         </td>
                         <td>
-                            <b>Visualization symbol</b>
+                            <b>cis</b>
+                        </td>
+                        <td>
+                            <b>trans</b>
                         </td>
                     </tr>
                     <tr>
-                        <td>cis Watson-Crick Watson-Crick</td>
+                        <td>Watson-Crick-Franklin - Watson-Crick-Franklin</td>
                         <td>
                             <img
                                 alt={"symbol-cww"}
@@ -58,9 +49,6 @@ export const SecondaryStructureDrawingHelpSection = () => {
                                 }
                             />
                         </td>
-                    </tr>
-                    <tr>
-                        <td>trans Watson-Crick Watson-Crick</td>
                         <td>
                             <img
                                 alt={"symbol-tww"}
@@ -71,7 +59,7 @@ export const SecondaryStructureDrawingHelpSection = () => {
                         </td>
                     </tr>
                     <tr>
-                        <td>cis Watson-Crick Hoogsteen</td>
+                        <td>Watson-Crick-Franklin - Hoogsteen</td>
                         <td>
                             <img
                                 alt={"symbol-cwh"}
@@ -80,9 +68,6 @@ export const SecondaryStructureDrawingHelpSection = () => {
                                 }
                             />
                         </td>
-                    </tr>
-                    <tr>
-                        <td>trans Watson-Crick Hoogsteen</td>
                         <td>
                             <img
                                 alt={"symbol-twh"}
@@ -93,7 +78,7 @@ export const SecondaryStructureDrawingHelpSection = () => {
                         </td>
                     </tr>
                     <tr>
-                        <td>cis Watson-Crick Sugar</td>
+                        <td>Watson-Crick-Franklin - Sugar</td>
                         <td>
                             <img
                                 alt={"symbol-cws"}
@@ -102,9 +87,6 @@ export const SecondaryStructureDrawingHelpSection = () => {
                                 }
                             />
                         </td>
-                    </tr>
-                    <tr>
-                        <td>trans Watson-Crick Sugar</td>
                         <td>
                             <img
                                 alt={"symbol-tws"}
@@ -115,7 +97,7 @@ export const SecondaryStructureDrawingHelpSection = () => {
                         </td>
                     </tr>
                     <tr>
-                        <td>cis Hoogsteen Watson-Crick</td>
+                        <td>Hoogsteen - Watson-Crick-Franklin</td>
                         <td>
                             <img
                                 alt={"symbol-chw"}
@@ -124,9 +106,6 @@ export const SecondaryStructureDrawingHelpSection = () => {
                                 }
                             />
                         </td>
-                    </tr>
-                    <tr>
-                        <td>trans Hoogsteen Watson-Crick</td>
                         <td>
                             <img
                                 alt={"symbol-thw"}
@@ -137,7 +116,7 @@ export const SecondaryStructureDrawingHelpSection = () => {
                         </td>
                     </tr>
                     <tr>
-                        <td>cis Hoogsteen Hoogsteen</td>
+                        <td>Hoogsteen - Hoogsteen</td>
                         <td>
                             <img
                                 alt={"symbol-chh"}
@@ -146,9 +125,6 @@ export const SecondaryStructureDrawingHelpSection = () => {
                                 }
                             />
                         </td>
-                    </tr>
-                    <tr>
-                        <td>trans Hoogsteen Hoogsteen</td>
                         <td>
                             <img
                                 alt={"symbol-thh"}
@@ -157,9 +133,10 @@ export const SecondaryStructureDrawingHelpSection = () => {
                                 }
                             />
                         </td>
+
                     </tr>
                     <tr>
-                        <td>cis Hoogsteen Sugar</td>
+                        <td>Hoogsteen - Sugar</td>
                         <td>
                             <img
                                 alt={"symbol-chs"}
@@ -168,9 +145,6 @@ export const SecondaryStructureDrawingHelpSection = () => {
                                 }
                             />
                         </td>
-                    </tr>
-                    <tr>
-                        <td>trans Hoogsteen Sugar</td>
                         <td>
                             <img
                                 alt={"symbol-ths"}
@@ -181,7 +155,7 @@ export const SecondaryStructureDrawingHelpSection = () => {
                         </td>
                     </tr>
                     <tr>
-                        <td>cis Sugar Watson-Crick</td>
+                        <td>Sugar - Watson-Crick-Franklin</td>
                         <td>
                             <img
                                 alt={"symbol-csw"}
@@ -190,9 +164,6 @@ export const SecondaryStructureDrawingHelpSection = () => {
                                 }
                             />
                         </td>
-                    </tr>
-                    <tr>
-                        <td>trans Sugar Watson-Crick</td>
                         <td>
                             <img
                                 alt={"symbol-tsw"}
@@ -203,7 +174,7 @@ export const SecondaryStructureDrawingHelpSection = () => {
                         </td>
                     </tr>
                     <tr>
-                        <td>cis Sugar Hoogsteen</td>
+                        <td>Sugar - Hoogsteen</td>
                         <td>
                             <img
                                 alt={"symbol-csh"}
@@ -212,9 +183,6 @@ export const SecondaryStructureDrawingHelpSection = () => {
                                 }
                             />
                         </td>
-                    </tr>
-                    <tr>
-                        <td>trans Sugar Hoogsteen</td>
                         <td>
                             <img
                                 alt={"symbol-tsh"}
@@ -225,7 +193,7 @@ export const SecondaryStructureDrawingHelpSection = () => {
                         </td>
                     </tr>
                     <tr>
-                        <td>cis Sugar Sugar</td>
+                        <td>Sugar - Sugar</td>
                         <td>
                             <img
                                 alt={"symbol-css"}
@@ -234,9 +202,6 @@ export const SecondaryStructureDrawingHelpSection = () => {
                                 }
                             />
                         </td>
-                    </tr>
-                    <tr>
-                        <td>trans Sugar Sugar</td>
                         <td>
                             <img
                                 alt={"symbol-tss"}
@@ -256,13 +221,7 @@ export const SecondaryStructureDrawingHelpSection = () => {
                 </a>
             </h3>
             <p>
-                R-chie is a tool for generating different types of arc diagrams. It
-                supports visualization of multiple sequence alignments and incorporation
-                of co-variance information into the image. R-chie can read inputs in
-                various formats including BPSEQ, CT and dot-bracket, also these
-                containing higher order pseudoknots. It is highly configurable and
-                allows to save output as PNG or PDF files. The webserver is available at{" "}
-                <a href="http://www.e-rna.org/r-chie">http://www.e-rna.org/r-chie</a>.
+                Arc diagram is an alternative representation of the secondary structure of a quadruplex shown in WebTetrado. To generate it, we use the R-chie program (Lai et al., 2022), which we adapted for quadruplexes. In a classical arc diagram, multiplets are not represented. Our procedure generates top-down arc diagrams, which correspond to two-line dot-bracket notation (Popenda et al., 2020). The top arcs in a diagram correspond to the first line of dot-bracket encoding, and the bottom arcs correspond to the second line of dot-bracket notation. The visualization of the arc diagram is interactive. There is a switch on its panel that allows drawing arcs that represent canonical base pairs beyond tetrads. By default, the arc diagram shows only the pairings directly involved in the quadruplex.
             </p>
             <h3 id={"secondary_drawing_drawtetrado"}>
                 3.4.{" "}
@@ -271,14 +230,7 @@ export const SecondaryStructureDrawingHelpSection = () => {
                 </a>
             </h3>
             <p>
-                Layer diagram shows the 3D models of quadruplexes and G4Helices in a simplified view. Each tetrad is demonstrated as a planar
-                rhombus with defined each nucleotide and its order number within a sequence.
-            </p>
-            <div className={"horizontal-center"}>
-                <img alt='drawtetrado_layer_visualization' width={'25%'} src={require('../../assets/images/drawtetrado.svg')} />
-            </div>
-            <p style={{ textAlign: 'center' }}>
-                Layer diagram of quadruplex. Black arrows indicate progression from 5’ to 3’ end.<br /> Nucleotides are displayed as rhombuses with their sequential numeric id.
+                The layer diagram shows the simplified 2.5 D model of a quadruplex or G4Helix. G4-helix is represented as a stack of quadruplexes. A quadruplex is drawn as an n-layered stack, where n is the number of tetrads. Each tetrad is displayed as a planar rhombus composed of four parallelograms that represent nucleotides. The name of a nucleotide is shown, containing chain ID, nucleotide symbol, and number. Strands are drawn with arrows depicting their directionalities. The layout is automatically optimized to give a clear image avoiding strand clutter. The drawing is generated automatically by the DrawTetrado program (Zurkowski et al., 2022) that runs within the computational engine of the system.
             </p>
             <h3 id={"tetrary_drawing_molstar"}>
                 3.5.{" "}
@@ -286,7 +238,9 @@ export const SecondaryStructureDrawingHelpSection = () => {
                     3D structure (cartoon model)
                 </a>
             </h3>
-            <p>Mol* viewer is a high-performance structure visualzer that is able to render compounded structures with atoms. WebTetrado uses Mol* to mark residues with correspondent base-pairing patterns ONZ colouring.</p>
+            <p>
+                To visualize the tertiary structure, WebTetrado uses the Mol* viewer (Sehnal et al., 2021). The 3D structure is represented in the cartoon model, in which the nucleotides that make up the tetrads are by default coloured according to the code defined for the ONZ classification. Nucleotides outside the quadruplex are light gray. The panel with the visualization of the 3D structure provides all options of Mol*. Users can therefore modify the view of the structure (hide and display specified fragments of the structure, recolor, change background settings, etc.).
+            </p>
         </div>
     );
 
