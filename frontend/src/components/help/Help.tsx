@@ -72,7 +72,7 @@ export const Help = () => {
                     </div>
                     <br />
                     <h2 id={"topological_class"}>
-                        2. Topological classification of quadruplex structures
+                        2. Topological classification of tetrads and quadruplexes
                     </h2>
                     <p>WebTetrado analyzes a number of parameters and properties of the input structure. Based on this analysis, it classifies tetrads and quadruplexes according to several criteria.</p>
                     <Suspense fallback={<RenderLoader />}>

@@ -46,7 +46,7 @@ export const TableOfHelpContents = () => {
                             moveTo("topological_class");
                         }}
                     >
-                        Topological classification of quadruplex structures
+                        Topological classification of tetrads and quadruplexes
                     </a>
                     <ol style={{ paddingLeft: "10px" }}>
                         <li>

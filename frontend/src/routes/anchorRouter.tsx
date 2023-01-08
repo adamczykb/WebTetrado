@@ -41,6 +41,7 @@ const HelpAnchor = () => {
             <Link href="#structure_visualisation" title="Structure representations and visualizations" />
             <Link href="#system_requirements" title="System requirements" />
             <Link href="#funding" title="Funding" />
+            <Link href="#bibliography" title="Bibliography" />
         </>
     );
 };
