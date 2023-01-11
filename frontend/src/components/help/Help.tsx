@@ -35,7 +35,48 @@ export const Help = () => {
                     <h2 id={"navigation"}>1. Navigation</h2>
                     <div>
                         <h3 id={"home_paragraph"}>1.1. Homepage and input data</h3>
-                        <p>The main page of WebTetrado allows users to define and launch a new task (calculations for a given DNA/RNA structure) and check the results of a task already completed.  Launching a new task involves loading a single data file containing the atomic coordinates of a nucleic acid molecule, setting input parameters (optional), and clicking the "Send request" button. The system accepts input files in PDB and mmCIF formats. They can be uploaded from a designated location (such as a local drive) or directly from the Protein Data Bank (Berman et al., 2000). In the latter case, all you need to do is provide the PDB ID of the structure, and the system will download it itself. New users of WebTetrado can also use the available examples to familiarize themselves with how the system works. In this scenario, select an example and click the "Send request" button.</p>
+                        <p>The main page of WebTetrado allows users to define and launch a new task (calculations for a given DNA/RNA structure) and check the results of a task already completed.  Launching a new task involves loading a single data file containing the atomic coordinates of a nucleic acid molecule, setting input parameters (optional), and clicking the "Submit task" button. The system accepts input files in PDB and mmCIF formats. They can be uploaded from a designated location (such as a local drive) or directly from the Protein Data Bank (Berman et al., 2000). In the latter case, all you need to do is provide the PDB ID of the structure, and the system will download it itself. New users of WebTetrado can also use the available examples to familiarize themselves with how the system works. In this scenario, select an example and click the "Submit task" button.</p>
+                        <p>After uploading the tertiary structure file, users can set additional parameters that condition the analysis of the input data and affect the result of their processing. WebTetrado allows setting the following five parameters on the "Additional settings" panel:</p>
+                        <ul>
+                            <li>&#8226; "Analyze the model with the number &lt;N&gt;" - if the input file includes more than one model of the structure, users can select which model to process;</li>
+                            <li>&#8226; "Restrict the search to G-tetrads" - tetrad is usually made of four guanines, however, other nucleotides can also participate in tetrad formation; WebTetrado can look for all tetrads or G-tetrads only depending on this setting;</li>
+                            <li>&#8226; "Detect tetrads with cWH pairings only" - nucleotides in a tetrad usually interact through Watson-Crick-Franklin and Hoogsteen edges forming cis WH base pair conformations; strict definition of a tetrad involves only such pairings; however, other interactions may also contribute to tetrad formation; WebTetrado can detect tetrads according to strict definition or tetrads formed by any type of interactions;</li>
+                            <li>&#8226; "Accept stacking mismatch for how many nts &lt;N&gt;" - a perfect tetrad stacking covers 4 nucleotides; this option can be used with value 1 or 2 to allow this number of nucleotides to be non-stacked with otherwise well-aligned tetrad;</li>
+                            <li>&#8226; "Reorder chains to optimize ONZ" - chains of bi- and tetramolecular quadruplexes should be reordered to be able to have them classified according to ONZ; when this option is set, chains will be processed in the original order, which for bi-/tetramolecular means that they will likely be misclassified.</li>
+                        </ul>
+                        <table id={'additional_settings_table'} style={{ marginLeft: 'auto', marginRight: 'auto' }}>
+                            <tr>
+                                <th>Additional settings</th>
+                                <th>Default</th>
+                                <th>Possible values</th>
+                            </tr>
+                            <tr>
+                                <td>Analyze the model with the number &lt;N&gt;</td>
+                                <td>1</td>
+                                <td>1, 2, 3, ..., number of the last model</td>
+                            </tr>
+                            <tr>
+                                <td>Restrict the search to G-tetrads</td>
+                                <td>Yes</td>
+                                <td>Yes, No</td>
+                            </tr>
+                            <tr>
+                                <td>Detect tetrads with cWH pairings only</td>
+                                <td>No</td>
+                                <td>Yes, No</td>
+                            </tr>
+                            <tr>
+                                <td>Accept stacking mismatch for how many nts &lt;N&gt;</td>
+                                <td>2</td>
+                                <td>0, 1, 2, 3, 4</td>
+                            </tr>
+                            <tr>
+                                <td>Reorder chains to optimize ONZ</td>
+                                <td>Yes</td>
+                                <td>Yes, No</td>
+                            </tr>
+                        </table>
+                        <br />
                         <div className={"horizontal-center"}>
                             <Image
                                 alt={"infographic"}
@@ -43,7 +84,7 @@ export const Help = () => {
                                 src={help_home_set_request}
                             />
                         </div>
-                        <p>To check the results of a completed task, users should have a task ID. The ID should be pasted into the edit box located in the "Check your result" section. After entering the ID and clicking the "Show" button, the system displays the task result page.
+                        <p>To check the results of a completed task, users should have a task ID. The ID should be pasted into the edit box located in section "Show the results of completed task". After entering the ID and clicking the "Submit" button, the system displays the task result page.
                             Where to get the task ID from? The system gives a unique identifier to each running task. This identifier is displayed on the processing page as "TASK id" and is added to the URL of the result page. If users plan to check the results after some time, they should save the task identifier for later use. The results of a completed task are stored in the system for 7 days.</p>
                         <div className={"horizontal-center"}>
                             <Image

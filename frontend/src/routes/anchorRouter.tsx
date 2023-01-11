@@ -8,7 +8,7 @@ const HomeAnchor = () => {
         <>
             <Link href="#introduction" title="Introduction" />
             <Link href="#check-your-structure" title="Check your structure" />
-            <Link href="#check-your-result" title="Check your result" />
+            <Link href="#check-your-result" title="Show the results of completed task" />
         </>
     );
 };

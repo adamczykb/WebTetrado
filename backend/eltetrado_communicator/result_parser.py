@@ -82,7 +82,7 @@ def add_base_pairs(base_pairs, tetrado_request):
                 info=str(tetrado_request.id),
                 traceback=traceback.format_exc(),
             ).save()
-            tetrado_request.error = "Error during adding base pairs"
+            tetrado_request.error = "Error during adding base pairs."
             tetrado_request.save()
             raise GetterException("Base pair parser", traceback.format_exc())
 
@@ -110,7 +110,7 @@ def add_nucleotides(nucleotides, tetrado_request):
                 info=str(tetrado_request.id),
                 traceback=traceback.format_exc(),
             ).save()
-            tetrado_request.error = "Error during adding nucleodities"
+            tetrado_request.error = "Error during adding nucleodities."
             tetrado_request.save()
             raise GetterException("Nucleotides parser", traceback.format_exc())
 
@@ -163,7 +163,7 @@ def add_tetrads(quadruplexes, quadruplex_entity, user_request, cif=False):
                 info=str(user_request.id),
                 traceback=traceback.format_exc(),
             ).save()
-            user_request.error = "Error during adding tetrads"
+            user_request.error = "Error during adding tetrads."
 
             user_request.save()
             raise GetterException("Tetrad parser", traceback.format_exc())
@@ -190,7 +190,7 @@ def add_loops(loops, quadruplex_entity, user_request):
                 traceback=traceback.format_exc(),
             ).save()
 
-            user_request.error = "Error during adding loops"
+            user_request.error = "Error during adding loops."
             user_request.save()
             raise GetterException("Loop parser", traceback.format_exc())
 
@@ -218,7 +218,7 @@ def add_tetrad_pairs(tetradPairs, helice_entity, user_request):
                 traceback=traceback.format_exc(),
             ).save()
 
-            user_request.error = "Error during adding tetrad pairs"
+            user_request.error = "Error during adding tetrad pairs."
             user_request.save()
             break
 
@@ -278,7 +278,7 @@ def add_quadruplexes(quadruplexes, file_data, helice_entity, user_request, cif=F
                 traceback=traceback.format_exc(),
             ).save()
 
-            user_request.error = "Error during adding quadruplexes"
+            user_request.error = "Error during adding quadruplexes."
             user_request.save()
             raise GetterException("Quadruplex parser", traceback.format_exc())
 
@@ -441,7 +441,7 @@ def parse_result_from_backend(user_request, request_key: str):
             break
         if r.status_code == 500:
             user_request.status = 5
-            user_request.error = "ElTetrado processor error"
+            user_request.error = "ElTetrado processor error."
             user_request.save()
             break
         time.sleep(1)
@@ -480,7 +480,7 @@ def add_task_to_queue(user_request):
             return "Failed to get eltetrado id"
     except Exception:
         user_request.status = 5
-        user_request.error = "Unknown server failure"
+        user_request.error = "Unknown server failure."
 
         Log.objects.create(
             type="Error [processing] ",

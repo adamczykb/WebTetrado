@@ -119,7 +119,8 @@ export const WebbDaSilvaClassificationHelpSection = () => {
             >
                 <div style={{ textAlign: 'center' }}><img alt="parallel" width="250px" src={require("../../assets/images/parallel.svg")} /><br /><span>Parallel</span></div>
                 <div style={{ textAlign: 'center' }}><img alt="hybrid-clean" width="250px" src={require("../../assets/images/hybrid.svg")} /><br /><span>Hybrid</span></div>
-                <div style={{ textAlign: 'center' }}><img alt="antiparallel" width="250px" src={require("../../assets/images/antiparallel-a.svg")} /><br /><span>Antiparallel (top-top-down-down)</span></div>
+                <div style={{ textAlign: 'center' }}><img alt="antiparallel-a" width="250px" src={require("../../assets/images/antiparallel-a.svg")} /><br /><span>Antiparallel (top-top-down-down)</span></div>
+                <div style={{ textAlign: 'center' }}><img alt="antiparallel-b" width="250px" src={require("../../assets/images/antiparallel-b.svg")} /><br /><span>Antiparallel (top-down-top-down)</span></div>
             </div>
             <br />
             <h3 id={"webb_base_pairing_patterns"}>2.4. by base-pairing patterns (ONZ)</h3>

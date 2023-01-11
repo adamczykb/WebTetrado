@@ -13,7 +13,6 @@ const config = {
     },
     output: {
         path: path.resolve(__dirname, "dist"),
-        //publicPath: "/static/",
         filename: "[name].js",
     },
     devServer: {
@@ -65,7 +64,27 @@ const config = {
                 test: /\.css$/i,
                 use: [MiniCssExtractPlugin.loader, "css-loader"],
             },
-
+            {
+                test: /\.less$/i,
+                use: [
+                    {
+                        loader: "style-loader",
+                    },
+                    {
+                        loader: "css-loader",
+                    },
+                    {
+                        loader: "less-loader",
+                        options: {
+                            lessOptions: {
+                                strictMath: false,
+                                javascriptEnabled: true,
+                                math: 'always'
+                            },
+                        },
+                    },
+                ],
+            },
             // Add your rules for custom modules here
             // Learn more about loaders from https://webpack.js.org/loaders/
         ],

@@ -25,7 +25,7 @@ export const Home = () => {
                 id="check-your-structure"
                 style={{ padding: "20px 0", textAlign: "center", fontSize: "32px" }}
             >
-                Upload DNA/RNA structure
+                Upload DNA/RNA 3D structure
             </h1>
 
             <Suspense fallback={<RenderLoader />}>
@@ -36,7 +36,7 @@ export const Home = () => {
                 id="check-your-result"
                 style={{ padding: "20px 0", textAlign: "center", fontSize: "32px" }}
             >
-                Check your result
+                Show the results of completed task
             </h1>
             <Results />
         </>

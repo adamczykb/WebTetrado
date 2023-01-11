@@ -84,13 +84,13 @@ export default function RequestForm() {
     }, [formValues.rcsbPdbId]);
     return (
         <>
-            <h2
-                id="check-your-structure"
-                style={{ padding: "20px 0", textAlign: "center" }}
-            >
-                Check out examples
-            </h2>
-            <div style={{ marginBottom: "40px", textAlign: "center" }}>
+
+            <div style={{ marginBottom: "40px", marginLeft: 'auto', marginRight: 'auto', textAlign: "left", width: '100%', maxWidth: '890px' }}>
+                <h4
+                    style={{ textAlign: 'left', padding: "0" }}
+                >
+                    From example collection:
+                </h4>
                 <Button
                     size={
                         !context.viewSettings.isCompressedViewNeeded ? "large" : "middle"
@@ -189,7 +189,6 @@ export default function RequestForm() {
                 >
                     RNA G-Quadruplex in solution
                 </Button>
-
             </div>
             <Form labelCol={{ span: 16 }} wrapperCol={{ span: 32 }}>
                 {!!context.viewSettings.isCompressedViewNeeded ? (
@@ -298,45 +297,57 @@ export default function RequestForm() {
                     className={"horizontal-center"}
                     style={{ paddingTop: "30px", fontSize: "17px" }}
                 >
-                    <Collapse defaultActiveKey={1} style={{ width: "70%" }}>
+                    <Collapse defaultActiveKey={1} style={{ width: "100%", maxWidth: '890px' }}>
                         <Panel header="Additional settings" key="1">
-                            <Form.Item valuePropName="checked">
+                            <Form.Item>
                                 <div className="horizontal-item-center">
-                                    <div className="item-label">
-                                        <Tooltip
-                                            title="Chains of bi- and tetramolecular quadruplexes should
-                        be reordered to be able to have them classified; when
-                        this is set, chains will be processed in original
-                        order, which for bi-/tetramolecular means that they
-                        will likely be misclassified"
-                                        >
-                                            Reorder chains to optimize ONZ:{" "}
-                                        </Tooltip>
+                                    <div
+                                        className="item-label"
+                                        style={
+                                            !context.viewSettings.isCompressedViewNeeded
+                                                ? { padding: "5px 0" }
+                                                : {}
+                                        }
+                                    >
+                                        Analyze the model with the number:
                                     </div>
-                                    <Switch
+                                    <Input
+                                        style={{ width: "calc(50% - 5px)", maxWidth: "100px" }}
                                         size={
                                             !context.viewSettings.isCompressedViewNeeded
-                                                ? "default"
+                                                ? "middle"
                                                 : "small"
                                         }
-                                        checkedChildren="Yes"
-                                        unCheckedChildren="No"
-                                        defaultChecked
-                                        onChange={() =>
-                                            setFormValues({
-                                                ...formValues,
-                                                settings: {
-                                                    ...formValues.settings,
-                                                    reorder: !formValues.settings.reorder,
-                                                },
-                                            })
-                                        }
+                                        type={"number"}
+                                        min="1"
+                                        max={maxModel}
+                                        data-testid="model-selector-slider"
+                                        value={formValues.settings.model}
+                                        onChange={(e) => {
+                                            if (e.target.valueAsNumber > maxModel) {
+                                                setFormValues({
+                                                    ...formValues,
+                                                    settings: {
+                                                        ...formValues.settings,
+                                                        model: maxModel,
+                                                    },
+                                                });
+                                            } else {
+                                                setFormValues({
+                                                    ...formValues,
+                                                    settings: {
+                                                        ...formValues.settings,
+                                                        model: e.target.valueAsNumber,
+                                                    },
+                                                });
+                                            }
+                                        }}
                                     />
                                 </div>
                             </Form.Item>
                             <Form.Item valuePropName="checked">
                                 <div className="horizontal-item-center">
-                                    <div className="item-label"><Tooltip title="Highlight G4 results">G4-limited search: </Tooltip> </div>
+                                    <div className="item-label"><Tooltip title="Highlight G4 results">Restrict the search to G-tetrads: </Tooltip> </div>
                                     <Switch
                                         size={
                                             !context.viewSettings.isCompressedViewNeeded
@@ -365,7 +376,7 @@ export default function RequestForm() {
                                             title="Nucleotides in tetrad are found when linked only by
                         cWH pairing"
                                         >
-                                            Strict:{" "}
+                                            Detect tetrads with cWH pairings only:{" "}
                                         </Tooltip>
                                     </div>
                                     <Switch
@@ -404,7 +415,7 @@ export default function RequestForm() {
                         number of nucleotides to be non-stacked with otherwise
                         well aligned tetrad"
                                         >
-                                            Stacking mismatch:
+                                            Accept stacking mismatch for how many nts:
                                         </Tooltip>
                                     </div>
                                     <Input
@@ -443,99 +454,44 @@ export default function RequestForm() {
                                     />
                                 </div>
                             </Form.Item>
-                            {maxModel > 0 ? (
-                                <>
-                                    <Form.Item>
-                                        <div className="horizontal-item-center">
-                                            <div
-                                                className="item-label"
-                                                style={
-                                                    !context.viewSettings.isCompressedViewNeeded
-                                                        ? { padding: "5px 0" }
-                                                        : {}
-                                                }
-                                            >
-                                                Selected model number:
-                                            </div>
-                                            <Slider
-                                                min={1}
-                                                max={maxModel}
-                                                style={{ width: "200px" }}
-                                                onChange={(value: number) =>
-                                                    setFormValues({
-                                                        ...formValues,
-                                                        settings: {
-                                                            ...formValues.settings,
-                                                            model: value,
-                                                        },
-                                                    })
-                                                }
-                                                value={formValues.settings.model}
-                                                step={1}
-                                            />
-                                        </div>
-                                    </Form.Item>
-                                    <Form.Item>
-                                        <div className="horizontal-item-center">
-                                            <div
-                                                className="item-label"
-                                                style={
-                                                    !context.viewSettings.isCompressedViewNeeded
-                                                        ? { padding: "5px 0" }
-                                                        : {}
-                                                }
-                                            ></div>
-                                            <Input
-                                                style={{ width: "calc(50% - 5px)", maxWidth: "100px" }}
-                                                size={
-                                                    !context.viewSettings.isCompressedViewNeeded
-                                                        ? "middle"
-                                                        : "small"
-                                                }
-                                                type={"number"}
-                                                min="1"
-                                                max={maxModel}
-                                                data-testid="model-selector-slider"
-                                                value={formValues.settings.model}
-                                                onChange={(e) => {
-                                                    if (e.target.valueAsNumber > maxModel) {
-                                                        setFormValues({
-                                                            ...formValues,
-                                                            settings: {
-                                                                ...formValues.settings,
-                                                                model: maxModel,
-                                                            },
-                                                        });
-                                                    } else {
-                                                        setFormValues({
-                                                            ...formValues,
-                                                            settings: {
-                                                                ...formValues.settings,
-                                                                model: e.target.valueAsNumber,
-                                                            },
-                                                        });
-                                                    }
-                                                }}
-                                            />
-                                        </div>
-                                    </Form.Item>
-                                </>
-                            ) : maxModelQuery ? (
-                                <Form.Item>
-                                    <p
-                                        className="horizontal-center"
-                                        data-testid="waiting-for-server-p"
-                                    >
-                                        Waiting for server response...
-                                    </p>
-                                    <Spin className="horizontal-center" />
-                                </Form.Item>
-                            ) : (
-                                <></>
-                            )}
+                            <Form.Item valuePropName="checked">
+                                <div className="horizontal-item-center">
+                                    <div className="item-label">
+                                        <Tooltip
+                                            title="Chains of bi- and tetramolecular quadruplexes should
+                        be reordered to be able to have them classified; when
+                        this is set, chains will be processed in original
+                        order, which for bi-/tetramolecular means that they
+                        will likely be misclassified"
+                                        >
+                                            Reorder chains to optimize ONZ:{" "}
+                                        </Tooltip>
+                                    </div>
+                                    <Switch
+                                        size={
+                                            !context.viewSettings.isCompressedViewNeeded
+                                                ? "default"
+                                                : "small"
+                                        }
+                                        checkedChildren="Yes"
+                                        unCheckedChildren="No"
+                                        defaultChecked
+                                        onChange={() =>
+                                            setFormValues({
+                                                ...formValues,
+                                                settings: {
+                                                    ...formValues.settings,
+                                                    reorder: !formValues.settings.reorder,
+                                                },
+                                            })
+                                        }
+                                    />
+                                </div>
+                            </Form.Item>
                         </Panel>
                     </Collapse>
                 </div>
+
                 <div className={"horizontal-center"} style={{ paddingTop: "30px" }}>
                     <Form.Item>
                         <Button
@@ -548,10 +504,10 @@ export default function RequestForm() {
                                 pdbError ||
                                 maxModel == 0
                             }
-                            loading={loading}
+                            loading={loading || maxModelQuery}
                             onClick={submit}
                         >
-                            Send request
+                            Submit task
                         </Button>
                     </Form.Item>
                 </div>

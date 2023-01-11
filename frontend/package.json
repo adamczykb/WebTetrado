@@ -4,14 +4,14 @@
     "description": "ElTetrado web service",
     "main": "./src/index.tsx",
     "scripts": {
-        "build": "./compile_less.sh && webpack --mode=production --node-env=production ",
+        "build": "webpack --mode=production --node-env=production ",
         "less": "less-watch-compiler --config less-watcher.config.json",
         "lessc": "./compile_less.sh",
         "test": "node --experimental-vm-modules node_modules/.bin/jest",
         "build:dev": "webpack --mode=development",
         "build:prod": "webpack --mode=production --node-env=production",
         "watch": "webpack --watch",
-        "serve": "concurrently --kill-others \"less-watch-compiler --config less-watcher.config.json\" \"webpack serve\""
+        "serve": "webpack serve"
     },
     "author": "Bartosz Adamczyk",
     "license": "ISC",

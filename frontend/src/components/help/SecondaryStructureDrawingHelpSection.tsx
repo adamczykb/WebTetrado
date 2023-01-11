@@ -26,7 +26,7 @@ export const SecondaryStructureDrawingHelpSection = () => {
             <p>
                 The secondary structure of the quadruplex is presented in a classical diagram generated using a VARNA-based procedure (Darty et al., 2009). In WebTetrado, we adjusted this procedure to visualize quadruplexes. Its advantage is the support for non-canonical base pairs. They are graphically annotated according to the Leontis-Westhof classification (Leontis and Westhof, 2001). For this annotation, we use pictograms presented in the table below. By default, only base pairs involved in the quadruplex are drawn on the diagram. However, two switches available on the interactive panel with the diagram, allow users to view canonical and non-canonical pairings outside the tetrads. The latter are colored grey.
             </p>
-            <table id={"visualization-symbol-table"}>
+            <table id={"visualization-symbol-table"} style={{ marginLeft: 'auto', marginRight: 'auto' }}>
                 <tbody>
                     <tr>
                         <td>
