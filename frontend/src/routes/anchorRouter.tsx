@@ -36,7 +36,7 @@ const HelpAnchor = () => {
             <Link href="#navigation" title="Navigation" />
             <Link
                 href="#topological_class"
-                title="Topological classification of quadruplex structures"
+                title="Topological classification of tetrads and quadruplexes"
             />
             <Link href="#structure_visualisation" title="Structure representations and visualizations" />
             <Link href="#system_requirements" title="System requirements" />
