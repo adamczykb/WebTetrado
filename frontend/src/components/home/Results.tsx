@@ -13,6 +13,11 @@ export const Results = () => {
                 <Input.Group compact>
                     <Input
                         value={inputValue}
+                        onPressEnter={() => {
+                            if (inputValue != "")
+                                window.open("/result/" + inputValue, "_self");
+
+                        }}
                         onChange={(e) => setInputValue(e.target.value)}
                         style={{
                             width: "calc(100% - 80px)",
@@ -27,6 +32,7 @@ export const Results = () => {
                     <Button
                         type="primary"
                         style={{ height: "38px" }}
+                        disabled={inputValue.length == 0}
                         onClick={() => {
                             if (inputValue != "")
                                 window.open("/result/" + inputValue, "_self");

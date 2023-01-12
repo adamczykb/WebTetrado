@@ -34,7 +34,7 @@ export default function RequestForm() {
         },
     };
     const [loading, setLoading] = useState(false);
-    const [maxModel, setMaxModel] = useState(0);
+    const [maxModel, setMaxModel] = useState(1);
     const [pdbError, setPDBError] = useState(false);
     const [maxModelQuery, setMaxModelQuery] = useState(false);
     const [formValues, setFormValues] = useState(form_values);
@@ -502,7 +502,7 @@ export default function RequestForm() {
                                 ((!fileListState || fileListState.length == 0) &&
                                     formValues.rcsbPdbId.length < 4) ||
                                 pdbError ||
-                                maxModel == 0
+                                maxModelQuery
                             }
                             loading={loading || maxModelQuery}
                             onClick={submit}

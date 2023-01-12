@@ -52,7 +52,7 @@ export default function ChiAngleTable(props: ChiAngleTableArguments) {
                 }
             />
             <div className="horizontal-center">
-                {JsonToCsvButton(props.value, ['number', 'nt1', 'nt2', 'nt3', 'nt4', 'nt2'], ['Number', 'Nucleotide 1', 'Nucleotide 2', 'Nucleotide 3', 'Nucleotide 4'], 'chi_angle_results')}
+                {JsonToCsvButton(props.value, ['number', 'nt1', 'nt2', 'nt3', 'nt4'], ['Number', 'Nucleotide 1', 'Nucleotide 2', 'Nucleotide 3', 'Nucleotide 4'], 'chi_angle_results')}
             </div>
 
         </>
