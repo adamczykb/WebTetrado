@@ -1,5 +1,6 @@
 import { quadruplex, result_values } from "../../types/RestultSet";
 import { Descriptions, Image, Tooltip } from "antd";
+import { InfoCircleOutlined } from "@ant-design/icons";
 interface ResultDescriptionArguments {
     resultSet: result_values;
     quadruplex: quadruplex;
@@ -67,7 +68,7 @@ const ResultDescription = (props: ResultDescriptionArguments) => {
                         color={"white"}
                     >
                         <u>{props.quadruplex.loopClassification}</u>
-                        <sup>?</sup>
+                        <sup><InfoCircleOutlined style={{ color: '#0272b4' }} /></sup>
                     </Tooltip>
                 </Descriptions.Item>
             ) : (
@@ -123,7 +124,7 @@ const ResultDescription = (props: ResultDescriptionArguments) => {
                                         color={"white"}
                                     >
                                         <u>{value}</u>
-                                        <sup>?</sup>
+                                        <sup><InfoCircleOutlined style={{ color: '#0272b4' }} /></sup>
                                         {array.length - 1 > ind ? ", " : ""}
                                     </Tooltip>
                                 );

@@ -3,6 +3,7 @@ import { tetrad } from "../../types/RestultSet";
 import { DownloadOutlined } from "@ant-design/icons";
 import { UseAppContext } from "../../AppContextProvider";
 import { JsonToCsvButton } from "../services/JsonToCsvButton";
+import { InfoCircleOutlined } from "@ant-design/icons";
 interface TetradTableArguments {
     value: tetrad[];
     g4Limited: boolean;
@@ -17,17 +18,17 @@ export default function TetradTable(props: TetradTableArguments) {
             key: "number",
         },
         {
-            title: "Indentifier",
-            dataIndex: "name",
-            key: "name",
-        },
-        {
             title: "Sequence",
             dataIndex: "sequence",
             key: "sequence",
         },
         {
-            title: "ONZ Class",
+            title: "Sequence (full names)",
+            dataIndex: "name",
+            key: "name",
+        },
+        {
+            title: "ONZ class",
             dataIndex: "onz_class",
             key: "onz_class",
         },
@@ -47,7 +48,7 @@ export default function TetradTable(props: TetradTableArguments) {
                         color={"white"}
                     >
                         <u>{text}</u>
-                        <sup>?</sup>
+                        <sup><InfoCircleOutlined style={{ color: '#0272b4' }} /></sup>
                     </Tooltip>
                 </>
             ),
@@ -95,7 +96,7 @@ export default function TetradTable(props: TetradTableArguments) {
                 }
             />
             <div className="horizontal-center">
-                {JsonToCsvButton(props.value, ['number', 'name', 'sequence', 'onz_class', 'gbaClassification', 'planarity'], ['Number', 'Indentifier', 'Sequence', 'ONZ Class', 'Tetrad combination', 'Planarity [Å]'], 'tetrad_results')}
+                {JsonToCsvButton(props.value, ['number', 'sequence', 'name', 'onz_class', 'gbaClassification', 'planarity'], ['Number', 'Sequence', 'Sequence (full names)', 'ONZ class', 'Tetrad combination', 'Planarity [Å]'], 'tetrad_results')}
             </div>
         </>
     );

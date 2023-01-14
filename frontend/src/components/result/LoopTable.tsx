@@ -17,12 +17,12 @@ export default function LoopTable(props: LoopTableArguments) {
             key: "number",
         },
         {
-            title: "Short sequence",
+            title: "Sequence",
             dataIndex: "short_sequence",
             key: "short_sequence",
         },
         {
-            title: "Full sequence",
+            title: "Sequence (full names)",
             dataIndex: "full_sequence",
             key: "full_sequence",
         },
@@ -54,7 +54,7 @@ export default function LoopTable(props: LoopTableArguments) {
                     }
                 />
                 <div className="horizontal-center">
-                    {JsonToCsvButton(props.value, ['number', 'short_sequence', 'full_sequence', 'length', 'type'], ['Number', 'Short sequence', 'Full sequence', 'Loop length', 'Loop type'], 'loop_results')}
+                    {JsonToCsvButton(props.value, ['number', 'short_sequence', 'full_sequence', 'length', 'type'], ['Number', 'Sequence', 'Sequence (full names)', 'Loop length', 'Loop type'], 'loop_results')}
                 </div>
             </> : <></>}
         </>

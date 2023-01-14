@@ -17,7 +17,7 @@ export default function TetradPairTable(props: TetradPariTableArguments) {
             key: "number",
         },
         {
-            title: "Tetrad pairs",
+            title: "Tetrad sequences",
             dataIndex: "pair",
             key: "pair",
         },
@@ -32,7 +32,7 @@ export default function TetradPairTable(props: TetradPariTableArguments) {
             key: "rise",
         },
         {
-            title: "Strand direction",
+            title: "Strands",
             dataIndex: "strand_direction",
             key: "strand_direction",
         },
@@ -53,7 +53,7 @@ export default function TetradPairTable(props: TetradPariTableArguments) {
                 columns={columns_tetrad_pairs}
             />
             <div className="horizontal-center">
-                {JsonToCsvButton(props.value, ['number', 'pair', 'twist', 'rise', 'strand_direction'], ['Number', 'Tetrad pairs', 'Twist [°]', 'Rise [Å]', 'Strand direction'], 'tetrad_pair_results')}
+                {JsonToCsvButton(props.value, ['number', 'pair', 'twist', 'rise', 'strand_direction'], ['Number', 'Tetrad sequence', 'Twist [°]', 'Rise [Å]', 'Strands'], 'tetrad_pair_results')}
             </div>
         </>
     );
