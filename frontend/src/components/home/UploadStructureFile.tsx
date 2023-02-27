@@ -88,7 +88,7 @@ const UploadStructureFile = (props: UploadFileArguments) => {
       style={{ padding: "20px" }}
     >
       <p className="ant-upload-drag-icon">
-        <InboxOutlined />
+        <InboxOutlined style={{ color: "#04afa4" }} />
       </p>
       <h3 className="ant-upload-text">
         Click or drag file to this area to upload

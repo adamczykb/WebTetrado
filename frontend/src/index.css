@@ -23,10 +23,12 @@ code {
     monospace;
 }
 
+
 h1 {
   font-size: 40px;
 }
 * {
+  line-height: 1.5715;
   font-family: "Ubuntu";
 }
 .ant-layout {
