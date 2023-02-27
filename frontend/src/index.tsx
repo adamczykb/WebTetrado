@@ -1,3 +1,4 @@
+import { ConfigProvider } from "antd";
 import React from "react";
 import ReactDOM from "react-dom";
 import App from "./App";
@@ -6,7 +7,16 @@ import reportWebVitals from "./reportWebVitals";
 import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <ConfigProvider
+      theme={{
+        token: {
+          colorBgLayout: '#f4f5f6',
+          colorPrimary: '#04afa4'
+        },
+      }}
+    >
+      <App />
+    </ConfigProvider>
   </React.StrictMode>,
   document.getElementById("root")
 );

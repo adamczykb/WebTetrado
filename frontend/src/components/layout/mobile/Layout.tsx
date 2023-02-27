@@ -85,7 +85,7 @@ export class MobileLayout extends React.Component {
           </div>
         </div>
         <Footer style={{ textAlign: "center" }}>
-          WebTetrado 2022 |{" "}
+          WebTetrado 2023 |{" "}
           <a href="https://github.com/adamczykb" rel="noreferrer">
             Bartosz Adamczyk
           </a>
