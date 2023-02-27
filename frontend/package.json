@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "ElTetrado web service",
   "main": "./src/index.tsx",
+  "type": "module",
   "scripts": {
     "build": "webpack --mode=production --node-env=production ",
     "less": "less-watch-compiler --config less-watcher.config.json",
