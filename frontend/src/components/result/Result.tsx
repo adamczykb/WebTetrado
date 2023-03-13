@@ -222,6 +222,7 @@ export const Result = () => {
                                               }
                                             />
                                           </Suspense>
+                                          <Divider />
                                           <Suspense fallback={<RenderLoader />}>
                                             <LoopTable
                                               value={v.loop}
