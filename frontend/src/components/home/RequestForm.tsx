@@ -353,7 +353,7 @@ export default function RequestForm() {
               </Form.Item>
               <Form.Item valuePropName="checked">
                 <div className="horizontal-item-center">
-                  <div className="item-label"><Tooltip title="Highlight G4 results">Restrict the search to G-tetrads: </Tooltip> </div>
+                  <div className="item-label"><Tooltip title="Distinguish GGGG tetrads in the result view">Highlight G-tetrads at the output: </Tooltip> </div>
                   <Switch
                     size={
                       !context.viewSettings.isCompressedViewNeeded

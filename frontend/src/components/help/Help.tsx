@@ -39,7 +39,7 @@ export const Help = () => {
             <p>After uploading the tertiary structure file, users can set additional parameters that condition the analysis of the input data and affect the result of their processing. WebTetrado allows setting the following five parameters on the "Additional settings" panel:</p>
             <ul>
               <li>&#8226; "Analyze the model with the number &lt;N&gt;" - if the input file includes more than one model of the structure, users can select which model to process;</li>
-              <li>&#8226; "Restrict the search to G-tetrads" - tetrad is usually made of four guanines, however, other nucleotides can also participate in tetrad formation; WebTetrado can look for all tetrads or G-tetrads only depending on this setting;</li>
+              <li>&#8226; "Highlight G-tetrads at the output" - tetrad is usually made of four guanines, however, other nucleotides can also participate in tetrad formation; WebTetrado can look for all tetrads or G-tetrads only depending on this setting;</li>
               <li>&#8226; "Detect tetrads with cWH pairings only" - nucleotides in a tetrad usually interact through Watson-Crick-Franklin and Hoogsteen edges forming cis WH base pair conformations; strict definition of a tetrad involves only such pairings; however, other interactions may also contribute to tetrad formation; WebTetrado can detect tetrads according to strict definition or tetrads formed by any type of interactions;</li>
               <li>&#8226; "Accept stacking mismatch for how many nts &lt;N&gt;" - a perfect tetrad stacking covers 4 nucleotides; this option can be used with value 1 or 2 to allow this number of nucleotides to be non-stacked with otherwise well-aligned tetrad;</li>
               <li>&#8226; "Reorder chains to enable ONZ" - chains of bi- and tetramolecular quadruplexes should be reordered to be able to have them classified according to ONZ; when this option is set, chains will be processed in the original order, which for bi-/tetramolecular means that they will likely be misclassified.</li>
@@ -56,7 +56,7 @@ export const Help = () => {
                 <td>1, 2, 3, ..., number of the last model</td>
               </tr>
               <tr>
-                <td>Restrict the search to G-tetrads</td>
+                <td>Highlight G-tetrads at the output</td>
                 <td>Yes</td>
                 <td>Yes, No</td>
               </tr>
