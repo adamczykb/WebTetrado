@@ -1,4 +1,4 @@
-import { Divider, Table } from "antd";
+import {  Table } from "antd";
 import { UseAppContext } from "../../AppContextProvider";
 import { loop } from "../../types/RestultSet";
 import { JsonToCsvButton } from "../services/JsonToCsvButton";
@@ -40,7 +40,6 @@ export default function LoopTable(props: LoopTableArguments) {
   return (
     <>
       {props.value.length > 0 ? <>
-        <Divider />
         <h2 id={props.id ? "loops" : ""} style={{ marginTop: "40px" }}>
           Loops
         </h2>

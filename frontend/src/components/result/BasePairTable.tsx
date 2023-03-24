@@ -52,7 +52,7 @@ export default function BasePairTable(props: BasePairTableArguents) {
                 if (a.in_tetrad) return 1;
                 else return -1;
             },
-            render: (be: boolean) => <>{be ? <u>✅</u> : ""}</>,
+            render: (be: boolean) => <>{be ? <>✅</>: ""}</>,
         },
     ];
     return (
