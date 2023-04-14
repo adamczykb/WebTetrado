@@ -219,7 +219,7 @@ export default function RequestForm() {
               <div className="split-layout__label">or</div>
               <div className="split-layout__rule"></div>
             </div>
-            <div style={{ width: "400px" }} className={"vertical-center"}>
+            <div style={{ width: "400px", flexDirection: 'unset' }} className={"vertical-center"} >
               <div>
                 <h4 style={{ margin: "0" }}>From Protein Data Bank:</h4>
                 <Form.Item>
@@ -315,7 +315,9 @@ export default function RequestForm() {
                         : {}
                     }
                   >
-                    Analyze the model with the number:
+                    <Tooltip title={'If the input structure includes more than one model, select here which one to process'}>
+                      Analyze the model with the number:
+                    </Tooltip>
                   </div>
                   <Input
                     style={{ width: "calc(50% - 5px)", maxWidth: "100px" }}
@@ -327,6 +329,12 @@ export default function RequestForm() {
                     type={"number"}
                     min="1"
                     max={maxModel}
+                    disabled={
+                      ((!fileListState || fileListState.length == 0) &&
+                        formValues.rcsbPdbId.length < 4) ||
+                      pdbError ||
+                      maxModelQuery
+                    }
                     data-testid="model-selector-slider"
                     value={formValues.settings.model}
                     onChange={(e) => {
@@ -339,13 +347,15 @@ export default function RequestForm() {
                           },
                         });
                       } else {
-                        setFormValues({
-                          ...formValues,
-                          settings: {
-                            ...formValues.settings,
-                            model: e.target.valueAsNumber,
-                          },
-                        });
+                        if (e.target.valueAsNumber < 1) {
+                          setFormValues({
+                            ...formValues,
+                            settings: {
+                              ...formValues.settings,
+                              model: 1,
+                            },
+                          });
+                        }
                       }
                     }}
                   />

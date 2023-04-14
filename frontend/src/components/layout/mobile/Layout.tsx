@@ -4,7 +4,7 @@ import React from "react";
 import IndexRouter from "../../../routes/router";
 import pp_img from "../../../assets/images/PP-PUT_logo_jasne.png";
 import ichb_img from "../../../assets/images/ICHB_PAN_EN_kolor.png";
-import rna_polis_img from "../../../assets/images/RNApolis-logo.png";
+// import rna_polis_img from "../../../assets/images/RNApolis-logo.png";
 import { MobileNavHeader } from "./MobileNavHeader";
 
 export class MobileLayout extends React.Component {
@@ -26,13 +26,14 @@ export class MobileLayout extends React.Component {
           >
             <img alt={"PP logo"} height="86px" src={pp_img} />
           </a>
-          <a target="_blank" rel="noreferrer" href={"https://www.rnapolis.pl/"}>
-            <img
-              alt={"RNApolis"}
-              style={{ height: "40px", margin: "0 40px" }}
-              src={rna_polis_img}
-            />
-          </a>
+          {/* <a target="_blank" rel="noreferrer" href={"https://www.rnapolis.pl/"}> */}
+          {/*   <img */}
+          {/*     alt={"RNApolis"} */}
+          {/*     style={{ height: "40px", margin: "0 40px" }} */}
+          {/*     src={rna_polis_img} */}
+          {/*   /> */}
+          {/* </a> */}
+          <div style={{ width: '30px' }}></div>
           <a
             target="_blank"
             rel="noreferrer"
@@ -69,26 +70,23 @@ export class MobileLayout extends React.Component {
                 />
               </a>
             </div>
-            <div style={{ marginTop: "30px" }}>
-              <a
-                target="_blank"
-                rel="noreferrer"
-                href={"https://www.rnapolis.pl/"}
-              >
-                <img
-                  alt={"RNApolis"}
-                  style={{ width: "100%" }}
-                  src={rna_polis_img}
-                />
-              </a>
-            </div>
+            {/* <div style={{ marginTop: "30px" }}> */}
+            {/*   <a */}
+            {/*     target="_blank" */}
+            {/*     rel="noreferrer" */}
+            {/*     href={"https://www.rnapolis.pl/"} */}
+            {/*   > */}
+            {/*     <img */}
+            {/*       alt={"RNApolis"} */}
+            {/*       style={{ width: "100%" }} */}
+            {/*       src={rna_polis_img} */}
+            {/*     /> */}
+            {/*   </a> */}
+            {/* </div> */}
           </div>
         </div>
         <Footer style={{ textAlign: "center" }}>
-          WebTetrado 2023 |{" "}
-          <a href="https://github.com/adamczykb" rel="noreferrer">
-            Bartosz Adamczyk
-          </a>
+          WebTetrado 2023 | RNApolis
         </Footer>
       </Layout>
     );

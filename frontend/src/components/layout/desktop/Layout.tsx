@@ -24,10 +24,7 @@ export const DesktopLayout = () => {
           </div>
         </Content>
         <Footer>
-          WebTetrado 2023 |{" "}
-          <a href="https://github.com/adamczykb" rel="noreferrer">
-            Bartosz Adamczyk
-          </a>
+          WebTetrado 2023 | RNApolis
         </Footer>
       </Layout>
     </>

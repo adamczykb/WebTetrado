@@ -1,4 +1,6 @@
-import django_rq, requests, os
+import django_rq
+import requests
+import os
 from typing import Dict
 from django.core.files.temp import NamedTemporaryFile
 from django.http import HttpResponse
@@ -29,7 +31,8 @@ def set_user_request_action(body: Dict):
                 temp_file = open(
                     os.path.join(
                         settings.BASE_DIR,
-                        "example_structure_files/" + file_name[1].split('/')[-1] + "." + file_name[2],
+                        "example_structure_files/" +
+                        file_name[1].split('/')[-1] + "." + file_name[2],
                     ),
                     "rb",
                 )
@@ -92,6 +95,6 @@ def set_user_request_action(body: Dict):
     queue = django_rq.get_queue("default", is_async=True)
     queue.enqueue(add_task_to_queue, entity)
     return HttpResponse(
-        content=b'{"orderId":"' + bytes(str(entity.hash_id),'UTF-8') + b'"}',
+        content=b'{"orderId":"' + bytes(str(entity.hash_id), 'UTF-8') + b'"}',
         content_type="application/json",
     )

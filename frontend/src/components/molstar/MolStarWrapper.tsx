@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   DefaultPluginUISpec,
   PluginUISpec,
@@ -8,7 +8,7 @@ import { PluginConfig } from "molstar/lib/mol-plugin/config";
 import { PluginUIContext } from "molstar/lib/mol-plugin-ui/context";
 
 import "molstar/build/viewer/molstar.css";
-import { StructureElement } from "molstar/lib/mol-model/structure";
+import { Structure, StructureElement } from "molstar/lib/mol-model/structure";
 import { ColorTheme } from "molstar/lib/mol-theme/color";
 import { ThemeDataContext } from "molstar/lib/mol-theme/theme";
 import { ColorNames } from "molstar/lib/mol-util/color/names";
@@ -19,7 +19,9 @@ import { Color } from "molstar/lib/mol-util/color";
 import { MolScriptBuilder as MS } from "molstar/lib/mol-script/language/builder";
 import { StateObjectRef } from "molstar/lib/mol-state";
 import { PluginStateObject as SO } from "molstar/lib/mol-plugin-state/objects";
-
+import { Subscription } from 'rxjs';
+import { throttleTime } from 'rxjs';
+import { StructureRef } from "molstar/lib/mol-plugin-state/manager/structure/hierarchy-state";
 const MolStarPluginSpec: PluginUISpec = {
   ...DefaultPluginUISpec(),
   config: [
@@ -60,7 +62,8 @@ function parseTetrad(tetrad: string) {
 async function addTetradComponents(
   plugin: PluginUIContext,
   tetrads: tetrad[],
-  structure: StateObjectRef<SO.Molecule.Structure>
+  structure: StateObjectRef<SO.Molecule.Structure>,
+  representation: any
 ) {
   // Create array of expressions defining nucleotides of each tetrad
   const nucleotideTetradExpressions = tetrads.map((tetrad) => {
@@ -116,7 +119,7 @@ async function addTetradComponents(
       await plugin.builders.structure.representation.addRepresentation(
         tetradComponent,
         {
-          type: "cartoon",
+          type: representation,
         }
       );
   }
@@ -134,7 +137,7 @@ async function addTetradComponents(
   if (otherNucleotides) {
     await plugin.builders.structure.representation.addRepresentation(
       otherNucleotides,
-      { type: "cartoon" }
+      { type: representation }
     );
   }
 }
@@ -148,8 +151,17 @@ function applyTetradOnzColorScheme(plugin: PluginUIContext, tetrads: tetrad[]) {
       factory: TetradOnzColorScheme,
       granularity: "group",
       color: (location) => {
-        if (!StructureElement.Location.is(location)) return ColorNames.green;
-        const { unit, element } = location;
+        let unit = undefined;
+        let element = undefined
+        if (!StructureElement.Location.is(location)) {
+          if (location.kind != 'bond-location')
+            return ColorNames.gray
+          unit = location.bUnit
+          element = location.aUnit.elements[0]
+        } else {
+          unit = location.unit
+          element = location.element
+        }
         let outputColor = Color(0xeeeeee);
 
         const atom_data = unit.model.atomicHierarchy;
@@ -217,10 +229,13 @@ function applyTetradOnzColorScheme(plugin: PluginUIContext, tetrads: tetrad[]) {
     isApplicable: () => true,
     defaultValues: {},
   };
+  try {
+    plugin.representation.structure.themes.colorThemeRegistry.add(
+      TetradOnzColorSchemeProvider
+    );
+  } catch (e) {
 
-  plugin.representation.structure.themes.colorThemeRegistry.add(
-    TetradOnzColorSchemeProvider
-  );
+  }
   for (const s of plugin.managers.structure.hierarchy.current.structures) {
     plugin.managers.structure.component.updateRepresentationsTheme(
       s.components,
@@ -229,18 +244,17 @@ function applyTetradOnzColorScheme(plugin: PluginUIContext, tetrads: tetrad[]) {
   }
 }
 
-const createPlugin = async (
-  parent: HTMLDivElement,
+const addStructure = async (
+  plugin: any,
   url: string,
-  tetrads: tetrad[]
-) => {
-  const file_format: String =
-    url.split(".")[url.split(".").length - 1] === "cif" ? "mmcif" : "pdb";
-  const plugin = await createPluginUI(parent, MolStarPluginSpec);
+  tetrads: tetrad[],
+  representation: any) => {
   const data = await plugin.builders.data.download(
     { url: url },
     { state: { isGhost: true } }
   );
+  const file_format: String =
+    url.split(".")[url.split(".").length - 1] === "cif" ? "mmcif" : "pdb";
   //@ts-ignore
   const trajectory = await plugin.builders.structure.parseTrajectory(
     data,
@@ -251,52 +265,55 @@ const createPlugin = async (
     name: "model",
     params: {},
   });
-
-  await addTetradComponents(plugin, tetrads, structure);
+  await addTetradComponents(plugin, tetrads, structure, representation);
   applyTetradOnzColorScheme(plugin, tetrads);
-  plugin.behaviors.layout.leftPanelTabName.next("data");
-  return plugin;
-};
 
+}
+const createPlugin = async (
+  parent: HTMLDivElement,
+  url: string,
+  tetrads: tetrad[],
+  representation: any
+) => {
+
+  const plugin = await createPluginUI(parent, MolStarPluginSpec);
+  await addStructure(plugin, url, tetrads, representation);
+  plugin.behaviors.layout.leftPanelTabName.next("data");
+  plugin.canvas3d?.camera.stateChanged.asObservable().pipe(throttleTime(10, undefined, { leading: true, trailing: true }))!.subscribe(value => {
+    plugin.canvas3d?.camera.setState({ fog: 0, clipFar: false, minNear: 0.1 })
+  })
+  return { plugin };
+};
 type MolStarWrapperProps = {
   structure_file: string;
   tetrads: tetrad[];
+  representation: any
 };
 
-export class MolStarWrapper extends React.Component<MolStarWrapperProps> {
-  parent: React.RefObject<HTMLDivElement>;
-  plugin: Promise<PluginUIContext> | undefined;
+export const MolStarWrapper = (props: MolStarWrapperProps) => {
+  let parent_c: React.RefObject<HTMLDivElement> = React.createRef<HTMLDivElement>();
+  let [plugin, setPlugin] = useState<PluginUIContext | undefined>(undefined);
+  let subs_c: Subscription[] = [];
 
-  constructor(props: any) {
-    super(props);
-    this.parent = React.createRef<HTMLDivElement>();
-    this.plugin = undefined;
-  }
-
-  componentDidMount() {
-    async function init(
-      plugin: Promise<PluginUIContext> | undefined,
-      parent: any,
-      url: string,
-      tetrads: tetrad[]
-    ) {
-      plugin = createPlugin(parent.current, url, tetrads);
-
-      return () => {
-        plugin?.then(function (result) {
-          result.dispose();
-        });
-      };
+  useEffect(() => {
+    if (!plugin) {
+      createPlugin(parent_c.current!,
+        props.structure_file,
+        props.tetrads,
+        props.representation
+      ).then((v) => {
+        setPlugin(v.plugin);
+      });
     }
-    return init(
-      this.plugin,
-      this.parent,
-      this.props.structure_file,
-      this.props.tetrads
-    );
-  }
 
-  render() {
-    return <div ref={this.parent}></div>;
-  }
+  }, [])
+
+  useEffect(() => {
+    if (plugin) {
+      plugin.clear()
+      addStructure(plugin, props.structure_file, props.tetrads, props.representation)
+    }
+  }, [props.representation])
+
+  return <div ref={parent_c}></div>;
 }
