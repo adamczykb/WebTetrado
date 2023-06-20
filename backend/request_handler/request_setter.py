@@ -93,7 +93,7 @@ def set_user_request_action(body: Dict):
     entity.save()
 
     queue = django_rq.get_queue("default", is_async=True)
-    queue.enqueue(add_task_to_queue, entity)
+    queue.enqueue(add_task_to_queue, entity, retry=Retry(max=3))
     return HttpResponse(
         content=b'{"orderId":"' + bytes(str(entity.hash_id), 'UTF-8') + b'"}',
         content_type="application/json",
