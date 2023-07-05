@@ -21,7 +21,7 @@ export const MobileNavHeader = () => {
           }}
           style={{ height: "auto" }}
         >
-          <MenuOutlined id="MenuOutlined-mobile" />
+          <MenuOutlined rev={undefined} id="MenuOutlined-mobile" />
         </Button>
       </div>
     </>

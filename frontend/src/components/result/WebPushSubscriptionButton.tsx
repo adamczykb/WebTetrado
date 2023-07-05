@@ -60,13 +60,13 @@ const WebPushSubscriptionButton = (
       return;
     }
     onClickSusbribeToPushNotification().then((val) => {
-      onClickSendSubscriptionToPushServer().then(async function (
+      onClickSendSubscriptionToPushServer().then(async function(
         subscriptionId
       ) {
         if (subscriptionId) {
           setSubscribe(true);
           nofificationRequest(props.requestNumber!, subscriptionId).then(
-            function (value) {
+            function(value) {
               if (value) {
                 let pushMessages = localStorage.getItem("pushMessages");
                 if (pushMessages === null) {
@@ -102,7 +102,7 @@ const WebPushSubscriptionButton = (
   ) {
     return (
       <Button
-        icon={<BellOutlined />}
+        icon={<BellOutlined rev={undefined} />}
         type={"default"}
         disabled={subscribed}
         loading={loadingPush}

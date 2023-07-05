@@ -36,7 +36,7 @@ export const Menu = (props: MenuArguments) => {
           top: "0px",
         }}
       >
-        <CloseOutlined />
+        <CloseOutlined rev={undefined} />
       </div>
     </div>
   );

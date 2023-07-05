@@ -165,7 +165,7 @@ export default function StructureVisualisation(
               <Button
                 type="primary"
                 shape="round"
-                icon={<DownloadOutlined />}
+                icon={<DownloadOutlined rev={undefined} />}
                 style={{ marginTop: "15px" }}
                 size={"large"}
                 onClick={() => {
@@ -262,7 +262,7 @@ export default function StructureVisualisation(
               <Button
                 type="primary"
                 shape="round"
-                icon={<DownloadOutlined />}
+                icon={<DownloadOutlined rev={undefined} />}
                 style={{ marginTop: "15px" }}
                 size={"large"}
                 onClick={() => {
@@ -312,7 +312,7 @@ export default function StructureVisualisation(
               <Button
                 type="primary"
                 shape="round"
-                icon={<DownloadOutlined />}
+                icon={<DownloadOutlined rev={undefined} />}
                 style={{ marginTop: "15px" }}
                 size={"large"}
                 onClick={() =>
@@ -359,7 +359,7 @@ export default function StructureVisualisation(
                     <Button
                       type="primary"
                       shape="round"
-                      icon={<DownloadOutlined />}
+                      icon={<DownloadOutlined rev={undefined} />}
                       style={{ marginTop: "15px" }}
                       size={"large"}
                       onClick={() =>

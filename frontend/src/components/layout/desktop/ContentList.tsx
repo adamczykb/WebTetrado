@@ -32,7 +32,7 @@ export const ContentList = (setMenuExpanded: any) => {
               setMenuExpanded(true);
             }}
           >
-            <MenuOutlined id="MenuOutlined-desktop" />
+            <MenuOutlined rev={undefined} id="MenuOutlined-desktop" />
           </Button>
         </div>
 
