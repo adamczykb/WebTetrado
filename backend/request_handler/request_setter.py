@@ -4,6 +4,7 @@ import os
 from typing import Dict
 from django.core.files.temp import NamedTemporaryFile
 from django.http import HttpResponse
+from rq import Retry
 from backend.models import TemporaryFile, TetradoRequest
 from WebTetrado import settings
 from backend.eltetrado_communicator.result_parser import add_task_to_queue
