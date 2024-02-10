@@ -1,5 +1,5 @@
 {
-    "SERVER_URL": "http://localhost",
-    "SERVER_WEB_SOCKET_URL": "ws://localhost/ws/",
+    "SERVER_URL": "",
+    "SERVER_WEB_SOCKET_URL": "wss://webtetrado.cs.put.poznan.pl/ws/",
     "FRONTEND_URL": ""
 }
