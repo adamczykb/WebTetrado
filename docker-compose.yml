@@ -11,8 +11,8 @@ services:
       - ./static:/opt/webtetrado/static
       - ./media:/opt/webtetrado/media
       - ./logs:/logs
-      - .:/opt/webtetrado
-    entrypoint: bash ./docker-entrypoint.sh
+      # - .:/opt/webtetrado
+    entrypoint: sh ./docker-entrypoint.sh
     networks:
       - web_network
       - db_network

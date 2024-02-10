@@ -1,4 +1,3 @@
-#! /bin/bash
 
 rm ../static/* -Rf;
 cd ../frontend;
