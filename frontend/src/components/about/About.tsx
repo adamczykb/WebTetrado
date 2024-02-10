@@ -49,7 +49,7 @@ export default function About() {
                     >
                         Michał Żurkowski
                     </a>
-                    <sup>1,2</sup>,{" "}
+                    <sup>1</sup>,{" "}
                     <a
                         href="https://www.cs.put.poznan.pl/mszachniuk"
                         target="_blank"
@@ -66,7 +66,7 @@ export default function About() {
                     >
                         Tomasz Żok
                     </a>
-                    <sup>1,2</sup>
+                    <sup>1</sup>
                     <br />
                     <br />
                     <ol>
