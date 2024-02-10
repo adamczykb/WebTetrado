@@ -6,7 +6,7 @@ import AnchorRouter from "../../../routes/anchorRouter";
 import logo from "../../../assets/images/logo_simple.png";
 import pp_img from "../../../assets/images/PP-PUT_logo_jasne.png";
 import ichb_img from "../../../assets/images/ICHB_PAN_EN_kolor.png";
-// import rna_polis_img from "../../../assets/images/RNApolis-logo.png";
+import rna_polis_img from "../../../assets/images/RNApolis-logo.png";
 
 export const ContentList = (setMenuExpanded: any) => {
   const [targetOffset, setTargetOffset] = useState<number | undefined>(
@@ -71,19 +71,19 @@ export const ContentList = (setMenuExpanded: any) => {
               />
             </a>
           </div>
-          {/* <div style={{ marginTop: "30px" }}> */}
-          {/*   <a */}
-          {/*     target="_blank" */}
-          {/*     rel="noreferrer" */}
-          {/*     href={"https://www.rnapolis.pl/"} */}
-          {/*   > */}
-          {/*     <img */}
-          {/*       alt={"RNApolis"} */}
-          {/*       style={{ width: "100%" }} */}
-          {/*       src={rna_polis_img} */}
-          {/*     /> */}
-          {/*   </a> */}
-          {/* </div> */}
+          <div style={{ marginTop: "30px" }}> 
+            <a 
+              target="_blank" 
+              rel="noreferrer" 
+              href={"https://www.rnapolis.pl/"} 
+            > 
+              <img 
+                alt={"RNApolis"} 
+                style={{ width: "100%" }} 
+                src={rna_polis_img} 
+              /> 
+            </a> 
+          </div>
         </div>
       </div>
     </>

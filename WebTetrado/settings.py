@@ -26,11 +26,11 @@ environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env("SECRET_KEY", default=environ.NoValue())
 DEBUG = env("DEBUG", default=True)
-ALLOWED_HOSTS = ['webtetrado.cs.put.poznan.pl','127.0.0.1']
+ALLOWED_HOSTS = ['webtetrado.cs.put.poznan.pl','127.0.0.1','localhost']
 CSRF_COOKIE_NAME = "csrftoken"
 CSRF_TRUSTED_ORIGINS = ['https://webtetrado.cs.put.poznan.pl']
 PROTECTED_MEDIA_FOLDERS=['uploads']
-
+ 
 # Application definition
 DATA_UPLOAD_MAX_NUMBER_FIELDS=10000
 INSTALLED_APPS = [

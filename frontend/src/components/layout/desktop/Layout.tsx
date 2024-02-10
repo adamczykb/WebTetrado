@@ -24,7 +24,7 @@ export const DesktopLayout = () => {
           </div>
         </Content>
         <Footer>
-          WebTetrado 2023 | RNApolis
+          WebTetrado 2024 | RNApolis
         </Footer>
       </Layout>
     </>

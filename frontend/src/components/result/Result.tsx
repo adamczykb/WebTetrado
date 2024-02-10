@@ -17,7 +17,7 @@ const TetradPairTable = lazy(() => import("./TetradPairTable"));
 const BasePairTable = lazy(() => import("./BasePairTable"));
 const NucleotideTable = lazy(() => import("./NucleotideTable"));
 const StructureVisualisation = lazy(() => import("./StructureVisualisation"));
-
+ 
 export const Result = () => {
   let result: result_values = {
     name: "",
@@ -70,10 +70,10 @@ export const Result = () => {
 
   return (
     <>
-      <WebPushSubscriptionButton
+       <WebPushSubscriptionButton
         status={resultSet.status}
         requestNumber={requestNumber}
-      />
+      /> 
 
       <h2>
         Task id:{" "}

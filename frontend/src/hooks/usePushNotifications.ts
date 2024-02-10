@@ -17,7 +17,9 @@ function isPushNotificationSupported() {
  * asks user consent to receive push notifications and returns the response of the user, one of granted, default, denied
  */
 async function askUserPermission() {
-  return await Notification.requestPermission();
+  return await Notification.requestPermission().catch(()=>{
+    return "denied" as NotificationPermission
+  });
 }
 
 /**
@@ -27,12 +29,13 @@ async function askUserPermission() {
  */
 async function createNotificationSubscription() {
   //wait for service worker installation to be ready
-  const serviceWorker = await navigator.serviceWorker.ready;
-  // subscribe and return the subscription
-  return await serviceWorker.pushManager.subscribe({
-    userVisibleOnly: true,
-    applicationServerKey: pushServerPublicKey,
-  });
+    const serviceWorker = await navigator.serviceWorker.ready;
+    // subscribe and return the subscription
+    return await serviceWorker.pushManager.subscribe({
+      userVisibleOnly: true,
+      applicationServerKey: pushServerPublicKey,
+    });
+  
 }
 
 /**
@@ -40,14 +43,16 @@ async function createNotificationSubscription() {
  */
 export const getUserSubscription = async () => {
   //wait for service worker installation to be ready, and then
-  return navigator.serviceWorker.ready
-    .then(function (serviceWorker: any) {
-      return serviceWorker.pushManager.getSubscription();
-    })
-    .then(function (pushSubscription: any) {
-      return pushSubscription;
-    })
-    .catch((error: any) => {});
+    return navigator.serviceWorker.ready
+      .then(function (serviceWorker: any) {
+        return serviceWorker.pushManager.getSubscription();
+      })
+      .then(function (pushSubscription: any) {
+        return pushSubscription;
+      })
+      .catch((error: any) => {});
+    
+  
 };
 
 //import all the function created to manage the push notifications
@@ -97,6 +102,7 @@ export default function usePushNotifications() {
    */
   async function onClickAskUserPermission() {
     setLoadingPush(true);
+
     return await askUserPermission().then((consent) => {
       setUserConsent(consent);
 

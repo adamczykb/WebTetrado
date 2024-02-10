@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   DefaultPluginUISpec,
   PluginUISpec,
@@ -20,8 +20,10 @@ import { MolScriptBuilder as MS } from "molstar/lib/mol-script/language/builder"
 import { StateObjectRef } from "molstar/lib/mol-state";
 import { PluginStateObject as SO } from "molstar/lib/mol-plugin-state/objects";
 import { Subscription } from 'rxjs';
-import { throttleTime } from 'rxjs';
+import { throttleTime } from 'rxjs/operators';
 import { StructureRef } from "molstar/lib/mol-plugin-state/manager/structure/hierarchy-state";
+import { renderReact18 } from 'molstar/lib/mol-plugin-ui/react18';
+
 const MolStarPluginSpec: PluginUISpec = {
   ...DefaultPluginUISpec(),
   config: [
@@ -274,9 +276,14 @@ const createPlugin = async (
   url: string,
   tetrads: tetrad[],
   representation: any
-) => {
+  ) => {
+  let options = {
+    target: parent,
+    render: renderReact18,
+    spec: MolStarPluginSpec
+  }
+  const plugin = await createPluginUI(options );
 
-  const plugin = await createPluginUI(parent, MolStarPluginSpec);
   await addStructure(plugin, url, tetrads, representation);
   plugin.behaviors.layout.leftPanelTabName.next("data");
   plugin.canvas3d?.camera.stateChanged.asObservable().pipe(throttleTime(10, undefined, { leading: true, trailing: true }))!.subscribe(value => {
@@ -294,13 +301,12 @@ export const MolStarWrapper = (props: MolStarWrapperProps) => {
   let parent_c: React.RefObject<HTMLDivElement> = React.createRef<HTMLDivElement>();
   let [plugin, setPlugin] = useState<PluginUIContext | undefined>(undefined);
   let subs_c: Subscription[] = [];
-
   useEffect(() => {
     if (!plugin) {
       createPlugin(parent_c.current!,
         props.structure_file,
         props.tetrads,
-        props.representation
+        props.representation,
       ).then((v) => {
         setPlugin(v.plugin);
       });
