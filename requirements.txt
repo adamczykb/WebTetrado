@@ -1,5 +1,5 @@
 Django==5.0.2
-biopython==1.79
+biopython==1.83
 rq==1.10.1
 django-cors-headers==3.11.0
 django-redis-cache==3.0.0
