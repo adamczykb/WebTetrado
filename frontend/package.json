@@ -17,7 +17,7 @@
   "license": "ISC",
   "dependencies": {
     "@testing-library/react": "^14.2.1",
-    "@ant-design/icons": "5.3.0",
+    "@ant-design/icons": "5.3.2",
     "@types/jest": "^27.4.0",
     "@types/node": "^18.14.2",
     "@types/react": "^18.2.55",

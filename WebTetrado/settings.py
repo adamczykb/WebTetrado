@@ -26,7 +26,7 @@ environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env("SECRET_KEY", default=environ.NoValue())
 DEBUG = env("DEBUG", default=True)
-ALLOWED_HOSTS = ['webtetrado.cs.put.poznan.pl','127.0.0.1','localhost']
+ALLOWED_HOSTS = ['webtetrado.cs.put.poznan.pl','127.0.0.1','localhost',"web","150.254.30.189"]
 CSRF_COOKIE_NAME = "csrftoken"
 CSRF_TRUSTED_ORIGINS = ['https://webtetrado.cs.put.poznan.pl']
 PROTECTED_MEDIA_FOLDERS=['uploads']
@@ -48,7 +48,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
+#    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',

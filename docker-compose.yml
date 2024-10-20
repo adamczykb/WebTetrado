@@ -11,7 +11,7 @@ services:
       - ./static:/opt/webtetrado/static
       - ./media:/opt/webtetrado/media
       - ./logs:/logs
-      # - .:/opt/webtetrado
+        #    - .:/opt/webtetrado
     entrypoint: sh ./docker-entrypoint.sh
     networks:
       - web_network
@@ -41,20 +41,16 @@ services:
         context: ./nginx
       restart: always
       ports:
-        - 80:8080
-        - 443:443
+        - 8080:8080
       depends_on:
         - web
       volumes:
         - ./static:/opt/webtetrado/static
         - ./media:/opt/webtetrado/media
-        - ./ssl:/etc/letsencrypt/
         - ./nginx/conf/:/etc/nginx/conf.d/
         - ./logs/nginx:/logs
       networks:
         - web_network
-      expose:
-        - "80"
       
   db:
     image: postgres:latest
